@@ -517,7 +517,9 @@ const BOARD_MEMBERS = [
   { name: "Emily Nakamura",    role: "Board Member"    },
 ];
 
-const WELCOME_TEXT = `The Emerald City School District Board of Education meets on the third Tuesday of each month at 6:30 PM in the District Office Board Room, 1234 Emerald Avenue. Public comment is accepted at the start of each meeting. Speakers must sign in by 6:15 PM and are allotted three minutes. Written comments may be submitted to board@ecsd.edu at least 24 hours prior to the meeting. Special meetings are posted at least 24 hours in advance per state open meeting requirements. Board packets are made available to the public 72 hours before each regular meeting.`;
+const WELCOME_PARA_1 = `The Emerald City School District Board of Education meets on the third Tuesday of each month at 6:30 PM in the District Office Board Room, 1234 Emerald Avenue.`;
+
+const WELCOME_PARA_2 = `Public comment is accepted at the start of each meeting. Speakers must sign in by 6:15 PM and are allotted three minutes. Written comments may be submitted to board@ecsd.edu at least 24 hours prior to the meeting. Board packets are made available to the public 72 hours before each regular meeting.`;
 
 function AgendaStatusPill({ status }: { status: AgendaStatus }) {
   const styles: Record<AgendaStatus, { bg: string; text: string }> = {
@@ -742,32 +744,39 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
       </div>
 
       {/* ── Right column (secondary) ── */}
-      <div className="w-[28%] shrink-0 flex flex-col gap-4">
+      <div className="w-[28%] shrink-0 flex flex-col gap-6">
 
-        {/* Welcome message */}
-        <div className="rounded-xl border border-outline-static bg-surface p-4">
-          <h2 className="text-sm font-semibold text-type mb-2 leading-snug">
-            Emerald City School District
-          </h2>
-          <p className={["text-xs text-type-muted leading-relaxed", !welcomeExpanded ? "line-clamp-6" : ""].join(" ")}>
-            {WELCOME_TEXT}
-          </p>
+        {/* Welcome message — no container chrome */}
+        <div>
+          {/* Logo + org name */}
+          <div className="flex items-center gap-2.5 mb-3">
+            <img src="/org-logo.png" alt="Organization logo" className="w-7 h-7 object-contain opacity-80" />
+            <h2 className="text-sm font-semibold text-type leading-snug">
+              Emerald City School District
+            </h2>
+          </div>
+
+          {/* Two-paragraph body */}
+          <div className={["flex flex-col gap-2 text-[11px] text-type-muted leading-relaxed", !welcomeExpanded ? "line-clamp-6" : ""].join(" ")}>
+            <p>{WELCOME_PARA_1}</p>
+            <p>{WELCOME_PARA_2}</p>
+          </div>
           <button onClick={() => setWelcomeExpanded((v) => !v)}
-            className="mt-2 text-xs text-action-primary hover:underline">
+            className="mt-1.5 text-[11px] text-action-primary hover:underline">
             {welcomeExpanded ? "Show less" : "Show more"}
           </button>
         </div>
 
-        {/* Board members */}
-        <div className="rounded-xl border border-outline-static bg-surface p-4">
-          <h2 className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-3">
+        {/* Board members — no container chrome */}
+        <div>
+          <h2 className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-2">
             Board Members
           </h2>
-          <ul className="flex flex-col gap-2.5">
+          <ul className="flex flex-col gap-1.5">
             {BOARD_MEMBERS.map((m) => (
-              <li key={m.name}>
-                <span className="block text-sm text-type leading-snug">{m.name}</span>
-                <span className="block text-xs text-type-muted">{m.role}</span>
+              <li key={m.name} className="leading-tight">
+                <span className="text-xs text-type">{m.name}</span>
+                <span className="text-[11px] text-type-muted"> · {m.role}</span>
               </li>
             ))}
           </ul>

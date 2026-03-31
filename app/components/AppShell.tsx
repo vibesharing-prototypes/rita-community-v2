@@ -468,12 +468,12 @@ function PagePlaceholder({ page }: { page: PageId }) {
 // ── Home page ─────────────────────────────────────────────────────
 
 const UPCOMING_MEETINGS = [
-  { id: "m1", name: "Regular Board Meeting", date: "Apr 15, 2026", committee: "Board of Education",   pinned: true  },
-  { id: "m2", name: "Finance Committee",     date: "Apr 22, 2026", committee: "Finance Committee",    pinned: false },
-  { id: "m3", name: "Special Board Meeting", date: "May 3, 2026",  committee: "Board of Education",   pinned: false },
-  { id: "m4", name: "Audit & Risk Review",   date: "May 14, 2026", committee: "Audit Committee",      pinned: false },
-  { id: "m5", name: "Budget Workshop",       date: "May 20, 2026", committee: "Finance Committee",    pinned: false },
-  { id: "m6", name: "Policy Review Session", date: "Jun 2, 2026",  committee: "Policy Subcommittee",  pinned: false },
+  { id: "m1", month: "APR", day: "15", name: "Regular Board Meeting", fullDate: "Tue, April 15, 2026", time: "6:00 PM", location: "District Office · Board Room",       pinned: true  },
+  { id: "m2", month: "APR", day: "22", name: "Finance Committee",     fullDate: "Wed, April 22, 2026", time: "5:30 PM", location: "District Office · Room 204",         pinned: false },
+  { id: "m3", month: "MAY", day:  "3", name: "Special Board Meeting", fullDate: "Sun, May 3, 2026",    time: "4:00 PM", location: "Superintendent's Conference Room",    pinned: false },
+  { id: "m4", month: "MAY", day: "14", name: "Audit & Risk Review",   fullDate: "Thu, May 14, 2026",   time: "3:00 PM", location: "District Office · Room 101",          pinned: false },
+  { id: "m5", month: "MAY", day: "20", name: "Budget Workshop",       fullDate: "Wed, May 20, 2026",   time: "9:00 AM", location: "District Office · Board Room",        pinned: false },
+  { id: "m6", month: "JUN", day:  "2", name: "Policy Review Session", fullDate: "Tue, June 2, 2026",   time: "5:00 PM", location: "District Office · Room 204",          pinned: false },
 ];
 
 const RECENT_MEETINGS = [
@@ -576,61 +576,54 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
   const visibleAgenda = agendaExpanded ? sortedAgenda : sortedAgenda.slice(0, 3);
 
   return (
-    <div className="flex gap-6 p-6 h-full overflow-auto items-start">
+    <div className="flex flex-col gap-6 p-6 h-full overflow-auto">
+
+      {/* Page title */}
+      <h1 className="text-2xl font-semibold text-type tracking-tight shrink-0">Home</h1>
+
+      <div className="flex gap-6 items-start flex-1 min-h-0">
 
       {/* ── Left column (primary) ── */}
-      <div className="flex-1 min-w-0 flex flex-col gap-4">
+      <div className="flex-1 min-w-0 flex flex-col gap-6">
 
-        {/* Meetings */}
-        <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
-          <div className="px-5 pt-4 pb-3 border-b border-outline-static">
-            <h2 className="text-sm font-semibold text-type">Meetings</h2>
+        {/* Meetings — no outer container */}
+        <div>
+          <p className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-3">Meetings</p>
+
+          {/* Upcoming cards */}
+          <div className="flex flex-col gap-2">
+            {UPCOMING_MEETINGS.slice(0, 5).map((m) => (
+              <div key={m.id}
+                onClick={() => onNavigate("meetings")}
+                className="flex items-center gap-4 p-4 rounded-xl border border-outline-static bg-surface cursor-pointer"
+              >
+                {/* Calendar block */}
+                <div className="flex flex-col items-center justify-center w-12 shrink-0 rounded-lg py-2 bg-selection">
+                  <span className="text-[10px] font-semibold text-action-primary uppercase tracking-wider leading-none mb-0.5">{m.month}</span>
+                  <span className="text-xl font-bold text-action-primary leading-tight">{m.day}</span>
+                </div>
+                {/* Details */}
+                <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                  <span className="text-sm font-semibold text-type leading-snug">{m.name}</span>
+                  <span className="text-xs text-type-muted">{m.fullDate} · {m.time}</span>
+                  <span className="text-xs text-type-disabled">{m.location}</span>
+                </div>
+                {/* Pin */}
+                {m.pinned && <Icon name="push_pin" size={14} className="text-action-primary shrink-0" />}
+              </div>
+            ))}
           </div>
 
-          {/* Upcoming tier — cards */}
-          <div className="px-5 pt-4 pb-4">
-            <div className="flex flex-wrap gap-3">
-              {UPCOMING_MEETINGS.slice(0, 5).map((m) => {
-                const [month, dayRaw] = m.date.split(" ");
-                const day = dayRaw.replace(",", "");
-                return (
-                  <div key={m.id}
-                    onClick={() => onNavigate("meetings")}
-                    className="relative flex flex-col w-[210px] rounded-xl border border-outline-static bg-surface cursor-pointer overflow-hidden"
-                  >
-                    {/* Pin indicator */}
-                    {m.pinned && (
-                      <div className="absolute top-2.5 right-2.5">
-                        <Icon name="push_pin" size={14} className="text-action-primary" />
-                      </div>
-                    )}
-                    {/* Calendar date block */}
-                    <div className="flex flex-col items-center justify-center pt-4 pb-3 border-b border-outline-static">
-                      <span className="text-xs font-medium text-type-muted uppercase tracking-widest leading-none mb-1">
-                        {month}
-                      </span>
-                      <span className="text-4xl font-semibold text-type leading-none">{day}</span>
-                    </div>
-                    {/* Meeting details */}
-                    <div className="px-3 pt-2.5 pb-3 flex flex-col gap-1">
-                      <span className="text-sm font-semibold text-type leading-snug line-clamp-2">{m.name}</span>
-                      <span className="text-xs text-type-muted leading-snug">{m.committee}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            {UPCOMING_MEETINGS.length > 5 && (
-              <button onClick={() => onNavigate("meetings")}
-                className="mt-3 text-xs text-type-muted hover:text-type cursor-pointer">
-                View all meetings →
-              </button>
-            )}
-          </div>
+          {UPCOMING_MEETINGS.length > 5 && (
+            <button onClick={() => onNavigate("meetings")}
+              className="mt-2 text-xs text-type-muted cursor-pointer">
+              View all meetings →
+            </button>
+          )}
 
-          {/* Divider + Recent tier */}
-          <div className="px-5 pt-3 pb-4 border-t border-outline-static" style={{ background: "var(--surface-variant)" }}>
-            <p className="text-xs font-medium text-type-muted uppercase tracking-wide mb-2">Recent</p>
+          {/* Recent */}
+          <div className="mt-4 pt-4 border-t border-outline-static">
+            <p className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-2">Recent</p>
             <ul className="flex flex-col gap-0.5">
               {RECENT_MEETINGS.map((m) => (
                 <li key={m.id}
@@ -781,6 +774,7 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
         </div>
       </div>
 
+      </div>{/* end two-column flex */}
     </div>
   );
 }

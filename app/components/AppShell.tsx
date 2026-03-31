@@ -183,8 +183,7 @@ function Sidebar({
       <div
         className={[
           "h-14 flex items-center border-b border-outline shrink-0",
-          "gap-2.5",
-          expanded ? "px-3" : "justify-center px-0",
+          expanded ? "px-3 gap-2.5" : "justify-center px-0 gap-0",
         ].join(" ")}
       >
         {/* Hamburger */}

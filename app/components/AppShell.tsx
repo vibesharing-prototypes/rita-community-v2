@@ -9,7 +9,10 @@ export type PageId =
   | "meetings"
   | "agenda"
   | "policies"
-  | "library"
+  | "library-files"
+  | "library-goals"
+  | "library-events"
+  | "library-members"
   | "settings";
 
 type NavItemConfig = {
@@ -19,6 +22,12 @@ type NavItemConfig = {
   badge?: number;
 };
 
+type LibrarySubItem = {
+  id: PageId;
+  label: string;
+  icon: string;
+};
+
 // ── Nav config ───────────────────────────────────────────────────
 
 const PRIMARY_NAV: NavItemConfig[] = [
@@ -26,7 +35,13 @@ const PRIMARY_NAV: NavItemConfig[] = [
   { id: "meetings", label: "Meetings",     icon: "calendar_month" },
   { id: "agenda",   label: "Agenda items", icon: "checklist", badge: 3 },
   { id: "policies", label: "Policies",     icon: "gavel" },
-  { id: "library",  label: "Library",      icon: "folder_open" },
+];
+
+const LIBRARY_SUB_NAV: LibrarySubItem[] = [
+  { id: "library-files",   label: "Files",         icon: "description" },
+  { id: "library-goals",   label: "Goals",         icon: "flag" },
+  { id: "library-events",  label: "Events",        icon: "event" },
+  { id: "library-members", label: "Board members", icon: "group" },
 ];
 
 // ── Primitives ───────────────────────────────────────────────────
@@ -111,7 +126,7 @@ function NavItem({
         title={!expanded ? label : undefined}
         aria-current={active ? "page" : undefined}
         className={[
-          "w-full rounded-full text-sm font-medium transition-colors duration-150 select-none",
+          "w-full rounded-xl text-sm font-medium transition-colors duration-150 select-none",
           expanded
             ? "flex items-center gap-3 px-3 py-2"
             : "flex items-center justify-center p-2.5",
@@ -132,7 +147,7 @@ function NavItem({
               {label}
             </span>
             {badge !== undefined && badge > 0 && (
-              <span className="bg-action-primary text-action-on-primary text-[10px] font-semibold rounded-full px-1.5 min-w-[18px] h-[18px] flex items-center justify-center leading-none shrink-0">
+              <span className="bg-action-primary text-action-primary-on-primary text-[10px] font-semibold rounded-full px-1.5 min-w-[18px] h-[18px] flex items-center justify-center leading-none shrink-0">
                 {badge > 99 ? "99+" : badge}
               </span>
             )}
@@ -171,10 +186,23 @@ function Sidebar({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const isLibraryActive = activePage.startsWith("library-");
+  const [libraryOpen, setLibraryOpen] = useState(isLibraryActive);
+
+  // Keep library group open when a sub-item is active
+  const handleLibraryToggle = () => {
+    if (!expanded) {
+      // Collapsed sidebar: navigate to first sub-item instead
+      onNavigate("library-files");
+    } else {
+      setLibraryOpen((v) => !v);
+    }
+  };
+
   return (
     <aside
       className={[
-        "shrink-0 flex flex-col bg-surface border-r border-outline",
+        "shrink-0 flex flex-col bg-surface border-r border-outline-static",
         "overflow-hidden transition-[width] duration-200 ease-in-out",
         expanded ? "w-[220px]" : "w-[60px]",
       ].join(" ")}
@@ -182,24 +210,21 @@ function Sidebar({
       {/* Logo row */}
       <div
         className={[
-          "h-14 flex items-center border-b border-outline shrink-0",
+          "h-14 flex items-center border-b border-outline-static shrink-0",
           expanded ? "px-3 gap-2.5" : "justify-center px-0 gap-0",
         ].join(" ")}
       >
-        {/* Hamburger */}
         <button
           onClick={onToggle}
           aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-          className="w-8 h-8 flex items-center justify-center rounded-md text-type-muted hover:bg-selection-hover hover:text-type transition-colors shrink-0"
+          className="w-8 h-8 flex items-center justify-center rounded-full text-type-muted hover:bg-selection-hover hover:text-type transition-colors shrink-0"
         >
           <Icon name="menu" size={20} />
         </button>
 
-        {/* Brand — fades out before sidebar fully collapses */}
         <div
           className={[
-            "flex items-center gap-2 overflow-hidden",
-            "transition-opacity duration-100",
+            "flex items-center gap-2 overflow-hidden transition-opacity duration-100",
             expanded ? "opacity-100" : "opacity-0 pointer-events-none w-0",
           ].join(" ")}
         >
@@ -226,11 +251,71 @@ function Sidebar({
             onClick={() => onNavigate(item.id)}
           />
         ))}
+
+        {/* Library — expandable group */}
+        <div className="relative px-2 py-0.5">
+          <button
+            onClick={handleLibraryToggle}
+            title={!expanded ? "Library" : undefined}
+            className={[
+              "w-full rounded-xl text-sm font-medium transition-colors duration-150 select-none",
+              expanded
+                ? "flex items-center gap-3 px-3 py-2"
+                : "flex items-center justify-center p-2.5",
+              isLibraryActive
+                ? "bg-selection text-action-primary"
+                : "text-type-muted hover:bg-selection-hover hover:text-type",
+            ].join(" ")}
+          >
+            <Icon name="folder_open" size={20} className={isLibraryActive ? "text-action-primary" : ""} />
+            {expanded && (
+              <>
+                <span className="flex-1 text-left leading-snug truncate">Library</span>
+                <Icon
+                  name="expand_more"
+                  size={16}
+                  className={[
+                    "text-type-disabled transition-transform duration-200 shrink-0",
+                    libraryOpen ? "rotate-180" : "",
+                  ].join(" ")}
+                />
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Library sub-items */}
+        {expanded && libraryOpen && (
+          <div className="pb-1">
+            {LIBRARY_SUB_NAV.map((item) => (
+              <div key={item.id} className="relative px-2 py-0.5">
+                <button
+                  onClick={() => onNavigate(item.id)}
+                  aria-current={activePage === item.id ? "page" : undefined}
+                  className={[
+                    "w-full rounded-xl text-sm font-medium transition-colors duration-150 select-none",
+                    "flex items-center gap-3 pl-9 pr-3 py-2",
+                    activePage === item.id
+                      ? "bg-selection text-action-primary"
+                      : "text-type-muted hover:bg-selection-hover hover:text-type",
+                  ].join(" ")}
+                >
+                  <Icon
+                    name={item.icon}
+                    size={18}
+                    className={activePage === item.id ? "text-action-primary" : ""}
+                  />
+                  <span className="flex-1 text-left leading-snug truncate">{item.label}</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </nav>
 
       {/* Utility nav */}
       <div
-        className="shrink-0 border-t border-outline py-2"
+        className="shrink-0 border-t border-outline-static py-2"
         aria-label="Utility navigation"
       >
         <NavItem
@@ -241,7 +326,7 @@ function Sidebar({
           onClick={() => onNavigate("settings")}
         />
         <NavItem
-          icon="open_in_new"
+          icon="language"
           label="Public site"
           external
           expanded={expanded}
@@ -270,7 +355,7 @@ function HeaderIconButton({
       onClick={onClick}
       title={label}
       aria-label={label}
-      className="relative w-9 h-9 flex items-center justify-center rounded-md text-type-muted hover:bg-selection-hover hover:text-type transition-colors"
+      className="relative w-9 h-9 flex items-center justify-center rounded-full text-type-muted hover:bg-selection-hover hover:text-type transition-colors"
     >
       <Icon name={icon} size={20} />
       {children}
@@ -288,7 +373,7 @@ function GlobalHeader({
   onToggleDark: () => void;
 }) {
   return (
-    <header className="h-14 shrink-0 flex items-center justify-between px-5 bg-surface border-b border-outline">
+    <header className="h-14 shrink-0 flex items-center justify-between px-5 bg-surface border-b border-outline-static">
       <button className="flex items-center gap-1 text-sm font-medium text-type hover:text-type-muted transition-colors">
         <span>Emerald City School District</span>
         <Icon name="expand_more" size={18} className="text-type-muted" />
@@ -303,13 +388,13 @@ function GlobalHeader({
         <HeaderIconButton icon="search" label="Search" />
         <HeaderIconButton icon="notifications" label="Notifications">
           <span
-            className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#C8102E] border-2 border-surface"
+            className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-action-destructive-secondary-default border-2 border-surface"
             aria-hidden="true"
           />
         </HeaderIconButton>
         <button
           aria-label="Profile"
-          className="ml-1 w-8 h-8 rounded-full bg-action-primary flex items-center justify-center text-action-on-primary text-xs font-semibold shrink-0 hover:opacity-90 transition-opacity"
+          className="ml-1 w-8 h-8 rounded-full bg-action-primary flex items-center justify-center text-action-primary-on-primary text-xs font-semibold shrink-0 hover:opacity-90 transition-opacity"
         >
           JS
         </button>
@@ -321,35 +406,71 @@ function GlobalHeader({
 // ── Page placeholder ─────────────────────────────────────────────
 
 const PAGE_META: Record<PageId, { title: string; breadcrumb: string }> = {
-  home:     { title: "Home",         breadcrumb: "Home" },
-  meetings: { title: "Meetings",     breadcrumb: "Meetings" },
-  agenda:   { title: "Agenda items", breadcrumb: "Agenda items" },
-  policies: { title: "Policies",     breadcrumb: "Policies" },
-  library:  { title: "Library",      breadcrumb: "Library" },
-  settings: { title: "Settings",     breadcrumb: "Settings" },
+  home:            { title: "Home",          breadcrumb: "Home" },
+  meetings:        { title: "Meetings",      breadcrumb: "Meetings" },
+  agenda:          { title: "Agenda items",  breadcrumb: "Agenda items" },
+  policies:        { title: "Policies",      breadcrumb: "Policies" },
+  "library-files":   { title: "Files",       breadcrumb: "Library / Files" },
+  "library-goals":   { title: "Goals",       breadcrumb: "Library / Goals" },
+  "library-events":  { title: "Events",      breadcrumb: "Library / Events" },
+  "library-members": { title: "Board members", breadcrumb: "Library / Board members" },
+  settings:        { title: "Settings",      breadcrumb: "Settings" },
 };
 
 function PagePlaceholder({ page }: { page: PageId }) {
   const meta = PAGE_META[page];
-  const navIcon = PRIMARY_NAV.find((n) => n.id === page)?.icon ?? "grid_view";
+  const navIcon =
+    PRIMARY_NAV.find((n) => n.id === page)?.icon ??
+    LIBRARY_SUB_NAV.find((n) => n.id === page)?.icon ??
+    (page === "settings" ? "settings" : "grid_view");
+
+  const breadcrumbSegments = meta.breadcrumb.split(" / ");
+
   return (
     <div className="p-8 max-w-5xl">
       <div className="flex items-center gap-1.5 text-xs text-type-muted mb-5">
         <span className="hover:text-type cursor-pointer transition-colors">
           Community v2
         </span>
-        <Icon name="chevron_right" size={14} className="text-type-disabled" />
-        <span className="text-type">{meta.breadcrumb}</span>
+        {breadcrumbSegments.map((segment, i) => (
+          <span key={i} className="flex items-center gap-1.5">
+            <Icon name="chevron_right" size={14} className="text-type-disabled" />
+            {i < breadcrumbSegments.length - 1 ? (
+              <span className="hover:text-type cursor-pointer transition-colors">{segment}</span>
+            ) : (
+              <span className="text-type">{segment}</span>
+            )}
+          </span>
+        ))}
       </div>
       <h1 className="text-2xl font-semibold text-type mb-6 tracking-tight">
         {meta.title}
       </h1>
-      <div className="rounded-lg border border-outline bg-surface p-12 flex flex-col items-center justify-center gap-3 text-center">
+      <div className="rounded-xl border border-outline-static bg-surface p-12 flex flex-col items-center justify-center gap-3 text-center">
         <div className="w-10 h-10 rounded-full bg-selection flex items-center justify-center">
           <Icon name={navIcon} size={20} className="text-action-primary" />
         </div>
         <p className="text-sm font-medium text-type">{meta.title}</p>
         <p className="text-xs text-type-muted">Content coming soon</p>
+
+        <div className="flex items-center gap-3 mt-6">
+          {/* Primary button */}
+          <button
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-action-primary-on-primary transition-colors"
+            style={{
+              background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))",
+            }}
+          >
+            <Icon name="add" size={18} className="text-action-primary-on-primary" />
+            Primary action
+          </button>
+
+          {/* Secondary button */}
+          <button className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-action-secondary-on-secondary border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
+            <Icon name="tune" size={18} className="text-type-muted" />
+            Secondary action
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -379,7 +500,12 @@ export default function AppShell({ children }: { children?: React.ReactNode }) {
           darkMode={darkMode}
           onToggleDark={() => setDarkMode((d) => !d)}
         />
-        <main className="flex-1 overflow-auto">
+        <main
+          className="flex-1 overflow-auto"
+          style={{
+            background: "linear-gradient(to bottom, var(--background-base-gradient-start) 0%, var(--background-base) 31%, var(--background-base-gradient-end) 100%)",
+          }}
+        >
           {children ?? <PagePlaceholder page={activePage} />}
         </main>
       </div>

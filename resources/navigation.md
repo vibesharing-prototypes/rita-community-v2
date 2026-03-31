@@ -16,18 +16,31 @@ Persistent across all pages. Contains three utility items, always right-aligned:
 
 The header also displays the **organisation name** on the left (e.g. "Emerald City Board of Education"). There is no committee selector in the header.
 
+### Visual implementation
+
+- Background: `surface-default` (same as sidebar — part of the chrome, not the content area)
+- Bottom border: `outline-static` (1px, `thin` border width token)
+- Height: 56px (h-14)
+- Organisation name: `type-default`, medium weight
+- Icon buttons: `rounded-full`, hover state `selection-primary-hover`
+- Notification dot: `action-destructive-secondary-default`
+
 ---
 
 ## Side Navigation
 
-Five primary nav items, plus two utility items at the bottom. Flat — no nesting, no collapsible groups at the top level.
+Five primary nav items, plus two utility items at the bottom. Library expands inline as a collapsible group — all other top-level items are flat.
 
 ```
 Home
 Meetings
 Agenda items          [badge: pending count]
 Policies
-Library
+Library ▾
+  └─ Files
+  └─ Goals
+  └─ Events
+  └─ Board members
 ────────────────
 Settings              (permission-scoped)
 Public site ↗         (external link)
@@ -41,18 +54,32 @@ Public site ↗         (external link)
 
 **Policies** — Organisation-wide policy library. Books → Sections → Policies hierarchy. Not committee-scoped — all policies are shared across the organisation.
 
-**Library** — Organisation-wide document repository. The Library nav item expands into four first-level sub-sections, each accessible as a direct destination within the Library section:
+**Library** — Organisation-wide document repository. The Library nav item expands inline in the side navigation as a collapsible group. Each of the four sub-items is a **direct navigation destination** — its own standalone page. There is no "Library" landing page; the group is an expandable container only. Clicking Library in the nav expands or collapses the group. Clicking a sub-item navigates directly to that content page.
 
 - **Files** — general documents (contracts, reports, bylaws, reference materials)
 - **Goals** — strategic objectives with 0–100% progress tracking, colour-coded by completion. Goals can be linked to agenda items.
 - **Events** — calendar-style items surfaced on the public portal
 - **Board members** — member profiles with names, titles, and photos
 
-These are not filtered views of a single list — they are distinct content types within the Library section, navigated via a secondary layer (accordion, sub-nav, or tab) inside the Library page. Not committee-scoped — all Library content is shared across the organisation.
+Not committee-scoped — all Library content is shared across the organisation.
 
 **Settings** — Organisation and committee configuration. Visible to Admin and SuperPublisher roles only; hidden for Publisher, Executive, and anonymous users. SuperPublisher has full access (committee CRUD, user management, site config, approval trees). Admin has scoped access depending on per-committee permissions.
 
 **Public site ↗** — External link to the public-facing portal. Opens in a new tab. Visible to all authenticated roles.
+
+### Visual implementation
+
+- Sidebar background: `surface-default` (chrome, not content area)
+- Right border: `outline-static` (1px, `thin` border width token)
+- Width expanded: 220px — collapsed: 60px
+- Nav item height: ~36px (py-2 + text)
+- **Selected state**: `selection-primary-default` background, `action-primary-default` text/icon, `rounded-xl` (Atlas `lg`, 12px)
+- **Hover state**: `selection-primary-hover` background, `type-default` text/icon
+- **Default state**: `type-muted` text/icon
+- Badge (pending count): `action-primary-default` background, `action-primary-on-primary` text, `rounded-full`
+- Library chevron: rotates 180° when group is open, `type-disabled` colour
+- Sub-items: indented (pl-8 when expanded), same selected/hover states as top-level items, `text-sm`
+- Active sub-item highlights parent Library item as "highlighted" (not selected) while sub-item takes the selected style
 
 ---
 

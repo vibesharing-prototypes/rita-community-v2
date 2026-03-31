@@ -575,40 +575,7 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
   return (
     <div className="flex gap-6 p-6 h-full overflow-auto items-start">
 
-      {/* ── Left column ── */}
-      <div className="w-[28%] shrink-0 flex flex-col gap-4">
-
-        {/* Welcome message */}
-        <div className="rounded-xl border border-outline-static bg-surface p-4">
-          <h2 className="text-sm font-semibold text-type mb-2 leading-snug">
-            Emerald City School District
-          </h2>
-          <p className={["text-xs text-type-muted leading-relaxed", !welcomeExpanded ? "line-clamp-6" : ""].join(" ")}>
-            {WELCOME_TEXT}
-          </p>
-          <button onClick={() => setWelcomeExpanded((v) => !v)}
-            className="mt-2 text-xs text-action-primary hover:underline">
-            {welcomeExpanded ? "Show less" : "Show more"}
-          </button>
-        </div>
-
-        {/* Board members */}
-        <div className="rounded-xl border border-outline-static bg-surface p-4">
-          <h2 className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-3">
-            Board Members
-          </h2>
-          <ul className="flex flex-col gap-2.5">
-            {BOARD_MEMBERS.map((m) => (
-              <li key={m.name}>
-                <span className="block text-sm text-type leading-snug">{m.name}</span>
-                <span className="block text-xs text-type-muted">{m.role}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-
-      {/* ── Right column ── */}
+      {/* ── Left column (primary) ── */}
       <div className="flex-1 min-w-0 flex flex-col gap-4">
 
         {/* Meetings */}
@@ -754,6 +721,40 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
         </div>
 
       </div>
+
+      {/* ── Right column (secondary) ── */}
+      <div className="w-[28%] shrink-0 flex flex-col gap-4">
+
+        {/* Welcome message */}
+        <div className="rounded-xl border border-outline-static bg-surface p-4">
+          <h2 className="text-sm font-semibold text-type mb-2 leading-snug">
+            Emerald City School District
+          </h2>
+          <p className={["text-xs text-type-muted leading-relaxed", !welcomeExpanded ? "line-clamp-6" : ""].join(" ")}>
+            {WELCOME_TEXT}
+          </p>
+          <button onClick={() => setWelcomeExpanded((v) => !v)}
+            className="mt-2 text-xs text-action-primary hover:underline">
+            {welcomeExpanded ? "Show less" : "Show more"}
+          </button>
+        </div>
+
+        {/* Board members */}
+        <div className="rounded-xl border border-outline-static bg-surface p-4">
+          <h2 className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-3">
+            Board Members
+          </h2>
+          <ul className="flex flex-col gap-2.5">
+            {BOARD_MEMBERS.map((m) => (
+              <li key={m.name}>
+                <span className="block text-sm text-type leading-snug">{m.name}</span>
+                <span className="block text-xs text-type-muted">{m.role}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
     </div>
   );
 }

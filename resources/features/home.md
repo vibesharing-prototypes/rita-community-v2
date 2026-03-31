@@ -26,14 +26,14 @@ Two-column layout:
 
 | Column | Role | Width |
 |---|---|---|
-| **Left / secondary** | Welcome message + Board Members | ~28–30% |
-| **Right / primary** | Content blocks (meetings, agenda items, featured) | ~70–72% |
+| **Left / primary** | Content blocks (meetings, agenda items, featured) | ~70–72% |
+| **Right / secondary** | Welcome message + Board Members | ~28–30% |
 
-The left column is visually subordinate — lower weight, supporting context only. The right column is what users come for.
+The right column is visually subordinate — lower weight, supporting context only. The left column is what users come for.
 
 ---
 
-## Left Column: Secondary Info Panel
+## Right Column: Secondary Info Panel
 
 ### Welcome Message
 
@@ -53,7 +53,7 @@ Displayed as a simple stacked list beneath the welcome message. No grid, no colu
 
 ---
 
-## Right Column: Primary Content Blocks
+## Left Column: Primary Content Blocks
 
 ### Block 1 — Meetings
 
@@ -146,15 +146,15 @@ Block content is **filtered and sorted server-side** based on the requesting use
 
 ## Left Column: Design Intent
 
-In BoardDocs, the left column occupied ~40% of screen width and competed visually with featured content. In v2:
+In BoardDocs, the secondary column occupied ~40% of screen width and competed visually with featured content. In v2:
 
-- The panel is narrower (~28–30%)
+- The panel is narrower (~28–30%) and placed on the right
 - Lower visual weight — subdued background, smaller type, no action affordances
 - Welcome message collapses if long (>6 lines)
 - Logo appears next to title if configured, without inflating the column
 - Board Members list is a simple stacked list — no grid, no visual noise
 
-The left column is **reference information**, not action-oriented content. It should feel like a sidebar, not a co-equal panel.
+The right column is **reference information**, not action-oriented content. It should feel like a sidebar, not a co-equal panel.
 
 ---
 

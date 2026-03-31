@@ -253,59 +253,66 @@ function Sidebar({
         ))}
 
         {/* Library — expandable group */}
-        <div className="relative px-2 py-0.5">
-          <button
-            onClick={handleLibraryToggle}
-            title={!expanded ? "Library" : undefined}
+        <div className="px-2 py-0.5">
+          <div
             className={[
-              "w-full rounded-xl text-sm font-medium transition-colors duration-150 select-none",
-              expanded
-                ? "flex items-center gap-3 px-3 py-2"
-                : "flex items-center justify-center p-2.5",
-              isLibraryActive
-                ? "bg-selection text-action-primary"
-                : "text-type-muted hover:bg-selection-hover hover:text-type",
+              "rounded-xl overflow-hidden",
+              expanded && libraryOpen ? "border border-[#E2E2E5]" : "",
             ].join(" ")}
           >
-            <Icon name="folder_open" size={20} className={isLibraryActive ? "text-action-primary" : ""} />
-            {expanded && (
-              <>
-                <span className="flex-1 text-left leading-snug truncate">Library</span>
-                <Icon
-                  name="expand_more"
-                  size={16}
-                  className={[
-                    "text-type-disabled transition-transform duration-200 shrink-0",
-                    libraryOpen ? "rotate-180" : "",
-                  ].join(" ")}
-                />
-              </>
-            )}
-          </button>
-        </div>
+            <button
+              onClick={handleLibraryToggle}
+              title={!expanded ? "Library" : undefined}
+              className={[
+                "w-full text-sm font-medium transition-colors duration-150 select-none",
+                expanded
+                  ? "flex items-center gap-3 px-3 py-2"
+                  : "flex items-center justify-center p-2.5",
+                isLibraryActive
+                  ? "bg-selection text-action-primary"
+                  : "text-type-muted hover:bg-selection-hover hover:text-type",
+              ].join(" ")}
+            >
+              <Icon name="folder_open" size={20} className={isLibraryActive ? "text-action-primary" : ""} />
+              {expanded && (
+                <>
+                  <span className="flex-1 text-left leading-snug truncate">Library</span>
+                  <Icon
+                    name="expand_more"
+                    size={16}
+                    className={[
+                      "text-type-disabled transition-transform duration-200 shrink-0",
+                      libraryOpen ? "rotate-180" : "",
+                    ].join(" ")}
+                  />
+                </>
+              )}
+            </button>
 
-        {/* Library sub-items */}
-        {expanded && libraryOpen && (
-          <div className="pb-1">
-            {LIBRARY_SUB_NAV.map((item) => (
-              <div key={item.id} className="relative px-2 py-0.5">
-                <button
-                  onClick={() => onNavigate(item.id)}
-                  aria-current={activePage === item.id ? "page" : undefined}
-                  className={[
-                    "w-full rounded-xl text-sm font-medium transition-colors duration-150 select-none",
-                    "flex items-center pl-9 pr-3 py-2",
-                    activePage === item.id
-                      ? "bg-selection text-action-primary"
-                      : "text-type-muted hover:bg-selection-hover hover:text-type",
-                  ].join(" ")}
-                >
-                  <span className="flex-1 text-left leading-snug truncate">{item.label}</span>
-                </button>
+            {/* Library sub-items */}
+            {expanded && libraryOpen && (
+              <div className="pb-1.5">
+                {LIBRARY_SUB_NAV.map((item) => (
+                  <div key={item.id} className="px-1.5 py-0.5">
+                    <button
+                      onClick={() => onNavigate(item.id)}
+                      aria-current={activePage === item.id ? "page" : undefined}
+                      className={[
+                        "w-full rounded-lg text-sm font-medium transition-colors duration-150 select-none",
+                        "flex items-center pl-[44px] pr-3 py-2",
+                        activePage === item.id
+                          ? "bg-selection text-action-primary"
+                          : "text-type-muted hover:bg-selection-hover hover:text-type",
+                      ].join(" ")}
+                    >
+                      <span className="flex-1 text-left leading-snug truncate">{item.label}</span>
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
-        )}
+        </div>
       </nav>
 
       {/* Utility nav */}

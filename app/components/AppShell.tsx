@@ -587,11 +587,18 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
       <div className="flex-1 min-w-0 flex flex-col gap-6">
 
         {/* Meetings — no outer container */}
-        <div>
-          <p className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-3">Meetings</p>
+        <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
+          {/* Header with inline "View all" */}
+          <div className="flex items-center justify-between px-5 pt-4 pb-4">
+            <h2 className="text-sm font-semibold text-type">Meetings</h2>
+            <button onClick={() => onNavigate("meetings")}
+              className="text-xs text-type-muted cursor-pointer">
+              View all meetings →
+            </button>
+          </div>
 
           {/* Upcoming cards */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3 px-5 pb-4">
             {UPCOMING_MEETINGS.slice(0, 5).map((m) => (
               <div key={m.id}
                 onClick={() => onNavigate("meetings")}
@@ -615,15 +622,8 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
             ))}
           </div>
 
-          {UPCOMING_MEETINGS.length > 5 && (
-            <button onClick={() => onNavigate("meetings")}
-              className="mt-2 text-xs text-type-muted cursor-pointer">
-              View all meetings →
-            </button>
-          )}
-
           {/* Recent */}
-          <div className="mt-4 pt-4 border-t border-outline-static">
+          <div className="px-5 pt-3 pb-4 border-t border-outline-static" style={{ background: "var(--surface-variant)" }}>
             <p className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-2">Recent</p>
             <ul className="flex flex-col gap-0.5">
               {RECENT_MEETINGS.map((m) => (

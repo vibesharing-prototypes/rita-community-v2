@@ -125,14 +125,15 @@ function NavItem({
         onClick={onClick}
         title={!expanded ? label : undefined}
         aria-current={active ? "page" : undefined}
+        style={active ? undefined : { color: "#242628" }}
         className={[
-          "w-full rounded-xl text-sm font-medium transition-colors duration-150 select-none",
+          "w-full rounded-xl text-base font-medium transition-colors duration-150 select-none",
           expanded
             ? "flex items-center gap-3 px-3 py-2"
             : "flex items-center justify-center p-2.5",
           active
             ? "bg-selection text-action-primary"
-            : "text-type-muted hover:bg-selection-hover hover:text-type",
+            : "hover:bg-selection-hover",
         ].join(" ")}
       >
         <Icon
@@ -202,7 +203,7 @@ function Sidebar({
   return (
     <aside
       className={[
-        "shrink-0 flex flex-col bg-surface border-r border-outline-static",
+        "shrink-0 flex flex-col bg-surface",
         "overflow-hidden transition-[width] duration-200 ease-in-out",
         expanded ? "w-[220px]" : "w-[60px]",
       ].join(" ")}
@@ -263,14 +264,15 @@ function Sidebar({
             <button
               onClick={handleLibraryToggle}
               title={!expanded ? "Library" : undefined}
+              style={isLibraryActive ? undefined : { color: "#242628" }}
               className={[
-                "w-full text-sm font-medium transition-colors duration-150 select-none",
+                "w-full text-base font-medium transition-colors duration-150 select-none",
                 expanded
                   ? "flex items-center gap-3 px-3 py-2"
                   : "flex items-center justify-center p-2.5",
                 isLibraryActive
                   ? "bg-selection text-action-primary"
-                  : "text-type-muted hover:bg-selection-hover hover:text-type",
+                  : "hover:bg-selection-hover",
               ].join(" ")}
             >
               <Icon name="folder_open" size={20} className={isLibraryActive ? "text-action-primary" : ""} />
@@ -297,12 +299,13 @@ function Sidebar({
                     <button
                       onClick={() => onNavigate(item.id)}
                       aria-current={activePage === item.id ? "page" : undefined}
+                      style={activePage === item.id ? undefined : { color: "#242628" }}
                       className={[
-                        "w-full rounded-lg text-sm font-medium transition-colors duration-150 select-none",
+                        "w-full rounded-lg text-base font-medium transition-colors duration-150 select-none",
                         "flex items-center pl-[44px] pr-3 py-2",
                         activePage === item.id
                           ? "bg-selection text-action-primary"
-                          : "text-type-muted hover:bg-selection-hover hover:text-type",
+                          : "hover:bg-selection-hover",
                       ].join(" ")}
                     >
                       <span className="flex-1 text-left leading-snug truncate">{item.label}</span>
@@ -375,8 +378,8 @@ function GlobalHeader({
   onToggleDark: () => void;
 }) {
   return (
-    <header className="h-14 shrink-0 flex items-center justify-between px-5 bg-surface border-b border-outline-static">
-      <button className="flex items-center gap-1 text-sm font-medium text-type hover:text-type-muted transition-colors">
+    <header className="h-14 shrink-0 flex items-center justify-between px-5 bg-surface">
+      <button className="flex items-center gap-1 text-base font-semibold text-type hover:text-type-muted transition-colors">
         <span>Emerald City School District</span>
         <Icon name="expand_more" size={18} className="text-type-muted" />
       </button>

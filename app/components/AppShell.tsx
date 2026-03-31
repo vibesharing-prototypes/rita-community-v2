@@ -468,9 +468,12 @@ function PagePlaceholder({ page }: { page: PageId }) {
 // ── Home page ─────────────────────────────────────────────────────
 
 const UPCOMING_MEETINGS = [
-  { id: "m1", name: "Regular Board Meeting", date: "Apr 15, 2026", pinned: true  },
-  { id: "m2", name: "Finance Committee",     date: "Apr 22, 2026", pinned: false },
-  { id: "m3", name: "Special Board Meeting", date: "May 3, 2026",  pinned: false },
+  { id: "m1", name: "Regular Board Meeting", date: "Apr 15, 2026", committee: "Board of Education",   pinned: true  },
+  { id: "m2", name: "Finance Committee",     date: "Apr 22, 2026", committee: "Finance Committee",    pinned: false },
+  { id: "m3", name: "Special Board Meeting", date: "May 3, 2026",  committee: "Board of Education",   pinned: false },
+  { id: "m4", name: "Audit & Risk Review",   date: "May 14, 2026", committee: "Audit Committee",      pinned: false },
+  { id: "m5", name: "Budget Workshop",       date: "May 20, 2026", committee: "Finance Committee",    pinned: false },
+  { id: "m6", name: "Policy Review Session", date: "Jun 2, 2026",  committee: "Policy Subcommittee",  pinned: false },
 ];
 
 const RECENT_MEETINGS = [
@@ -584,26 +587,49 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
             <h2 className="text-sm font-semibold text-type">Meetings</h2>
           </div>
 
-          {/* Upcoming tier */}
-          <div className="px-5 pt-4 pb-3">
-            <p className="text-xs font-medium text-type-muted uppercase tracking-wide mb-3">Upcoming</p>
-            <ul className="flex flex-col divide-y divide-outline-static">
-              {UPCOMING_MEETINGS.map((m) => (
-                <li key={m.id}
-                  className="flex items-center justify-between gap-4 py-3 cursor-pointer hover:bg-selection-hover rounded-lg px-2 -mx-2 transition-colors"
-                  onClick={() => onNavigate("meetings")}>
-                  <div>
-                    <span className="block text-sm font-medium text-type leading-snug">{m.name}</span>
-                    {m.pinned && <span className="text-xs text-action-primary">Pinned</span>}
+          {/* Upcoming tier — cards */}
+          <div className="px-5 pt-4 pb-4">
+            <div className="flex flex-wrap gap-3">
+              {UPCOMING_MEETINGS.slice(0, 5).map((m) => {
+                const [month, dayRaw] = m.date.split(" ");
+                const day = dayRaw.replace(",", "");
+                return (
+                  <div key={m.id}
+                    onClick={() => onNavigate("meetings")}
+                    className="relative flex flex-col w-[210px] rounded-xl border border-outline-static bg-surface cursor-pointer overflow-hidden"
+                  >
+                    {/* Pin indicator */}
+                    {m.pinned && (
+                      <div className="absolute top-2.5 right-2.5">
+                        <Icon name="push_pin" size={14} className="text-action-primary" />
+                      </div>
+                    )}
+                    {/* Calendar date block */}
+                    <div className="flex flex-col items-center justify-center pt-4 pb-3 border-b border-outline-static">
+                      <span className="text-xs font-medium text-type-muted uppercase tracking-widest leading-none mb-1">
+                        {month}
+                      </span>
+                      <span className="text-4xl font-semibold text-type leading-none">{day}</span>
+                    </div>
+                    {/* Meeting details */}
+                    <div className="px-3 pt-2.5 pb-3 flex flex-col gap-1">
+                      <span className="text-sm font-semibold text-type leading-snug line-clamp-2">{m.name}</span>
+                      <span className="text-xs text-type-muted leading-snug">{m.committee}</span>
+                    </div>
                   </div>
-                  <span className="text-sm font-semibold text-type shrink-0">{m.date}</span>
-                </li>
-              ))}
-            </ul>
+                );
+              })}
+            </div>
+            {UPCOMING_MEETINGS.length > 5 && (
+              <button onClick={() => onNavigate("meetings")}
+                className="mt-3 text-xs text-type-muted hover:text-type cursor-pointer">
+                View all meetings →
+              </button>
+            )}
           </div>
 
-          {/* Recent tier */}
-          <div className="px-5 pt-3 pb-4" style={{ background: "var(--surface-variant)" }}>
+          {/* Divider + Recent tier */}
+          <div className="px-5 pt-3 pb-4 border-t border-outline-static" style={{ background: "var(--surface-variant)" }}>
             <p className="text-xs font-medium text-type-muted uppercase tracking-wide mb-2">Recent</p>
             <ul className="flex flex-col gap-0.5">
               {RECENT_MEETINGS.map((m) => (

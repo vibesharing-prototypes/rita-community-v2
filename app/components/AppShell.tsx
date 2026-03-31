@@ -211,7 +211,7 @@ function Sidebar({
       {/* Logo row */}
       <div
         className={[
-          "h-14 flex items-center shrink-0",
+          "h-14 flex items-center border-b border-outline-static shrink-0",
           expanded ? "px-3 gap-2.5" : "justify-center px-0 gap-0",
         ].join(" ")}
       >

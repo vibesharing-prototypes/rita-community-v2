@@ -127,9 +127,9 @@ function NavItem({
         aria-current={active ? "page" : undefined}
         style={active ? undefined : { color: "#242628" }}
         className={[
-          "w-full rounded-xl text-base font-medium transition-colors duration-150 select-none",
+          "w-full rounded-xl text-sm font-normal transition-colors duration-150 select-none",
           expanded
-            ? "flex items-center gap-3 px-3 py-2"
+            ? "flex items-center gap-3 p-3"
             : "flex items-center justify-center p-2.5",
           active
             ? "bg-selection text-action-primary"
@@ -203,9 +203,9 @@ function Sidebar({
   return (
     <aside
       className={[
-        "shrink-0 flex flex-col bg-surface",
+        "shrink-0 flex flex-col bg-surface border-r border-outline-static",
         "overflow-hidden transition-[width] duration-200 ease-in-out",
-        expanded ? "w-[220px]" : "w-[60px]",
+        expanded ? "w-[300px]" : "w-[60px]",
       ].join(" ")}
     >
       {/* Logo row */}
@@ -266,9 +266,9 @@ function Sidebar({
               title={!expanded ? "Library" : undefined}
               style={isLibraryActive ? undefined : { color: "#242628" }}
               className={[
-                "w-full text-base font-medium transition-colors duration-150 select-none",
+                "w-full text-sm font-normal transition-colors duration-150 select-none",
                 expanded
-                  ? "flex items-center gap-3 px-3 py-2"
+                  ? "flex items-center gap-3 p-3"
                   : "flex items-center justify-center p-2.5",
                 isLibraryActive
                   ? "bg-selection text-action-primary"
@@ -301,8 +301,8 @@ function Sidebar({
                       aria-current={activePage === item.id ? "page" : undefined}
                       style={activePage === item.id ? undefined : { color: "#242628" }}
                       className={[
-                        "w-full rounded-lg text-base font-medium transition-colors duration-150 select-none",
-                        "flex items-center pl-[44px] pr-3 py-2",
+                        "w-full rounded-lg text-sm font-normal transition-colors duration-150 select-none",
+                        "flex items-center pl-[44px] pr-3 py-3",
                         activePage === item.id
                           ? "bg-selection text-action-primary"
                           : "hover:bg-selection-hover",

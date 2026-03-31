@@ -631,7 +631,10 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
                 <li key={m.id}
                   className="flex items-center justify-between gap-3 py-1.5 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
                   onClick={() => onNavigate("meetings")}>
-                  <span className="text-xs text-type-muted truncate">{m.name}</span>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <Icon name="event" size={14} className="text-type-disabled shrink-0" />
+                    <span className="text-xs text-type-muted truncate">{m.name}</span>
+                  </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <span className="text-xs text-type-disabled">{m.date}</span>
                     <MinutesStatusPill status={m.minutesStatus} />
@@ -652,7 +655,10 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
               <li key={item.id}
                 className="flex items-center justify-between gap-3 px-5 py-3 cursor-pointer hover:bg-selection-hover transition-colors"
                 onClick={() => onNavigate("agenda")}>
-                <span className="text-sm text-type leading-snug truncate">{item.title}</span>
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Icon name="checklist" size={16} className="text-type-disabled shrink-0" />
+                  <span className="text-sm text-type leading-snug truncate">{item.title}</span>
+                </div>
                 <AgendaStatusPill status={item.status} />
               </li>
             ))}
@@ -687,7 +693,10 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
                   <li key={p.id}
                     className="flex items-center justify-between gap-3 py-2 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
                     onClick={() => onNavigate("policies")}>
-                    <span className="text-sm text-type leading-snug">{p.title}</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Icon name="gavel" size={14} className="text-type-disabled shrink-0" />
+                      <span className="text-sm text-type leading-snug truncate">{p.title}</span>
+                    </div>
                     <span className="text-xs text-type-muted shrink-0">{p.subtitle}</span>
                   </li>
                 ))}
@@ -706,8 +715,9 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
               <ul className="flex flex-col gap-0.5">
                 {FEATURED_DOCUMENTS.map((d) => (
                   <li key={d.id}
-                    className="flex items-center gap-3 py-2 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                    className="flex items-center gap-2 py-2 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
                     onClick={() => onNavigate("library-files")}>
+                    <Icon name="description" size={14} className="text-type-disabled shrink-0" />
                     <span className="text-sm text-type leading-snug">{d.title}</span>
                   </li>
                 ))}
@@ -728,8 +738,11 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
                   <li key={g.id}
                     className="flex flex-col gap-1.5 py-1 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
                     onClick={() => onNavigate("library-goals")}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-type leading-snug">{g.title}</span>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Icon name="flag" size={14} className="text-type-disabled shrink-0" />
+                        <span className="text-sm text-type leading-snug truncate">{g.title}</span>
+                      </div>
                       <span className="text-xs text-type-muted shrink-0">{g.progress}%</span>
                     </div>
                     <GoalProgressBar progress={g.progress} />

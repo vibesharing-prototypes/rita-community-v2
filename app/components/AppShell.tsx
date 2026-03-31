@@ -748,18 +748,19 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
 
         {/* Welcome message — no container chrome */}
         <div>
-          {/* Logo + org name */}
-          <div className="flex items-center gap-2.5 mb-3">
-            <img src="/org-logo.png" alt="Organization logo" className="w-7 h-7 object-contain opacity-80" />
+          {/* Org name + logo on right */}
+          <div className="flex items-center justify-between gap-3 mb-3">
             <h2 className="text-sm font-semibold text-type leading-snug">
               Emerald City School District
             </h2>
+            <img src="/org-logo.png" alt="Organization logo"
+              className="w-12 h-12 shrink-0 object-contain mix-blend-multiply dark:mix-blend-screen dark:invert" />
           </div>
 
-          {/* Two-paragraph body */}
-          <div className={["flex flex-col gap-2 text-[11px] text-type-muted leading-relaxed", !welcomeExpanded ? "line-clamp-6" : ""].join(" ")}>
-            <p>{WELCOME_PARA_1}</p>
-            <p>{WELCOME_PARA_2}</p>
+          {/* Two-paragraph body — plain div so line-clamp works */}
+          <div className={!welcomeExpanded ? "line-clamp-6" : ""}>
+            <p className="text-[11px] text-type-muted leading-relaxed">{WELCOME_PARA_1}</p>
+            <p className="text-[11px] text-type-muted leading-relaxed mt-2">{WELCOME_PARA_2}</p>
           </div>
           <button onClick={() => setWelcomeExpanded((v) => !v)}
             className="mt-1.5 text-[11px] text-action-primary hover:underline">

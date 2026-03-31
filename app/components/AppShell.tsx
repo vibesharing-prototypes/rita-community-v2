@@ -294,17 +294,12 @@ function Sidebar({
                   aria-current={activePage === item.id ? "page" : undefined}
                   className={[
                     "w-full rounded-xl text-sm font-medium transition-colors duration-150 select-none",
-                    "flex items-center gap-3 pl-9 pr-3 py-2",
+                    "flex items-center pl-9 pr-3 py-2",
                     activePage === item.id
                       ? "bg-selection text-action-primary"
                       : "text-type-muted hover:bg-selection-hover hover:text-type",
                   ].join(" ")}
                 >
-                  <Icon
-                    name={item.icon}
-                    size={18}
-                    className={activePage === item.id ? "text-action-primary" : ""}
-                  />
                   <span className="flex-1 text-left leading-snug truncate">{item.label}</span>
                 </button>
               </div>

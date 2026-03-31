@@ -125,7 +125,6 @@ function NavItem({
         onClick={onClick}
         title={!expanded ? label : undefined}
         aria-current={active ? "page" : undefined}
-        style={active ? undefined : { color: "#242628" }}
         className={[
           "w-full rounded-xl text-sm font-normal transition-colors duration-150 select-none",
           expanded
@@ -133,7 +132,7 @@ function NavItem({
             : "flex items-center justify-center p-2.5",
           active
             ? "bg-selection text-action-primary"
-            : "hover:bg-selection-hover",
+            : "text-type hover:bg-selection-hover",
         ].join(" ")}
       >
         <Icon
@@ -264,7 +263,6 @@ function Sidebar({
             <button
               onClick={handleLibraryToggle}
               title={!expanded ? "Library" : undefined}
-              style={isLibraryActive ? undefined : { color: "#242628" }}
               className={[
                 "w-full text-sm font-normal transition-colors duration-150 select-none",
                 expanded
@@ -272,7 +270,7 @@ function Sidebar({
                   : "flex items-center justify-center p-2.5",
                 isLibraryActive
                   ? "bg-selection text-action-primary"
-                  : "hover:bg-selection-hover",
+                  : "text-type hover:bg-selection-hover",
               ].join(" ")}
             >
               <Icon name="folder_open" size={20} className={isLibraryActive ? "text-action-primary" : ""} />
@@ -299,13 +297,12 @@ function Sidebar({
                     <button
                       onClick={() => onNavigate(item.id)}
                       aria-current={activePage === item.id ? "page" : undefined}
-                      style={activePage === item.id ? undefined : { color: "#242628" }}
                       className={[
                         "w-full rounded-lg text-sm font-normal transition-colors duration-150 select-none",
                         "flex items-center pl-[44px] pr-3 py-3",
                         activePage === item.id
                           ? "bg-selection text-action-primary"
-                          : "hover:bg-selection-hover",
+                          : "text-type hover:bg-selection-hover",
                       ].join(" ")}
                     >
                       <span className="flex-1 text-left leading-snug truncate">{item.label}</span>

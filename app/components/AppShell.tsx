@@ -591,25 +591,26 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
           <p className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-3">Meetings</p>
 
           {/* Upcoming cards */}
-          <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-3 gap-3">
             {UPCOMING_MEETINGS.slice(0, 5).map((m) => (
               <div key={m.id}
                 onClick={() => onNavigate("meetings")}
-                className="flex items-center gap-4 p-4 rounded-xl border border-outline-static bg-surface cursor-pointer"
+                className="flex items-start gap-3 p-3 rounded-xl border border-outline-static bg-surface cursor-pointer"
               >
                 {/* Calendar block */}
-                <div className="flex flex-col items-center justify-center w-12 shrink-0 rounded-lg py-2 bg-selection">
-                  <span className="text-[10px] font-semibold text-action-primary uppercase tracking-wider leading-none mb-0.5">{m.month}</span>
-                  <span className="text-xl font-bold text-action-primary leading-tight">{m.day}</span>
+                <div className="flex flex-col items-center justify-center w-10 shrink-0 rounded-lg py-1.5 bg-selection">
+                  <span className="text-[9px] font-semibold text-action-primary uppercase tracking-wider leading-none mb-0.5">{m.month}</span>
+                  <span className="text-lg font-bold text-action-primary leading-tight">{m.day}</span>
                 </div>
                 {/* Details */}
                 <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                  <span className="text-sm font-semibold text-type leading-snug">{m.name}</span>
-                  <span className="text-xs text-type-muted">{m.fullDate} · {m.time}</span>
-                  <span className="text-xs text-type-disabled">{m.location}</span>
+                  <div className="flex items-start justify-between gap-1">
+                    <span className="text-sm font-semibold text-type leading-snug">{m.name}</span>
+                    {m.pinned && <Icon name="push_pin" size={12} className="text-action-primary shrink-0 mt-0.5" />}
+                  </div>
+                  <span className="text-xs text-type-muted truncate">{m.fullDate} · {m.time}</span>
+                  <span className="text-xs text-type-disabled truncate">{m.location}</span>
                 </div>
-                {/* Pin */}
-                {m.pinned && <Icon name="push_pin" size={14} className="text-action-primary shrink-0" />}
               </div>
             ))}
           </div>

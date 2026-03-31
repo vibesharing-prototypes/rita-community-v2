@@ -465,6 +465,299 @@ function PagePlaceholder({ page }: { page: PageId }) {
   );
 }
 
+// ── Home page ─────────────────────────────────────────────────────
+
+const UPCOMING_MEETINGS = [
+  { id: "m1", name: "Regular Board Meeting", date: "Apr 15, 2026", pinned: true  },
+  { id: "m2", name: "Finance Committee",     date: "Apr 22, 2026", pinned: false },
+  { id: "m3", name: "Special Board Meeting", date: "May 3, 2026",  pinned: false },
+];
+
+const RECENT_MEETINGS = [
+  { id: "m4", name: "Regular Board Meeting", date: "Mar 18, 2026", minutesStatus: "Adopted"  },
+  { id: "m5", name: "Audit Committee",       date: "Mar 10, 2026", minutesStatus: "Draft"    },
+  { id: "m6", name: "Finance Committee",     date: "Feb 25, 2026", minutesStatus: "None"     },
+];
+
+type AgendaStatus = "Action Needed" | "Submitted" | "Approved" | "Rejected" | "Draft";
+
+const AGENDA_ITEMS: { id: string; title: string; status: AgendaStatus; isApprover: boolean }[] = [
+  { id: "a1", title: "Budget Amendment FY2026",        status: "Action Needed", isApprover: true  },
+  { id: "a2", title: "Capital Projects Update Q1",     status: "Submitted",     isApprover: false },
+  { id: "a3", title: "Policy Revision 4.1.2",          status: "Draft",         isApprover: false },
+  { id: "a4", title: "Staff Recognition Program",      status: "Approved",      isApprover: false },
+  { id: "a5", title: "Community Outreach Initiative",  status: "Submitted",     isApprover: false },
+];
+
+const FEATURED_POLICIES = [
+  { id: "p1", title: "Board Governance Policy",    subtitle: "Section 2.4" },
+  { id: "p2", title: "Conflict of Interest Policy", subtitle: "Section 7.1" },
+];
+
+const FEATURED_DOCUMENTS = [
+  { id: "d1", title: "Annual Report 2025"        },
+  { id: "d2", title: "Strategic Plan 2025–2028"  },
+];
+
+const FEATURED_GOALS = [
+  { id: "g1", title: "Student Achievement Rate",   progress: 78  },
+  { id: "g2", title: "Budget Utilization",          progress: 100 },
+  { id: "g3", title: "Community Engagement Index", progress: 32  },
+];
+
+const BOARD_MEMBERS = [
+  { name: "Dr. Patricia Chen", role: "Board President" },
+  { name: "Marcus Williams",   role: "Vice President"  },
+  { name: "Sarah Johnson",     role: "Board Member"    },
+  { name: "Robert Okafor",     role: "Board Member"    },
+  { name: "Linda Torres",      role: "Board Member"    },
+  { name: "James Huang",       role: "Board Member"    },
+  { name: "Emily Nakamura",    role: "Board Member"    },
+];
+
+const WELCOME_TEXT = `The Emerald City School District Board of Education meets on the third Tuesday of each month at 6:30 PM in the District Office Board Room, 1234 Emerald Avenue. Public comment is accepted at the start of each meeting. Speakers must sign in by 6:15 PM and are allotted three minutes. Written comments may be submitted to board@ecsd.edu at least 24 hours prior to the meeting. Special meetings are posted at least 24 hours in advance per state open meeting requirements. Board packets are made available to the public 72 hours before each regular meeting.`;
+
+function AgendaStatusPill({ status }: { status: AgendaStatus }) {
+  const styles: Record<AgendaStatus, { bg: string; text: string }> = {
+    "Action Needed": { bg: "var(--status-warning-bg-default)",      text: "var(--status-warning-content-default)"      },
+    "Submitted":     { bg: "var(--status-notification-bg-variant)", text: "var(--status-notification-content-variant)" },
+    "Approved":      { bg: "var(--status-success-bg-variant)",      text: "var(--status-success-content-variant)"      },
+    "Rejected":      { bg: "var(--status-error-bg-variant)",        text: "var(--status-error-content-variant)"        },
+    "Draft":         { bg: "var(--status-neutral-bg-variant)",      text: "var(--status-neutral-content-variant)"      },
+  };
+  const s = styles[status];
+  return (
+    <span className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap"
+      style={{ background: s.bg, color: s.text }}>
+      {status}
+    </span>
+  );
+}
+
+function MinutesStatusPill({ status }: { status: string }) {
+  const styles: Record<string, { bg: string; text: string }> = {
+    None:     { bg: "var(--status-neutral-bg-variant)",      text: "var(--status-neutral-content-variant)"      },
+    Draft:    { bg: "var(--status-warning-bg-variant)",      text: "var(--status-warning-content-variant)"      },
+    Adopted:  { bg: "var(--status-success-bg-variant)",      text: "var(--status-success-content-variant)"      },
+    Released: { bg: "var(--status-notification-bg-variant)", text: "var(--status-notification-content-variant)" },
+  };
+  const s = styles[status] ?? styles["None"];
+  return (
+    <span className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0"
+      style={{ background: s.bg, color: s.text }}>
+      {status}
+    </span>
+  );
+}
+
+function GoalProgressBar({ progress }: { progress: number }) {
+  const color =
+    progress >= 100 ? "var(--status-success-bg-default)" :
+    progress >= 40  ? "var(--status-warning-bg-default)" :
+                      "var(--status-neutral-bg-default)";
+  return (
+    <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ background: "var(--outline-static)" }}>
+      <div className="h-full rounded-full" style={{ width: `${Math.min(progress, 100)}%`, background: color }} />
+    </div>
+  );
+}
+
+function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
+  const [welcomeExpanded, setWelcomeExpanded] = useState(false);
+  const [agendaExpanded, setAgendaExpanded]   = useState(false);
+
+  const pinnedAgenda  = AGENDA_ITEMS.filter((i) =>  i.isApprover);
+  const otherAgenda   = AGENDA_ITEMS.filter((i) => !i.isApprover);
+  const sortedAgenda  = [...pinnedAgenda, ...otherAgenda];
+  const hiddenCount   = sortedAgenda.length - 3;
+  const visibleAgenda = agendaExpanded ? sortedAgenda : sortedAgenda.slice(0, 3);
+
+  return (
+    <div className="flex gap-6 p-6 h-full overflow-auto items-start">
+
+      {/* ── Left column ── */}
+      <div className="w-[28%] shrink-0 flex flex-col gap-4">
+
+        {/* Welcome message */}
+        <div className="rounded-xl border border-outline-static bg-surface p-4">
+          <h2 className="text-sm font-semibold text-type mb-2 leading-snug">
+            Emerald City School District
+          </h2>
+          <p className={["text-xs text-type-muted leading-relaxed", !welcomeExpanded ? "line-clamp-6" : ""].join(" ")}>
+            {WELCOME_TEXT}
+          </p>
+          <button onClick={() => setWelcomeExpanded((v) => !v)}
+            className="mt-2 text-xs text-action-primary hover:underline">
+            {welcomeExpanded ? "Show less" : "Show more"}
+          </button>
+        </div>
+
+        {/* Board members */}
+        <div className="rounded-xl border border-outline-static bg-surface p-4">
+          <h2 className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-3">
+            Board Members
+          </h2>
+          <ul className="flex flex-col gap-2.5">
+            {BOARD_MEMBERS.map((m) => (
+              <li key={m.name}>
+                <span className="block text-sm text-type leading-snug">{m.name}</span>
+                <span className="block text-xs text-type-muted">{m.role}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* ── Right column ── */}
+      <div className="flex-1 min-w-0 flex flex-col gap-4">
+
+        {/* Meetings */}
+        <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
+          <div className="px-5 pt-4 pb-3 border-b border-outline-static">
+            <h2 className="text-sm font-semibold text-type">Meetings</h2>
+          </div>
+
+          {/* Upcoming tier */}
+          <div className="px-5 pt-4 pb-3">
+            <p className="text-xs font-medium text-type-muted uppercase tracking-wide mb-3">Upcoming</p>
+            <ul className="flex flex-col divide-y divide-outline-static">
+              {UPCOMING_MEETINGS.map((m) => (
+                <li key={m.id}
+                  className="flex items-center justify-between gap-4 py-3 cursor-pointer hover:bg-selection-hover rounded-lg px-2 -mx-2 transition-colors"
+                  onClick={() => onNavigate("meetings")}>
+                  <div>
+                    <span className="block text-sm font-medium text-type leading-snug">{m.name}</span>
+                    {m.pinned && <span className="text-xs text-action-primary">Pinned</span>}
+                  </div>
+                  <span className="text-sm font-semibold text-type shrink-0">{m.date}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Recent tier */}
+          <div className="px-5 pt-3 pb-4" style={{ background: "var(--surface-variant)" }}>
+            <p className="text-xs font-medium text-type-muted uppercase tracking-wide mb-2">Recent</p>
+            <ul className="flex flex-col gap-0.5">
+              {RECENT_MEETINGS.map((m) => (
+                <li key={m.id}
+                  className="flex items-center justify-between gap-3 py-1.5 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                  onClick={() => onNavigate("meetings")}>
+                  <span className="text-xs text-type-muted truncate">{m.name}</span>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <span className="text-xs text-type-disabled">{m.date}</span>
+                    <MinutesStatusPill status={m.minutesStatus} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* My Agenda Items */}
+        <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
+          <div className="px-5 pt-4 pb-3 border-b border-outline-static">
+            <h2 className="text-sm font-semibold text-type">My Agenda Items</h2>
+          </div>
+          <ul className="flex flex-col divide-y divide-outline-static">
+            {visibleAgenda.map((item) => (
+              <li key={item.id}
+                className="flex items-center justify-between gap-3 px-5 py-3 cursor-pointer hover:bg-selection-hover transition-colors"
+                onClick={() => onNavigate("agenda")}>
+                <span className="text-sm text-type leading-snug truncate">{item.title}</span>
+                <AgendaStatusPill status={item.status} />
+              </li>
+            ))}
+          </ul>
+          {hiddenCount > 0 && (
+            <div className="px-5 py-3 border-t border-outline-static">
+              <button onClick={() => setAgendaExpanded((v) => !v)}
+                className="text-xs text-action-primary hover:underline">
+                {agendaExpanded ? "Show less" : `Show ${hiddenCount} more`}
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Featured */}
+        <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
+          <div className="px-5 pt-4 pb-3 border-b border-outline-static">
+            <h2 className="text-sm font-semibold text-type">Featured</h2>
+            <p className="text-xs text-type-muted mt-0.5">Selected by your administrator</p>
+          </div>
+          <div className="px-5 py-4 flex flex-col gap-5">
+
+            {/* Policies */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Policies</span>
+                <button onClick={() => onNavigate("policies")}
+                  className="text-xs text-action-primary hover:underline">View all</button>
+              </div>
+              <ul className="flex flex-col gap-0.5">
+                {FEATURED_POLICIES.map((p) => (
+                  <li key={p.id}
+                    className="flex items-center justify-between gap-3 py-2 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                    onClick={() => onNavigate("policies")}>
+                    <span className="text-sm text-type leading-snug">{p.title}</span>
+                    <span className="text-xs text-type-muted shrink-0">{p.subtitle}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="border-t border-outline-static" />
+
+            {/* Documents */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Documents</span>
+                <button onClick={() => onNavigate("library-files")}
+                  className="text-xs text-action-primary hover:underline">View all</button>
+              </div>
+              <ul className="flex flex-col gap-0.5">
+                {FEATURED_DOCUMENTS.map((d) => (
+                  <li key={d.id}
+                    className="flex items-center gap-3 py-2 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                    onClick={() => onNavigate("library-files")}>
+                    <span className="text-sm text-type leading-snug">{d.title}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="border-t border-outline-static" />
+
+            {/* Goals */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Goals</span>
+                <button onClick={() => onNavigate("library-goals")}
+                  className="text-xs text-action-primary hover:underline">View all</button>
+              </div>
+              <ul className="flex flex-col gap-3">
+                {FEATURED_GOALS.map((g) => (
+                  <li key={g.id}
+                    className="flex flex-col gap-1.5 py-1 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                    onClick={() => onNavigate("library-goals")}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-type leading-snug">{g.title}</span>
+                      <span className="text-xs text-type-muted shrink-0">{g.progress}%</span>
+                    </div>
+                    <GoalProgressBar progress={g.progress} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 // ── App shell ────────────────────────────────────────────────────
 
 export default function AppShell({ children }: { children?: React.ReactNode }) {
@@ -495,7 +788,11 @@ export default function AppShell({ children }: { children?: React.ReactNode }) {
             background: "linear-gradient(to bottom, var(--background-base-gradient-start) 0%, var(--background-base) 31%, var(--background-base-gradient-end) 100%)",
           }}
         >
-          {children ?? <PagePlaceholder page={activePage} />}
+          {children ?? (
+            activePage === "home"
+              ? <HomePage onNavigate={setActivePage} />
+              : <PagePlaceholder page={activePage} />
+          )}
         </main>
       </div>
     </div>

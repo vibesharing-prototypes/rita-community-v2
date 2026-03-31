@@ -405,16 +405,16 @@ function GlobalHeader({
 
 // ── Page placeholder ─────────────────────────────────────────────
 
-const PAGE_META: Record<PageId, { title: string; breadcrumb: string }> = {
-  home:            { title: "Home",          breadcrumb: "Home" },
-  meetings:        { title: "Meetings",      breadcrumb: "Meetings" },
-  agenda:          { title: "Agenda items",  breadcrumb: "Agenda items" },
-  policies:        { title: "Policies",      breadcrumb: "Policies" },
-  "library-files":   { title: "Files",       breadcrumb: "Library / Files" },
-  "library-goals":   { title: "Goals",       breadcrumb: "Library / Goals" },
-  "library-events":  { title: "Events",      breadcrumb: "Library / Events" },
-  "library-members": { title: "Board members", breadcrumb: "Library / Board members" },
-  settings:        { title: "Settings",      breadcrumb: "Settings" },
+const PAGE_META: Record<PageId, { title: string; librarySubPage?: string }> = {
+  home:            { title: "Home" },
+  meetings:        { title: "Meetings" },
+  agenda:          { title: "Agenda items" },
+  policies:        { title: "Policies" },
+  "library-files":   { title: "Files",         librarySubPage: "Files" },
+  "library-goals":   { title: "Goals",         librarySubPage: "Goals" },
+  "library-events":  { title: "Events",        librarySubPage: "Events" },
+  "library-members": { title: "Board members", librarySubPage: "Board members" },
+  settings:        { title: "Settings" },
 };
 
 function PagePlaceholder({ page }: { page: PageId }) {
@@ -424,25 +424,15 @@ function PagePlaceholder({ page }: { page: PageId }) {
     LIBRARY_SUB_NAV.find((n) => n.id === page)?.icon ??
     (page === "settings" ? "settings" : "grid_view");
 
-  const breadcrumbSegments = meta.breadcrumb.split(" / ");
-
   return (
     <div className="p-8 max-w-5xl">
-      <div className="flex items-center gap-1.5 text-xs text-type-muted mb-5">
-        <span className="hover:text-type cursor-pointer transition-colors">
-          Community v2
-        </span>
-        {breadcrumbSegments.map((segment, i) => (
-          <span key={i} className="flex items-center gap-1.5">
-            <Icon name="chevron_right" size={14} className="text-type-disabled" />
-            {i < breadcrumbSegments.length - 1 ? (
-              <span className="hover:text-type cursor-pointer transition-colors">{segment}</span>
-            ) : (
-              <span className="text-type">{segment}</span>
-            )}
-          </span>
-        ))}
-      </div>
+      {meta.librarySubPage && (
+        <div className="flex items-center gap-1.5 text-xs text-type-muted mb-5">
+          <span className="text-type-muted">Library</span>
+          <Icon name="chevron_right" size={14} className="text-type-disabled" />
+          <span className="text-type">{meta.librarySubPage}</span>
+        </div>
+      )}
       <h1 className="text-2xl font-semibold text-type mb-6 tracking-tight">
         {meta.title}
       </h1>

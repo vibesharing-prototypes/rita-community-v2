@@ -473,7 +473,6 @@ const UPCOMING_MEETINGS = [
   { id: "m3", month: "MAY", day:  "3", name: "Special Board Meeting", fullDate: "Sun, May 3, 2026",    time: "4:00 PM", location: "Superintendent's Conference Room",    pinned: false },
   { id: "m4", month: "MAY", day: "14", name: "Audit & Risk Review",   fullDate: "Thu, May 14, 2026",   time: "3:00 PM", location: "District Office · Room 101",          pinned: false },
   { id: "m5", month: "MAY", day: "20", name: "Budget Workshop",       fullDate: "Wed, May 20, 2026",   time: "9:00 AM", location: "District Office · Board Room",        pinned: false },
-  { id: "m6", month: "JUN", day:  "2", name: "Policy Review Session", fullDate: "Tue, June 2, 2026",   time: "5:00 PM", location: "District Office · Room 204",          pinned: false },
 ];
 
 const RECENT_MEETINGS = [
@@ -599,7 +598,7 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
 
           {/* Upcoming cards */}
           <div className="grid grid-cols-2 gap-3 px-5 pb-4">
-            {UPCOMING_MEETINGS.slice(0, 5).map((m) => (
+            {UPCOMING_MEETINGS.slice(0, 4).map((m) => (
               <div key={m.id}
                 onClick={() => onNavigate("meetings")}
                 className="flex items-start gap-3 p-3 rounded-xl border border-outline-static bg-surface cursor-pointer"

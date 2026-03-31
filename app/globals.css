@@ -2,31 +2,153 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Atlas Light (default) ──────────────────────────────────────── */
 :root {
-  --background: #0d1117;
-  --foreground: #f0f6fc;
+  /* Background */
+  --bg-base: #F8FAFC;
+  --bg-default: #FFFFFF;
+
+  /* Surface */
+  --surface-default: #FFFFFF;
+  --surface-subtle: #F1F5F9;
+
+  /* Type */
+  --type-default: #0F172A;
+  --type-muted: #64748B;
+  --type-disabled: #94A3B8;
+
+  /* Action — Indigo (Atlas Light primary) */
+  --action-primary: #4338CA;
+  --action-primary-hover: #3730A3;
+  --action-on-primary: #FFFFFF;
+  --action-secondary: #FFFFFF;
+  --action-secondary-border: #E2E8F0;
+  --action-secondary-hover: #F8FAFC;
+
+  /* Outline */
+  --outline-default: #E2E8F0;
+  --outline-focused: #4338CA;
+
+  /* UI utilities */
+  --ui-focus-ring: rgba(67, 56, 202, 0.25);
+  --ui-divider: #E2E8F0;
+
+  /* Selection */
+  --selection-default: #EEF2FF;
+  --selection-hover: #F1F5F9;
+
+  /* Status — Success (Moss) */
+  --status-success-bg: #ECFDF5;
+  --status-success-text: #065F46;
+
+  /* Status — Error (Red) */
+  --status-error-bg: #FEF2F2;
+  --status-error-text: #991B1B;
+
+  /* Status — Warning (Yellow) */
+  --status-warning-bg: #FFFBEB;
+  --status-warning-text: #92400E;
+
+  /* Status — Info (Ocean) */
+  --status-info-bg: #EFF6FF;
+  --status-info-text: #1E40AF;
+
+  /* Status — Neutral */
+  --status-neutral-bg: #F8FAFC;
+  --status-neutral-text: #334155;
 }
 
+/* ── Atlas Dark ─────────────────────────────────────────────────── */
+.dark {
+  /* Background */
+  --bg-base: #0D1220;
+  --bg-default: #111827;
+
+  /* Surface */
+  --surface-default: #182030;
+  --surface-subtle: #1E2D40;
+
+  /* Type */
+  --type-default: #E2E8F0;
+  --type-muted: #94A3B8;
+  --type-disabled: #475569;
+
+  /* Action — Sky (Atlas Dark primary) */
+  --action-primary: #0EA5E9;
+  --action-primary-hover: #38BDF8;
+  --action-on-primary: #082F49;
+  --action-secondary: #182030;
+  --action-secondary-border: #2D4060;
+  --action-secondary-hover: #1E2D40;
+
+  /* Outline */
+  --outline-default: #243347;
+  --outline-focused: #0EA5E9;
+
+  /* UI utilities */
+  --ui-focus-ring: rgba(14, 165, 233, 0.25);
+  --ui-divider: #1E2D40;
+
+  /* Selection */
+  --selection-default: #0C1E38;
+  --selection-hover: #1A2A40;
+
+  /* Status — Success (Moss) */
+  --status-success-bg: #064E3B;
+  --status-success-text: #6EE7B7;
+
+  /* Status — Error (Red) */
+  --status-error-bg: #450A0A;
+  --status-error-text: #FCA5A5;
+
+  /* Status — Warning (Yellow) */
+  --status-warning-bg: #422006;
+  --status-warning-text: #FCD34D;
+
+  /* Status — Info (Sky/Blue) */
+  --status-info-bg: #0C1A3D;
+  --status-info-text: #93C5FD;
+
+  /* Status — Neutral */
+  --status-neutral-bg: #182030;
+  --status-neutral-text: #CBD5E1;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--type-default);
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
+/* ── Material Symbols ───────────────────────────────────────────── */
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 20;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  white-space: nowrap;
+  display: inline-block;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #161b22;
+  background: var(--bg-base);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #30363d;
-  border-radius: 4px;
+  background: var(--outline-default);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #484f58;
+  background: var(--type-disabled);
 }

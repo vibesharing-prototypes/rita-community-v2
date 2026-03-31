@@ -211,7 +211,7 @@ function Sidebar({
       {/* Logo row */}
       <div
         className={[
-          "h-14 flex items-center border-b border-outline-static shrink-0",
+          "h-14 flex items-center shrink-0",
           expanded ? "px-3 gap-2.5" : "justify-center px-0 gap-0",
         ].join(" ")}
       >
@@ -378,11 +378,8 @@ function GlobalHeader({
   onToggleDark: () => void;
 }) {
   return (
-    <header className="h-14 shrink-0 flex items-center justify-between px-5 bg-surface">
-      <button className="flex items-center gap-1 text-base font-semibold text-type hover:text-type-muted transition-colors">
-        <span>Emerald City School District</span>
-        <Icon name="expand_more" size={18} className="text-type-muted" />
-      </button>
+    <header className="h-14 shrink-0 flex items-center justify-between px-5 bg-surface border-b border-outline-static">
+      <span className="text-base font-semibold text-type">Emerald City School District</span>
 
       <div className="flex items-center gap-0.5">
         <HeaderIconButton

@@ -624,7 +624,7 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
           </div>
 
           {/* Recent */}
-          <div className="px-5 pt-3 pb-4 border-t border-outline-static" style={{ background: "var(--surface-variant)" }}>
+          <div className="px-5 pt-3 pb-4 border-t border-outline-static bg-surface">
             <p className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-2">Recent</p>
             <ul className="flex flex-col gap-0.5">
               {RECENT_MEETINGS.map((m) => (

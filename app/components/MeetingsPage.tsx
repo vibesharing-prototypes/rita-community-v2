@@ -25,7 +25,8 @@ function Icon({
 
 // ── Types ───────────────────────────────────────────────────────────
 
-type MeetingStatus = "Draft" | "Active";
+type MeetingStatus = "Draft" | "Published";
+type MeetingVisibility = "Public" | "Internal";
 type AgendaStatus = "Not Published" | "Published" | "Out of Sync";
 type TemplateStatus = "Active" | "Archived";
 
@@ -37,6 +38,7 @@ type Meeting = {
   location?: string;
   committee: string;
   status: MeetingStatus;
+  visibility: MeetingVisibility;
   agendaStatus: AgendaStatus;
   agendaCategories: number;
   agendaItems: number;
@@ -63,22 +65,22 @@ type DetailView = { meetingId: string } | null;
 // ── Sample data ─────────────────────────────────────────────────────
 
 const SAMPLE_MEETINGS: Meeting[] = [
-  { id: "m1", name: "Regular Board Meeting", date: "2026-04-15", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Draft", agendaStatus: "Not Published", agendaCategories: 3, agendaItems: 12, membersOnly: false, publicRTS: true, templateId: "t1" },
-  { id: "m2", name: "Finance Committee", date: "2026-04-22", time: "5:30 PM", location: "District Office · Room 204", committee: "Finance", status: "Active", agendaStatus: "Published", agendaCategories: 2, agendaItems: 8, membersOnly: false, publicRTS: false, templateId: "t2" },
-  { id: "m3", name: "Special Board Meeting", date: "2026-05-03", time: "4:00 PM", location: "Superintendent's Conference Room", committee: "Regular Board", status: "Draft", agendaStatus: "Not Published", agendaCategories: 0, agendaItems: 0, membersOnly: true, publicRTS: false },
-  { id: "m4", name: "Audit & Risk Review", date: "2026-05-14", time: "3:00 PM", location: "District Office · Room 101", committee: "Audit", status: "Active", agendaStatus: "Out of Sync", agendaCategories: 4, agendaItems: 15, membersOnly: false, publicRTS: false, templateId: "t3" },
-  { id: "m5", name: "Budget Workshop", date: "2026-05-20", time: "9:00 AM", location: "District Office · Board Room", committee: "Finance", status: "Draft", agendaStatus: "Not Published", agendaCategories: 1, agendaItems: 3, membersOnly: false, publicRTS: true },
+  { id: "m1", name: "Regular Board Meeting", date: "2026-04-15", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Draft", visibility: "Public", agendaStatus: "Not Published", agendaCategories: 3, agendaItems: 12, membersOnly: false, publicRTS: true, templateId: "t1" },
+  { id: "m2", name: "Finance Committee", date: "2026-04-22", time: "5:30 PM", location: "District Office · Room 204", committee: "Finance", status: "Published", visibility: "Internal", agendaStatus: "Published", agendaCategories: 2, agendaItems: 8, membersOnly: false, publicRTS: false, templateId: "t2" },
+  { id: "m3", name: "Special Board Meeting", date: "2026-05-03", time: "4:00 PM", location: "Superintendent's Conference Room", committee: "Regular Board", status: "Draft", visibility: "Internal", agendaStatus: "Not Published", agendaCategories: 0, agendaItems: 0, membersOnly: true, publicRTS: false },
+  { id: "m4", name: "Audit & Risk Review", date: "2026-05-14", time: "3:00 PM", location: "District Office · Room 101", committee: "Audit", status: "Published", visibility: "Public", agendaStatus: "Out of Sync", agendaCategories: 4, agendaItems: 15, membersOnly: false, publicRTS: false, templateId: "t3" },
+  { id: "m5", name: "Budget Workshop", date: "2026-05-20", time: "9:00 AM", location: "District Office · Board Room", committee: "Finance", status: "Draft", visibility: "Public", agendaStatus: "Not Published", agendaCategories: 1, agendaItems: 3, membersOnly: false, publicRTS: true },
   // Previous meetings
-  { id: "m6", name: "Regular Board Meeting", date: "2026-03-18", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Active", agendaStatus: "Published", agendaCategories: 5, agendaItems: 18, membersOnly: false, publicRTS: true, templateId: "t1" },
-  { id: "m7", name: "Audit Committee", date: "2026-03-10", time: "3:00 PM", location: "District Office · Room 101", committee: "Audit", status: "Active", agendaStatus: "Published", agendaCategories: 3, agendaItems: 10, membersOnly: false, publicRTS: false, templateId: "t3" },
-  { id: "m8", name: "Finance Committee", date: "2026-02-25", time: "5:30 PM", location: "District Office · Room 204", committee: "Finance", status: "Active", agendaStatus: "Published", agendaCategories: 2, agendaItems: 7, membersOnly: false, publicRTS: false, templateId: "t2" },
-  { id: "m9", name: "Regular Board Meeting", date: "2026-02-17", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Active", agendaStatus: "Published", agendaCategories: 4, agendaItems: 14, membersOnly: false, publicRTS: true, templateId: "t1" },
-  { id: "m10", name: "Special Board Meeting", date: "2026-01-22", time: "4:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Active", agendaStatus: "Published", agendaCategories: 2, agendaItems: 6, membersOnly: true, publicRTS: false },
-  { id: "m11", name: "Regular Board Meeting", date: "2025-12-16", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Active", agendaStatus: "Published", agendaCategories: 5, agendaItems: 20, membersOnly: false, publicRTS: true, templateId: "t1" },
-  { id: "m12", name: "Finance Committee", date: "2025-11-19", time: "5:30 PM", location: "District Office · Room 204", committee: "Finance", status: "Active", agendaStatus: "Published", agendaCategories: 2, agendaItems: 9, membersOnly: false, publicRTS: false, templateId: "t2" },
-  { id: "m13", name: "Regular Board Meeting", date: "2025-10-21", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Active", agendaStatus: "Published", agendaCategories: 4, agendaItems: 16, membersOnly: false, publicRTS: true, templateId: "t1" },
-  { id: "m14", name: "Audit & Risk Review", date: "2025-09-10", time: "3:00 PM", location: "District Office · Room 101", committee: "Audit", status: "Active", agendaStatus: "Published", agendaCategories: 3, agendaItems: 11, membersOnly: false, publicRTS: false, templateId: "t3" },
-  { id: "m15", name: "Budget Workshop", date: "2025-08-13", time: "9:00 AM", location: "District Office · Board Room", committee: "Finance", status: "Active", agendaStatus: "Published", agendaCategories: 2, agendaItems: 5, membersOnly: false, publicRTS: true },
+  { id: "m6", name: "Regular Board Meeting", date: "2026-03-18", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Published", visibility: "Public", agendaStatus: "Published", agendaCategories: 5, agendaItems: 18, membersOnly: false, publicRTS: true, templateId: "t1" },
+  { id: "m7", name: "Audit Committee", date: "2026-03-10", time: "3:00 PM", location: "District Office · Room 101", committee: "Audit", status: "Published", visibility: "Internal", agendaStatus: "Published", agendaCategories: 3, agendaItems: 10, membersOnly: false, publicRTS: false, templateId: "t3" },
+  { id: "m8", name: "Finance Committee", date: "2026-02-25", time: "5:30 PM", location: "District Office · Room 204", committee: "Finance", status: "Published", visibility: "Internal", agendaStatus: "Published", agendaCategories: 2, agendaItems: 7, membersOnly: false, publicRTS: false, templateId: "t2" },
+  { id: "m9", name: "Regular Board Meeting", date: "2026-02-17", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Published", visibility: "Public", agendaStatus: "Published", agendaCategories: 4, agendaItems: 14, membersOnly: false, publicRTS: true, templateId: "t1" },
+  { id: "m10", name: "Special Board Meeting", date: "2026-01-22", time: "4:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Published", visibility: "Public", agendaStatus: "Published", agendaCategories: 2, agendaItems: 6, membersOnly: true, publicRTS: false },
+  { id: "m11", name: "Regular Board Meeting", date: "2025-12-16", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Published", visibility: "Public", agendaStatus: "Published", agendaCategories: 5, agendaItems: 20, membersOnly: false, publicRTS: true, templateId: "t1" },
+  { id: "m12", name: "Finance Committee", date: "2025-11-19", time: "5:30 PM", location: "District Office · Room 204", committee: "Finance", status: "Published", visibility: "Internal", agendaStatus: "Published", agendaCategories: 2, agendaItems: 9, membersOnly: false, publicRTS: false, templateId: "t2" },
+  { id: "m13", name: "Regular Board Meeting", date: "2025-10-21", time: "6:00 PM", location: "District Office · Board Room", committee: "Regular Board", status: "Published", visibility: "Public", agendaStatus: "Published", agendaCategories: 4, agendaItems: 16, membersOnly: false, publicRTS: true, templateId: "t1" },
+  { id: "m14", name: "Audit & Risk Review", date: "2025-09-10", time: "3:00 PM", location: "District Office · Room 101", committee: "Audit", status: "Published", visibility: "Internal", agendaStatus: "Published", agendaCategories: 3, agendaItems: 11, membersOnly: false, publicRTS: false, templateId: "t3" },
+  { id: "m15", name: "Budget Workshop", date: "2025-08-13", time: "9:00 AM", location: "District Office · Board Room", committee: "Finance", status: "Published", visibility: "Public", agendaStatus: "Published", agendaCategories: 2, agendaItems: 5, membersOnly: false, publicRTS: true },
 ];
 
 const SAMPLE_TEMPLATES: MeetingTemplate[] = [
@@ -117,8 +119,8 @@ function isUpcoming(dateStr: string): boolean {
 
 function MeetingStatusBadge({ status }: { status: MeetingStatus }) {
   const styles: Record<MeetingStatus, { bg: string; text: string }> = {
-    Draft: { bg: "var(--status-warning-bg-variant)", text: "var(--status-warning-content-variant)" },
-    Active: { bg: "var(--status-success-bg-variant)", text: "var(--status-success-content-variant)" },
+    Draft: { bg: "var(--status-neutral-bg-variant)", text: "var(--status-neutral-content-variant)" },
+    Published: { bg: "var(--status-success-bg-variant)", text: "var(--status-success-content-variant)" },
   };
   const s = styles[status];
   return (
@@ -127,6 +129,21 @@ function MeetingStatusBadge({ status }: { status: MeetingStatus }) {
       style={{ background: s.bg, color: s.text }}
     >
       {status}
+    </span>
+  );
+}
+
+function VisibilityBadge({ visibility }: { visibility: MeetingVisibility }) {
+  return (
+    <span
+      className="text-xs font-medium px-2.5 py-0.5 rounded-full whitespace-nowrap border"
+      style={{
+        background: "transparent",
+        color: "var(--type-muted)",
+        borderColor: "var(--outline-static)",
+      }}
+    >
+      {visibility}
     </span>
   );
 }
@@ -411,6 +428,7 @@ function CreateMeetingModal({
       location: location || undefined,
       committee,
       status: "Draft",
+      visibility: "Internal",
       agendaStatus: "Not Published",
       agendaCategories: 0,
       agendaItems: 0,
@@ -567,6 +585,7 @@ function DuplicateMeetingModal({
       date: newDate,
       committee: newCommittee,
       status: "Draft",
+      visibility: "Internal",
       agendaStatus: "Not Published",
     };
     onDuplicate(dup);
@@ -720,7 +739,7 @@ function MeetingDetailView({
       return;
     }
     setInlineErrors([]);
-    onUpdateMeeting({ ...meeting, status: "Active" });
+    onUpdateMeeting({ ...meeting, status: "Published" });
   };
 
   const handleUnpublish = () => {
@@ -764,7 +783,7 @@ function MeetingDetailView({
                 Publish
               </button>
             )}
-            {meeting.status === "Active" && (
+            {meeting.status === "Published" && (
               <button
                 onClick={handleUnpublish}
                 className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors"
@@ -864,8 +883,8 @@ export default function MeetingsPage() {
   const [templates] = useState<MeetingTemplate[]>(SAMPLE_TEMPLATES);
   const [activeTab, setActiveTab] = useState<MeetingTab>("upcoming");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("date-asc");
   const [statusFilter, setStatusFilter] = useState<"" | MeetingStatus>("");
-  const [agendaFilter, setAgendaFilter] = useState<"" | AgendaStatus>("");
   const [committeeFilter, setCommitteeFilter] = useState("");
   const [showFilters, setShowFilters] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
@@ -894,7 +913,6 @@ export default function MeetingsPage() {
   const filteredMeetings = meetings.filter((m) => {
     if (searchQuery && !m.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (statusFilter && m.status !== statusFilter) return false;
-    if (agendaFilter && m.agendaStatus !== agendaFilter) return false;
     if (committeeFilter && m.committee !== committeeFilter) return false;
     return true;
   });
@@ -1005,51 +1023,59 @@ export default function MeetingsPage() {
           </div>
         </div>
 
-        {/* ── Search + filters row ──────────────────────────────── */}
-        <div className="flex items-center gap-3 py-4">
-          {/* Search */}
-          <div className="relative flex-1 max-w-xs">
-            <Icon name="search" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-type-disabled pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search"
-              className="w-full pl-9 pr-3 py-2 text-sm text-type bg-surface border border-outline-static rounded-lg focus:outline-none focus:border-action-form-outline-selected focus:ring-1 focus:ring-action-form-outline-selected transition-colors placeholder:text-type-disabled"
-            />
+        {/* ── Search + Sort + Filter row ─────────────────────────── */}
+        <div className="flex items-end gap-4 py-4">
+          {/* Search — labeled */}
+          <div className="flex flex-col gap-1.5 flex-1 max-w-[340px]">
+            <label className="text-xs font-medium text-type-muted">Search</label>
+            <div className="relative">
+              <Icon name="search" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-type-disabled pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search"
+                className="w-full pl-9 pr-3 py-2 text-sm text-type bg-surface border border-outline-static rounded-lg focus:outline-none focus:border-action-form-outline-selected focus:ring-1 focus:ring-action-form-outline-selected transition-colors placeholder:text-type-disabled"
+              />
+            </div>
           </div>
 
           {activeTab !== "templates" && (
             <>
-              {/* Sort placeholder */}
-              <SelectInput
-                value=""
-                onChange={() => {}}
-                placeholder="Sort by"
-                options={[
-                  { value: "date-asc", label: "Date (oldest)" },
-                  { value: "date-desc", label: "Date (newest)" },
-                  { value: "name", label: "Name" },
-                ]}
-              />
+              {/* Sort by — labeled */}
+              <div className="flex flex-col gap-1.5 flex-1 max-w-[280px]">
+                <label className="text-xs font-medium text-type-muted">Sort by</label>
+                <SelectInput
+                  value={sortBy}
+                  onChange={setSortBy}
+                  placeholder="Meeting date ascending"
+                  options={[
+                    { value: "date-asc", label: "Meeting date ascending" },
+                    { value: "date-desc", label: "Meeting date descending" },
+                    { value: "name", label: "Name" },
+                  ]}
+                />
+              </div>
 
-              {/* Filter toggle */}
+              {/* Filter — tertiary icon + text button */}
               <button
                 onClick={() => setShowFilters((v) => !v)}
-                className={`inline-flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg border transition-colors ${
+                className={`inline-flex items-center gap-2 px-3 py-2 mb-px text-sm font-medium rounded-lg transition-colors ${
                   showFilters
-                    ? "border-action-primary text-action-primary bg-selection"
-                    : "border-outline-static text-type-muted hover:bg-selection-hover hover:text-type"
+                    ? "text-action-primary"
+                    : "text-type-muted hover:text-type"
                 }`}
               >
-                <Icon name="filter_list" size={16} />
+                <Icon name="filter_list" size={18} />
                 Filter
               </button>
             </>
           )}
 
           {activeTab === "templates" && (
-            <ToggleSwitch checked={showArchived} onChange={setShowArchived} label="Show archived" />
+            <div className="mb-1">
+              <ToggleSwitch checked={showArchived} onChange={setShowArchived} label="Show archived" />
+            </div>
           )}
         </div>
 
@@ -1062,17 +1088,7 @@ export default function MeetingsPage() {
               placeholder="All statuses"
               options={[
                 { value: "Draft", label: "Draft" },
-                { value: "Active", label: "Active" },
-              ]}
-            />
-            <SelectInput
-              value={agendaFilter}
-              onChange={(v) => setAgendaFilter(v as "" | AgendaStatus)}
-              placeholder="All agenda statuses"
-              options={[
                 { value: "Published", label: "Published" },
-                { value: "Not Published", label: "Not Published" },
-                { value: "Out of Sync", label: "Out of Sync" },
               ]}
             />
             <SelectInput
@@ -1081,9 +1097,9 @@ export default function MeetingsPage() {
               placeholder="All committees"
               options={COMMITTEES.map((c) => ({ value: c, label: c }))}
             />
-            {(statusFilter || agendaFilter || committeeFilter) && (
+            {(statusFilter || committeeFilter) && (
               <button
-                onClick={() => { setStatusFilter(""); setAgendaFilter(""); setCommitteeFilter(""); }}
+                onClick={() => { setStatusFilter(""); setCommitteeFilter(""); }}
                 className="text-xs text-action-primary hover:underline whitespace-nowrap"
               >
                 Clear filters
@@ -1112,8 +1128,8 @@ export default function MeetingsPage() {
                   key={m.id}
                   meeting={m}
                   onView={() => setDetailView({ meetingId: m.id })}
-                  onPublish={() => handleUpdateMeeting({ ...m, status: "Active" })}
-                  onMakeDraft={() => handleUpdateMeeting({ ...m, status: "Draft" })}
+                  onPublish={() => handleUpdateMeeting({ ...m, status: "Published" })}
+                  onUnpublish={() => handleUpdateMeeting({ ...m, status: "Draft" })}
                   onDuplicate={() => { setDuplicateSource(m); setDuplicateOpen(true); }}
                   onDelete={() => handleDeleteMeeting(m)}
                 />
@@ -1157,8 +1173,8 @@ export default function MeetingsPage() {
                           key={m.id}
                           meeting={m}
                           onView={() => setDetailView({ meetingId: m.id })}
-                          onPublish={() => handleUpdateMeeting({ ...m, status: "Active" })}
-                          onMakeDraft={() => handleUpdateMeeting({ ...m, status: "Draft" })}
+                          onPublish={() => handleUpdateMeeting({ ...m, status: "Published" })}
+                          onUnpublish={() => handleUpdateMeeting({ ...m, status: "Draft" })}
                           onDuplicate={() => { setDuplicateSource(m); setDuplicateOpen(true); }}
                           onDelete={() => handleDeleteMeeting(m)}
                         />
@@ -1257,14 +1273,14 @@ function MeetingRow({
   meeting,
   onView,
   onPublish,
-  onMakeDraft,
+  onUnpublish,
   onDuplicate,
   onDelete,
 }: {
   meeting: Meeting;
   onView: () => void;
   onPublish: () => void;
-  onMakeDraft: () => void;
+  onUnpublish: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
@@ -1276,7 +1292,7 @@ function MeetingRow({
           { label: "Delete", icon: "delete", danger: true as const, onClick: onDelete },
         ]
       : [
-          { label: "Make Draft", icon: "edit_note", onClick: onMakeDraft },
+          { label: "Unpublish", icon: "unpublished", onClick: onUnpublish },
           { label: "Duplicate", icon: "content_copy", onClick: onDuplicate },
           { label: "Delete", icon: "delete", danger: true as const, onClick: onDelete },
         ];
@@ -1286,25 +1302,20 @@ function MeetingRow({
       onClick={onView}
       className="flex items-center gap-4 px-4 py-3.5 border-b border-outline-static hover:bg-selection-hover transition-colors cursor-pointer group"
     >
-      {/* Date */}
-      <span className="text-sm text-type-muted w-28 shrink-0">{formatDate(meeting.date)}</span>
-
-      {/* Name */}
-      <span className="flex-1 min-w-0 text-sm text-type font-medium truncate">{meeting.name}</span>
+      {/* Left: title + date */}
+      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+        <span className="text-sm text-type font-medium truncate">{meeting.name}</span>
+        <div className="flex items-center gap-1.5">
+          <Icon name="calendar_today" size={14} className="text-type-disabled" />
+          <span className="text-xs text-type-muted">{formatDate(meeting.date)}</span>
+        </div>
+      </div>
 
       {/* Badges */}
       <div className="flex items-center gap-2 shrink-0">
         <MeetingStatusBadge status={meeting.status} />
-        <AgendaStatusBadge status={meeting.agendaStatus} />
+        <VisibilityBadge visibility={meeting.visibility} />
       </div>
-
-      {/* Primary action */}
-      <button
-        onClick={(e) => { e.stopPropagation(); onView(); }}
-        className="px-3 py-1.5 text-xs font-semibold text-action-secondary-on-secondary rounded-lg border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors shrink-0"
-      >
-        {meeting.status === "Draft" ? "Edit Agenda" : "View"}
-      </button>
 
       {/* Overflow */}
       <OverflowMenu items={overflowItems} />

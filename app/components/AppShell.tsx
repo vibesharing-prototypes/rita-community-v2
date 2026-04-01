@@ -469,17 +469,17 @@ function PagePlaceholder({ page }: { page: PageId }) {
 // ── Home page ─────────────────────────────────────────────────────
 
 const UPCOMING_MEETINGS = [
-  { id: "m1", month: "APR", day: "15", name: "Regular Board Meeting", fullDate: "Tue, April 15, 2026", time: "6:00 PM", location: "District Office · Board Room",       pinned: true  },
-  { id: "m2", month: "APR", day: "22", name: "Finance Committee",     fullDate: "Wed, April 22, 2026", time: "5:30 PM", location: "District Office · Room 204",         pinned: false },
-  { id: "m3", month: "MAY", day:  "3", name: "Special Board Meeting", fullDate: "Sun, May 3, 2026",    time: "4:00 PM", location: "Superintendent's Conference Room",    pinned: false },
-  { id: "m4", month: "MAY", day: "14", name: "Audit & Risk Review",   fullDate: "Thu, May 14, 2026",   time: "3:00 PM", location: "District Office · Room 101",          pinned: false },
-  { id: "m5", month: "MAY", day: "20", name: "Budget Workshop",       fullDate: "Wed, May 20, 2026",   time: "9:00 AM", location: "District Office · Board Room",        pinned: false },
+  { id: "m1", month: "APR", day: "15", name: "Regular Board Meeting", fullDate: "Tue, April 15, 2026", time: "6:00 PM", location: "District Office · Board Room", status: "Draft" as const, visibility: "Public" as const },
+  { id: "m2", month: "APR", day: "22", name: "Finance Committee",     fullDate: "Wed, April 22, 2026", time: "5:30 PM", location: "District Office · Room 204",   status: "Published" as const, visibility: "Internal" as const },
+  { id: "m3", month: "MAY", day:  "3", name: "Special Board Meeting", fullDate: "Sun, May 3, 2026",    time: "4:00 PM", location: "Superintendent's Conference Room", status: "Draft" as const, visibility: "Internal" as const },
+  { id: "m4", month: "MAY", day: "14", name: "Audit & Risk Review",   fullDate: "Thu, May 14, 2026",   time: "3:00 PM", location: "District Office · Room 101",   status: "Published" as const, visibility: "Public" as const },
+  { id: "m5", month: "MAY", day: "20", name: "Budget Workshop",       fullDate: "Wed, May 20, 2026",   time: "9:00 AM", location: "District Office · Board Room", status: "Draft" as const, visibility: "Public" as const },
 ];
 
 const RECENT_MEETINGS = [
-  { id: "m4", name: "Regular Board Meeting", date: "Mar 18, 2026", minutesStatus: "Adopted"  },
-  { id: "m5", name: "Audit Committee",       date: "Mar 10, 2026", minutesStatus: "Draft"    },
-  { id: "m6", name: "Finance Committee",     date: "Feb 25, 2026", minutesStatus: "None"     },
+  { id: "m6", name: "Regular Board Meeting", date: "Mar 18, 2026", status: "Published" as const, visibility: "Public" as const },
+  { id: "m7", name: "Audit Committee",       date: "Mar 10, 2026", status: "Published" as const, visibility: "Internal" as const },
+  { id: "m8", name: "Finance Committee",     date: "Feb 25, 2026", status: "Published" as const, visibility: "Internal" as const },
 ];
 
 type AgendaStatus = "Action Needed" | "Submitted" | "Approved" | "Rejected" | "Draft";
@@ -521,6 +521,27 @@ const BOARD_MEMBERS = [
 const WELCOME_PARA_1 = `The Emerald City School District Board of Education meets on the third Tuesday of each month at 6:30 PM in the District Office Board Room, 1234 Emerald Avenue.`;
 
 const WELCOME_PARA_2 = `Public comment is accepted at the start of each meeting. Speakers must sign in by 6:15 PM and are allotted three minutes. Written comments may be submitted to board@ecsd.edu at least 24 hours prior to the meeting. Board packets are made available to the public 72 hours before each regular meeting.`;
+
+function HomeMeetingStatusBadge({ status }: { status: "Draft" | "Published" }) {
+  const styles = {
+    Draft: { bg: "#F3F3F3", text: "#515255" },
+    Published: { bg: "#E4F3FF", text: "#004C6C" },
+  };
+  const s = styles[status];
+  return (
+    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap" style={{ background: s.bg, color: s.text }}>
+      {status}
+    </span>
+  );
+}
+
+function HomeVisibilityBadge({ visibility }: { visibility: "Public" | "Internal" }) {
+  return (
+    <span className="text-[10px] font-medium px-2 py-0.5 rounded-full whitespace-nowrap border" style={{ background: "transparent", color: "var(--type-muted)", borderColor: "var(--outline-static)" }}>
+      {visibility}
+    </span>
+  );
+}
 
 function AgendaStatusPill({ status }: { status: AgendaStatus }) {
   const styles: Record<AgendaStatus, { bg: string; text: string }> = {
@@ -567,7 +588,7 @@ function GoalProgressBar({ progress }: { progress: number }) {
   );
 }
 
-function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
+function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => void; onViewMeeting: (meetingId: string) => void }) {
   const [welcomeExpanded, setWelcomeExpanded] = useState(false);
   const [agendaExpanded, setAgendaExpanded]   = useState(false);
 
@@ -599,12 +620,15 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
             </button>
           </div>
 
+          {/* Upcoming label */}
+          <p className="text-xs font-semibold text-type-muted uppercase tracking-wide px-5 pb-2">Upcoming</p>
+
           {/* Upcoming cards */}
           <div className="grid grid-cols-2 gap-3 px-5 pb-4">
             {UPCOMING_MEETINGS.slice(0, 4).map((m) => (
               <div key={m.id}
-                onClick={() => onNavigate("meetings")}
-                className="flex items-start gap-3 p-3 rounded-xl border border-outline-static bg-surface cursor-pointer"
+                onClick={() => onViewMeeting(m.id)}
+                className="flex items-start gap-3 p-3 rounded-xl border border-outline-static bg-surface cursor-pointer hover:bg-selection-hover transition-colors"
               >
                 {/* Calendar block */}
                 <div className="flex flex-col items-center justify-center w-10 shrink-0 rounded-lg py-1.5 bg-selection">
@@ -613,12 +637,12 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
                 </div>
                 {/* Details */}
                 <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-1">
-                    <span className="text-sm font-semibold text-type leading-snug">{m.name}</span>
-                    {m.pinned && <Icon name="push_pin" size={12} className="text-action-primary shrink-0 mt-0.5" />}
-                  </div>
+                  <span className="text-sm font-semibold text-type leading-snug">{m.name}</span>
                   <span className="text-xs text-type-muted truncate">{m.fullDate} · {m.time}</span>
-                  <span className="text-xs text-type-disabled truncate">{m.location}</span>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <HomeMeetingStatusBadge status={m.status} />
+                    <HomeVisibilityBadge visibility={m.visibility} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -631,14 +655,15 @@ function HomePage({ onNavigate }: { onNavigate: (id: PageId) => void }) {
               {RECENT_MEETINGS.map((m) => (
                 <li key={m.id}
                   className="flex items-center justify-between gap-3 py-1.5 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
-                  onClick={() => onNavigate("meetings")}>
+                  onClick={() => onViewMeeting(m.id)}>
                   <div className="flex items-center gap-2 min-w-0">
                     <Icon name="event" size={14} className="text-type-disabled shrink-0" />
-                    <span className="text-xs text-type-muted truncate">{m.name}</span>
+                    <span className="text-xs font-semibold text-type truncate">{m.name}</span>
                   </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-xs text-type-disabled">{m.date}</span>
-                    <MinutesStatusPill status={m.minutesStatus} />
+                  <div className="flex items-center gap-2 shrink-0">
+                    <span className="text-xs text-type-muted">{m.date}</span>
+                    <HomeMeetingStatusBadge status={m.status} />
+                    <HomeVisibilityBadge visibility={m.visibility} />
                   </div>
                 </li>
               ))}
@@ -809,6 +834,17 @@ export default function AppShell({ children }: { children?: React.ReactNode }) {
   const [activePage, setActivePage] = useState<PageId>("home");
   const [darkMode, setDarkMode]     = useState(false);
   const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [initialMeetingId, setInitialMeetingId] = useState<string | undefined>();
+
+  const handleViewMeeting = (meetingId: string) => {
+    setInitialMeetingId(meetingId);
+    setActivePage("meetings");
+  };
+
+  const handleNavigate = (id: PageId) => {
+    setInitialMeetingId(undefined);
+    setActivePage(id);
+  };
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -818,7 +854,7 @@ export default function AppShell({ children }: { children?: React.ReactNode }) {
     <div className="flex h-screen overflow-hidden bg-background-base">
       <Sidebar
         activePage={activePage}
-        onNavigate={setActivePage}
+        onNavigate={handleNavigate}
         expanded={sidebarExpanded}
         onToggle={() => setSidebarExpanded((v) => !v)}
       />
@@ -835,9 +871,9 @@ export default function AppShell({ children }: { children?: React.ReactNode }) {
         >
           {children ?? (
             activePage === "home"
-              ? <HomePage onNavigate={setActivePage} />
+              ? <HomePage onNavigate={handleNavigate} onViewMeeting={handleViewMeeting} />
               : activePage === "meetings"
-              ? <MeetingsPage />
+              ? <MeetingsPage initialMeetingId={initialMeetingId} />
               : <PagePlaceholder page={activePage} />
           )}
         </main>

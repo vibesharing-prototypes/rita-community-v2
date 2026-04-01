@@ -949,7 +949,7 @@ function MeetingDetailView({
 
 // ── Main MeetingsPage ────────────────────────────────────────────────
 
-export default function MeetingsPage() {
+export default function MeetingsPage({ initialMeetingId }: { initialMeetingId?: string }) {
   const [meetings, setMeetings] = useState<Meeting[]>(SAMPLE_MEETINGS);
   const [templates] = useState<MeetingTemplate[]>(SAMPLE_TEMPLATES);
   const [activeTab, setActiveTab] = useState<MeetingTab>("upcoming");
@@ -976,7 +976,9 @@ export default function MeetingsPage() {
   const [duplicateSource, setDuplicateSource] = useState<Meeting | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Meeting | null>(null);
-  const [detailView, setDetailView] = useState<DetailView>(null);
+  const [detailView, setDetailView] = useState<DetailView>(
+    initialMeetingId ? { meetingId: initialMeetingId } : null
+  );
   const [createView, setCreateView] = useState<{ templateId: string } | null>(null);
   const [editView, setEditView] = useState<{ meetingId: string } | null>(null);
 

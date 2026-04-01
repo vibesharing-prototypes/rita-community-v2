@@ -821,19 +821,19 @@ function MeetingDetailView({
         </button>
       </div>
 
-      {/* Header */}
-      <div className="px-8 pb-5">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-semibold text-type tracking-tight mb-1">{meeting.name}</h1>
-            <div className="flex items-center gap-2 text-sm text-type-muted">
-              <span>{formatDateLong(meeting.date)}</span>
-              {meeting.time && <><span>·</span><span>{meeting.time}</span></>}
-              {meeting.location && <><span>·</span><span>{meeting.location}</span></>}
-            </div>
-          </div>
-          <div className="flex items-center gap-3 shrink-0 pt-1">
+      {/* Header toolbar */}
+      <div className="px-8 pb-4">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <h1 className="text-2xl font-semibold text-type tracking-tight truncate">{meeting.name}</h1>
             <MeetingStatusBadge status={meeting.status} />
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Edit button */}
+            <button className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
+              Edit
+            </button>
+            {/* Publish / Unpublish */}
             {meeting.status === "Draft" && (
               <button
                 onClick={handlePublish}
@@ -851,6 +851,13 @@ function MeetingDetailView({
                 Unpublish
               </button>
             )}
+            {/* More actions */}
+            <OverflowMenu
+              items={[
+                { label: "Download agenda as PDF", icon: "picture_as_pdf", onClick: () => {} },
+                { label: "Share by email", icon: "mail", onClick: () => {} },
+              ]}
+            />
           </div>
         </div>
 
@@ -862,56 +869,35 @@ function MeetingDetailView({
         )}
       </div>
 
-      {/* Content sections */}
-      <div className="px-8 pb-8 flex flex-col gap-0">
-        {/* AGENDA */}
-        <div className="border border-outline-static rounded-xl overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4">
-            <div className="flex items-center gap-3">
-              <h2 className="text-sm font-semibold text-type uppercase tracking-wide">Agenda</h2>
-              <AgendaStatusBadge status={meeting.agendaStatus} />
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="px-3 py-1.5 text-xs font-semibold text-action-secondary-on-secondary rounded-lg border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
-                {meeting.status === "Draft" ? "Edit Agenda" : "View"}
-              </button>
-              <button className="px-3 py-1.5 text-xs font-semibold text-action-secondary-on-secondary rounded-lg border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
-                Share
-              </button>
-              {meeting.status === "Draft" && (
-                <button className="px-3 py-1.5 text-xs font-semibold text-action-primary-on-primary rounded-lg transition-colors" style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}>
-                  Publish
-                </button>
-              )}
-            </div>
-          </div>
-          <div className="px-5 pb-4 text-sm text-type-muted">
-            {meeting.agendaCategories} categories · {meeting.agendaItems} items
-          </div>
+      {/* Meeting info */}
+      <div className="px-8 pb-6">
+        <div className="flex items-center gap-2 text-sm text-type-muted mb-1">
+          <span>{formatDateLong(meeting.date)}</span>
+          {meeting.time && <><span>·</span><span>{meeting.time}</span></>}
+          {meeting.location && <><span>·</span><span>{meeting.location}</span></>}
         </div>
+        <p className="text-sm text-type-muted">{meeting.committee}</p>
+      </div>
 
-        {/* MINUTES */}
-        <div className="border border-outline-static border-t-0 rounded-b-xl -mt-[1px] overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4">
-            <h2 className="text-sm font-semibold text-type uppercase tracking-wide">Minutes</h2>
-            <button className="px-3 py-1.5 text-xs font-semibold text-action-secondary-on-secondary rounded-lg border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
-              Edit Minutes
-            </button>
-          </div>
-          <div className="px-5 pb-4 text-sm text-type-muted">
-            Status: None
-          </div>
+      {/* Description */}
+      <div className="px-8 pb-6">
+        <div className="rounded-xl border border-outline-static bg-surface p-5">
+          <p className="text-sm text-type leading-relaxed">
+            {meeting.description || <span className="text-type-disabled italic">No description provided.</span>}
+          </p>
         </div>
+      </div>
 
-        {/* VIDEO */}
-        <div className="border border-outline-static border-t-0 rounded-b-xl -mt-[1px] overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4">
-            <h2 className="text-sm font-semibold text-type uppercase tracking-wide">Video</h2>
-            <button className="px-3 py-1.5 text-xs font-semibold text-action-secondary-on-secondary rounded-lg border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
-              Add Broadcast Link
-            </button>
-          </div>
-        </div>
+      {/* Action buttons */}
+      <div className="px-8 pb-8 flex items-center gap-3">
+        <button className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
+          <Icon name="list_alt" size={18} className="text-type-muted" />
+          View Agenda
+        </button>
+        <button className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
+          <Icon name="edit_note" size={18} className="text-type-muted" />
+          Add Minutes
+        </button>
       </div>
 
       {/* Confirm dialogs */}

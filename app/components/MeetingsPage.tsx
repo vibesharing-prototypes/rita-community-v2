@@ -586,7 +586,7 @@ function CreateMeetingPage({
 
       {/* Fixed footer */}
       <div className="shrink-0 border-t border-outline-static bg-surface">
-        <div className="flex items-center justify-end gap-3 px-8 py-4">
+        <div className="flex items-center justify-between max-w-2xl px-8 py-4">
           <button
             onClick={onBack}
             className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors"

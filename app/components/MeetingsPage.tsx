@@ -1550,7 +1550,7 @@ function MeetingRow({
             <span className="text-xs text-type-muted">{formatDate(meeting.date)}</span>
           </div>
           <MeetingStatusBadge status={meeting.status} />
-          <VisibilityBadge visibility={meeting.visibility} />
+          {meeting.status === "Published" && <VisibilityBadge visibility={meeting.visibility} />}
         </div>
       </div>
 

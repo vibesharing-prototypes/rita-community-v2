@@ -641,7 +641,7 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
                   <span className="text-xs text-type-muted truncate">{m.fullDate} · {m.time}</span>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <HomeMeetingStatusBadge status={m.status} />
-                    <HomeVisibilityBadge visibility={m.visibility} />
+                    {m.status === "Published" && <HomeVisibilityBadge visibility={m.visibility} />}
                   </div>
                 </div>
               </div>
@@ -663,7 +663,7 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
                   <div className="flex items-center gap-2 shrink-0">
                     <span className="text-xs text-type-muted">{m.date}</span>
                     <HomeMeetingStatusBadge status={m.status} />
-                    <HomeVisibilityBadge visibility={m.visibility} />
+                    {m.status === "Published" && <HomeVisibilityBadge visibility={m.visibility} />}
                   </div>
                 </li>
               ))}

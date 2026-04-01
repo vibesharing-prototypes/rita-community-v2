@@ -699,25 +699,26 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
           )}
         </div>
 
-        {/* Featured */}
-        <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
-          <div className="px-5 pt-4 pb-3 border-b border-outline-static">
+        {/* Featured — header */}
+        <div>
+          <div className="mb-3">
             <h2 className="text-sm font-semibold text-type">Featured</h2>
             <p className="text-xs text-type-muted mt-0.5">Selected by your administrator</p>
           </div>
-          <div className="px-5 py-4 flex flex-col gap-5">
 
-            {/* Policies */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
+          {/* Policies + Files — side by side */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {/* Policies card */}
+            <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
+              <div className="flex items-center justify-between px-4 pt-3 pb-2">
                 <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Policies</span>
                 <button onClick={() => onNavigate("policies")}
                   className="text-xs text-action-primary hover:underline">View all</button>
               </div>
-              <ul className="flex flex-col gap-0.5">
+              <ul className="flex flex-col divide-y divide-outline-static">
                 {FEATURED_POLICIES.map((p) => (
                   <li key={p.id}
-                    className="flex items-center justify-between gap-3 py-2 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                    className="flex items-center justify-between gap-3 py-2.5 px-4 cursor-pointer hover:bg-selection-hover transition-colors"
                     onClick={() => onNavigate("policies")}>
                     <div className="flex items-center gap-2 min-w-0">
                       <Icon name="gavel" size={14} className="text-type-disabled shrink-0" />
@@ -729,19 +730,17 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
               </ul>
             </div>
 
-            <div className="border-t border-outline-static" />
-
-            {/* Documents */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Documents</span>
+            {/* Files card */}
+            <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
+              <div className="flex items-center justify-between px-4 pt-3 pb-2">
+                <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Files</span>
                 <button onClick={() => onNavigate("library-files")}
                   className="text-xs text-action-primary hover:underline">View all</button>
               </div>
-              <ul className="flex flex-col gap-0.5">
+              <ul className="flex flex-col divide-y divide-outline-static">
                 {FEATURED_DOCUMENTS.map((d) => (
                   <li key={d.id}
-                    className="flex items-center gap-2 py-2 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                    className="flex items-center gap-2 py-2.5 px-4 cursor-pointer hover:bg-selection-hover transition-colors"
                     onClick={() => onNavigate("library-files")}>
                     <Icon name="description" size={14} className="text-type-disabled shrink-0" />
                     <span className="text-sm text-type leading-snug">{d.title}</span>
@@ -749,34 +748,31 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
                 ))}
               </ul>
             </div>
+          </div>
 
-            <div className="border-t border-outline-static" />
-
-            {/* Goals */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Goals</span>
-                <button onClick={() => onNavigate("library-goals")}
-                  className="text-xs text-action-primary hover:underline">View all</button>
-              </div>
-              <ul className="flex flex-col gap-3">
-                {FEATURED_GOALS.map((g) => (
-                  <li key={g.id}
-                    className="flex flex-col gap-1.5 py-1 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
-                    onClick={() => onNavigate("library-goals")}>
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <Icon name="flag" size={14} className="text-type-disabled shrink-0" />
-                        <span className="text-sm text-type leading-snug truncate">{g.title}</span>
-                      </div>
-                      <span className="text-xs text-type-muted shrink-0">{g.progress}%</span>
-                    </div>
-                    <GoalProgressBar progress={g.progress} />
-                  </li>
-                ))}
-              </ul>
+          {/* Goals */}
+          <div className="rounded-xl border border-outline-static bg-surface overflow-hidden">
+            <div className="flex items-center justify-between px-4 pt-3 pb-2">
+              <span className="text-xs font-semibold text-type-muted uppercase tracking-wide">Goals</span>
+              <button onClick={() => onNavigate("library-goals")}
+                className="text-xs text-action-primary hover:underline">View all</button>
             </div>
-
+            <ul className="flex flex-col divide-y divide-outline-static">
+              {FEATURED_GOALS.map((g) => (
+                <li key={g.id}
+                  className="flex flex-col gap-1.5 py-2.5 px-4 cursor-pointer hover:bg-selection-hover transition-colors"
+                  onClick={() => onNavigate("library-goals")}>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Icon name="flag" size={14} className="text-type-disabled shrink-0" />
+                      <span className="text-sm text-type leading-snug truncate">{g.title}</span>
+                    </div>
+                    <span className="text-xs text-type-muted shrink-0">{g.progress}%</span>
+                  </div>
+                  <GoalProgressBar progress={g.progress} />
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 

@@ -905,13 +905,13 @@ function MeetingDetailView({
       </div>
 
       {/* Description */}
-      <div className="px-8 pb-6">
-        <div className="rounded-xl border border-outline-static bg-surface p-5">
-          <p className="text-sm text-type leading-relaxed">
-            {meeting.description || <span className="text-type-disabled italic">No description provided.</span>}
-          </p>
+      {meeting.description && (
+        <div className="px-8 pb-6">
+          <div className="rounded-xl border border-outline-static bg-surface p-5">
+            <p className="text-sm text-type leading-relaxed">{meeting.description}</p>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Action buttons */}
       <div className="px-8 pb-8 flex items-center gap-3">

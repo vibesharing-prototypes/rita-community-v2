@@ -119,8 +119,8 @@ function isUpcoming(dateStr: string): boolean {
 
 function MeetingStatusBadge({ status }: { status: MeetingStatus }) {
   const styles: Record<MeetingStatus, { bg: string; text: string }> = {
-    Draft: { bg: "var(--status-neutral-bg-variant)", text: "var(--status-neutral-content-variant)" },
-    Published: { bg: "var(--status-success-bg-variant)", text: "var(--status-success-content-variant)" },
+    Draft: { bg: "#F3F3F3", text: "#515255" },
+    Published: { bg: "#E4F3FF", text: "#004C6C" },
   };
   const s = styles[status];
   return (
@@ -1035,7 +1035,7 @@ export default function MeetingsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search"
-                className="w-full pl-9 pr-3 py-2 text-sm text-type bg-surface border border-outline-static rounded-lg focus:outline-none focus:border-action-form-outline-selected focus:ring-1 focus:ring-action-form-outline-selected transition-colors placeholder:text-type-disabled"
+                className="w-full pl-9 pr-3 py-2 text-sm text-type bg-surface border border-action-form-outline rounded-lg focus:outline-none focus:border-action-form-outline-selected focus:ring-1 focus:ring-action-form-outline-selected transition-colors placeholder:text-type-disabled"
               />
             </div>
           </div>
@@ -1302,19 +1302,17 @@ function MeetingRow({
       onClick={onView}
       className="flex items-center gap-4 px-4 py-3.5 border-b border-outline-static hover:bg-selection-hover transition-colors cursor-pointer group"
     >
-      {/* Left: title + date */}
-      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+      {/* Left: title + date + badges */}
+      <div className="flex-1 min-w-0 flex flex-col gap-1">
         <span className="text-sm text-type font-medium truncate">{meeting.name}</span>
-        <div className="flex items-center gap-1.5">
-          <Icon name="calendar_today" size={14} className="text-type-disabled" />
-          <span className="text-xs text-type-muted">{formatDate(meeting.date)}</span>
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5">
+            <Icon name="calendar_today" size={14} className="text-type-disabled" />
+            <span className="text-xs text-type-muted">{formatDate(meeting.date)}</span>
+          </div>
+          <MeetingStatusBadge status={meeting.status} />
+          <VisibilityBadge visibility={meeting.visibility} />
         </div>
-      </div>
-
-      {/* Badges */}
-      <div className="flex items-center gap-2 shrink-0">
-        <MeetingStatusBadge status={meeting.status} />
-        <VisibilityBadge visibility={meeting.visibility} />
       </div>
 
       {/* Overflow */}

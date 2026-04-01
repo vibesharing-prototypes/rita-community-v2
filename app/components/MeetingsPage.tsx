@@ -1171,7 +1171,6 @@ export default function MeetingsPage() {
                 <SelectInput
                   value={sortBy}
                   onChange={setSortBy}
-                  placeholder="Meeting date ascending"
                   options={[
                     { value: "date-asc", label: "Meeting date ascending" },
                     { value: "date-desc", label: "Meeting date descending" },

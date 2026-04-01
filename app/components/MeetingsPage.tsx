@@ -573,33 +573,14 @@ function CreateMeetingPage({
             />
           </FormField>
 
-          {/* Divider */}
-          <div className="border-t border-outline-static" />
+          {/* Live video */}
+          <ToggleSwitch checked={showVideo} onChange={setShowVideo} label="Show live video" />
 
-          {/* Video section */}
-          <div className="rounded-xl border-l-4 px-5 py-4 flex flex-col gap-4" style={{ borderLeftColor: "var(--status-warning-bg-default)", background: "var(--surface-variant-subtle)" }}>
-            <div>
-              <h3 className="text-sm font-semibold text-type mb-1">Providing a Live Video of your Meeting?</h3>
-              <p className="text-xs text-type-muted leading-relaxed">
-                You can create a button that links to a live video feed by providing the complete URL of the video, and selecting when you would like it to show. The button will appear on the meeting information page.
-              </p>
-            </div>
-
+          {showVideo && (
             <FormField label="Video URL">
-              <TextInput value={videoUrl} onChange={setVideoUrl} placeholder="example: https://www.youtube.com/watch?v=xxxxxxxxxxx" />
+              <TextInput value={videoUrl} onChange={setVideoUrl} placeholder="https://www.youtube.com/watch?v=..." />
             </FormField>
-
-            <FormField label="Show the button?">
-              <SelectInput
-                value={showVideo ? "yes" : "no"}
-                onChange={(v) => setShowVideo(v === "yes")}
-                options={[
-                  { value: "no", label: "No" },
-                  { value: "yes", label: "Yes" },
-                ]}
-              />
-            </FormField>
-          </div>
+          )}
 
           {/* Footer actions */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-outline-static">

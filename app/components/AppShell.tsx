@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import MeetingsPage from "./MeetingsPage";
 
 // ── Types ────────────────────────────────────────────────────────
 
@@ -835,6 +836,8 @@ export default function AppShell({ children }: { children?: React.ReactNode }) {
           {children ?? (
             activePage === "home"
               ? <HomePage onNavigate={setActivePage} />
+              : activePage === "meetings"
+              ? <MeetingsPage />
               : <PagePlaceholder page={activePage} />
           )}
         </main>

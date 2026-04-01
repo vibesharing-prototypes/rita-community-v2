@@ -654,7 +654,7 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
             <ul className="flex flex-col divide-y divide-outline-static">
               {RECENT_MEETINGS.map((m) => (
                 <li key={m.id}
-                  className="flex items-center justify-between gap-3 py-1.5 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"
+                  className="flex items-center justify-between gap-3 py-2 cursor-pointer hover:bg-selection-hover transition-colors"
                   onClick={() => onViewMeeting(m.id)}>
                   <div className="flex items-center gap-2 min-w-0">
                     <Icon name="event" size={14} className="text-type-disabled shrink-0" />

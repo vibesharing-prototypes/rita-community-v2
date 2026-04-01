@@ -364,9 +364,10 @@ function SegmentedToggle({
           onClick={() => onChange(opt)}
           className={`px-4 py-1.5 text-sm font-medium transition-colors ${
             value === opt
-              ? "bg-type text-surface"
+              ? "text-action-primary-on-primary"
               : "bg-surface text-type hover:bg-selection-hover"
           }`}
+          style={value === opt ? { background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" } : undefined}
         >
           {opt}
         </button>
@@ -1304,7 +1305,7 @@ export default function MeetingsPage() {
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-5 border-b border-outline-static shrink-0">
+            <div className="flex items-center justify-between px-6 py-5 shrink-0">
               <h2 className="text-lg font-semibold text-type">Filters</h2>
               <button
                 onClick={() => setFilterPanelOpen(false)}

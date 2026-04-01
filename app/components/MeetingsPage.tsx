@@ -44,6 +44,9 @@ type Meeting = {
   agendaItems: number;
   membersOnly: boolean;
   publicRTS: boolean;
+  description?: string;
+  videoUrl?: string;
+  showVideo?: boolean;
   templateId?: string;
 };
 
@@ -378,74 +381,68 @@ function SegmentedToggle({
 
 // ── Creation modal ───────────────────────────────────────────────────
 
-function CreateMeetingModal({
+function TemplatePickerModal({
   open,
   onClose,
   templates,
-  onCreateMeeting,
+  onSelectTemplate,
 }: {
   open: boolean;
   onClose: () => void;
   templates: MeetingTemplate[];
+  onSelectTemplate: (templateId: string) => void;
+}) {
+  const activeTemplates = templates.filter((t) => t.status === "Active");
+
+  return (
+    <Modal open={open} onClose={onClose} title="New Meeting — Select Template">
+      <div className="p-6 flex flex-col gap-2">
+        {activeTemplates.map((tmpl) => (
+          <button
+            key={tmpl.id}
+            onClick={() => { onSelectTemplate(tmpl.id); onClose(); }}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-outline-static text-left hover:bg-selection-hover transition-colors"
+          >
+            <div className="w-8 h-8 rounded-lg bg-selection flex items-center justify-center shrink-0">
+              <Icon name="description" size={16} className="text-action-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-type truncate">{tmpl.name}</p>
+              <p className="text-xs text-type-muted">{tmpl.committee}{tmpl.time ? ` · ${tmpl.time}` : ""}</p>
+            </div>
+            <Icon name="chevron_right" size={16} className="text-type-disabled shrink-0" />
+          </button>
+        ))}
+      </div>
+    </Modal>
+  );
+}
+
+// ── Create meeting page (full-page form) ─────────────────────────────
+
+function CreateMeetingPage({
+  template,
+  onBack,
+  onCreateMeeting,
+}: {
+  template: MeetingTemplate;
+  onBack: () => void;
   onCreateMeeting: (meeting: Meeting) => void;
 }) {
-  const [step, setStep] = useState<1 | 2>(1);
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("");
-  const [name, setName] = useState("");
+  const [name, setName] = useState(template.name);
   const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [duration, setDuration] = useState("");
-  const [location, setLocation] = useState("");
-  const [committee, setCommittee] = useState("");
-  const [membersOnly, setMembersOnly] = useState(false);
-  const [publicRTS, setPublicRTS] = useState(false);
+  const [time, setTime] = useState(template.time || "");
+  const [location, setLocation] = useState(template.location || "");
+  const [description, setDescription] = useState("");
+  const [access, setAccess] = useState<MeetingVisibility>("Public");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [showVideo, setShowVideo] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
-
-  // Reset on open
-  useEffect(() => {
-    if (open) {
-      setStep(1);
-      setSelectedTemplate("");
-      setName("");
-      setDate("");
-      setTime("");
-      setDuration("");
-      setLocation("");
-      setCommittee("");
-      setMembersOnly(false);
-      setPublicRTS(false);
-      setErrors([]);
-    }
-  }, [open]);
-
-  const handleSelectTemplate = (templateId: string) => {
-    setSelectedTemplate(templateId);
-    if (templateId) {
-      const tmpl = templates.find((t) => t.id === templateId);
-      if (tmpl) {
-        setName(tmpl.name);
-        setTime(tmpl.time || "");
-        setLocation(tmpl.location || "");
-        setCommittee(tmpl.committee);
-        setMembersOnly(tmpl.membersOnly);
-        setPublicRTS(tmpl.publicRTS);
-      }
-    } else {
-      setName("");
-      setTime("");
-      setLocation("");
-      setCommittee("");
-      setMembersOnly(false);
-      setPublicRTS(false);
-    }
-    setStep(2);
-  };
 
   const handleCreate = () => {
     const errs: string[] = [];
     if (!name.trim()) errs.push("Name is required.");
     if (!date) errs.push("Date is required.");
-    if (!committee) errs.push("Committee is required.");
     if (errs.length > 0) {
       setErrors(errs);
       return;
@@ -457,75 +454,55 @@ function CreateMeetingModal({
       date,
       time: time || undefined,
       location: location || undefined,
-      committee,
+      committee: template.committee,
       status: "Draft",
-      visibility: "Internal",
+      visibility: access,
       agendaStatus: "Not Published",
       agendaCategories: 0,
       agendaItems: 0,
-      membersOnly,
-      publicRTS,
-      templateId: selectedTemplate || undefined,
+      membersOnly: template.membersOnly,
+      publicRTS: template.publicRTS,
+      description: description || undefined,
+      videoUrl: videoUrl || undefined,
+      showVideo,
+      templateId: template.id,
     };
     onCreateMeeting(newMeeting);
-    onClose();
   };
 
-  const activeTemplates = templates.filter((t) => t.status === "Active");
-
   return (
-    <Modal open={open} onClose={onClose} title={step === 1 ? "New Meeting — Select Template" : "New Meeting — Details"}>
-      {step === 1 ? (
-        <div className="p-6 flex flex-col gap-2">
-          {/* No template option */}
-          <button
-            onClick={() => handleSelectTemplate("")}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-outline-static text-left hover:bg-selection-hover transition-colors"
-          >
-            <div className="w-8 h-8 rounded-lg bg-surface-variant flex items-center justify-center shrink-0">
-              <Icon name="block" size={16} className="text-type-muted" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-type">No template</p>
-              <p className="text-xs text-type-muted">Start with a blank meeting</p>
-            </div>
-          </button>
+    <div className="flex flex-col h-full overflow-auto">
+      {/* Back link */}
+      <div className="px-8 pt-6 pb-2">
+        <button onClick={onBack} className="flex items-center gap-1 text-sm text-action-primary hover:underline">
+          <Icon name="arrow_back" size={16} />
+          Meetings
+        </button>
+      </div>
 
-          {activeTemplates.map((tmpl) => (
-            <button
-              key={tmpl.id}
-              onClick={() => handleSelectTemplate(tmpl.id)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-outline-static text-left hover:bg-selection-hover transition-colors"
-            >
-              <div className="w-8 h-8 rounded-lg bg-selection flex items-center justify-center shrink-0">
-                <Icon name="description" size={16} className="text-action-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-type truncate">{tmpl.name}</p>
-                <p className="text-xs text-type-muted">{tmpl.committee}{tmpl.time ? ` · ${tmpl.time}` : ""}</p>
-              </div>
-              <Icon name="chevron_right" size={16} className="text-type-disabled shrink-0" />
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="p-6 flex flex-col gap-5">
-          {/* Back link */}
-          <button onClick={() => setStep(1)} className="flex items-center gap-1 text-xs text-action-primary hover:underline self-start -mt-1">
-            <Icon name="arrow_back" size={14} />
-            Change template
-          </button>
+      {/* Title */}
+      <div className="px-8 pb-6">
+        <h1 className="text-2xl font-semibold text-type tracking-tight">Draft Meeting</h1>
+        <p className="text-sm text-type-muted mt-1">
+          Template: {template.name} · {template.committee}
+        </p>
+      </div>
 
-          {errors.length > 0 && (
-            <div className="rounded-lg px-3 py-2.5 text-sm" style={{ background: "var(--status-error-bg-variant)", color: "var(--status-error-content-variant)" }}>
-              {errors.map((e, i) => <p key={i}>{e}</p>)}
-            </div>
-          )}
+      {/* Form */}
+      <div className="px-8 pb-8 max-w-2xl">
+        {errors.length > 0 && (
+          <div className="rounded-lg px-3 py-2.5 text-sm mb-5" style={{ background: "var(--status-error-bg-variant)", color: "var(--status-error-content-variant)" }}>
+            {errors.map((e, i) => <p key={i}>{e}</p>)}
+          </div>
+        )}
 
-          <FormField label="Meeting name" required>
-            <TextInput value={name} onChange={setName} placeholder="e.g. Regular Board Meeting" />
+        <div className="flex flex-col gap-5">
+          {/* Name */}
+          <FormField label="Name" required>
+            <TextInput value={name} onChange={setName} placeholder="Meeting name" />
           </FormField>
 
+          {/* Date + Time */}
           <div className="grid grid-cols-2 gap-4">
             <FormField label="Date" required>
               <TextInput type="date" value={date} onChange={setDate} />
@@ -535,32 +512,68 @@ function CreateMeetingModal({
             </FormField>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <FormField label="Duration">
-              <TextInput value={duration} onChange={setDuration} placeholder="e.g. 2 hours" />
+          {/* Location */}
+          <FormField label="Location">
+            <TextInput value={location} onChange={setLocation} placeholder="e.g. District Office · Board Room" />
+          </FormField>
+
+          {/* Description */}
+          <FormField label="Description">
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Meeting description..."
+              rows={4}
+              className="w-full px-3 py-2 text-sm text-type bg-surface border border-action-form-outline rounded-lg focus:outline-none focus:border-action-form-outline-selected focus:ring-1 focus:ring-action-form-outline-selected transition-colors placeholder:text-type-disabled resize-y"
+            />
+          </FormField>
+
+          {/* Access */}
+          <FormField label="Access">
+            <SelectInput
+              value={access}
+              onChange={(v) => setAccess(v as MeetingVisibility)}
+              options={[
+                { value: "Public", label: "Public" },
+                { value: "Internal", label: "Internal" },
+              ]}
+            />
+          </FormField>
+
+          {/* Divider */}
+          <div className="border-t border-outline-static" />
+
+          {/* Video section */}
+          <div className="rounded-xl border-l-4 px-5 py-4 flex flex-col gap-4" style={{ borderLeftColor: "var(--status-warning-bg-default)", background: "var(--surface-variant-subtle)" }}>
+            <div>
+              <h3 className="text-sm font-semibold text-type mb-1">Providing a Live Video of your Meeting?</h3>
+              <p className="text-xs text-type-muted leading-relaxed">
+                You can create a button that links to a live video feed by providing the complete URL of the video, and selecting when you would like it to show. The button will appear on the meeting information page.
+              </p>
+            </div>
+
+            <FormField label="Video URL">
+              <TextInput value={videoUrl} onChange={setVideoUrl} placeholder="example: https://www.youtube.com/watch?v=xxxxxxxxxxx" />
             </FormField>
-            <FormField label="Committee" required>
+
+            <FormField label="Show the button?">
               <SelectInput
-                value={committee}
-                onChange={setCommittee}
-                placeholder="Select committee"
-                options={COMMITTEES.map((c) => ({ value: c, label: c }))}
+                value={showVideo ? "yes" : "no"}
+                onChange={(v) => setShowVideo(v === "yes")}
+                options={[
+                  { value: "no", label: "No" },
+                  { value: "yes", label: "Yes" },
+                ]}
               />
             </FormField>
           </div>
 
-          <FormField label="Location">
-            <TextInput value={location} onChange={setLocation} placeholder="e.g. Board Room" />
-          </FormField>
-
-          <div className="flex flex-col gap-3 pt-1">
-            <ToggleSwitch checked={membersOnly} onChange={setMembersOnly} label="Members only" />
-            <ToggleSwitch checked={publicRTS} onChange={setPublicRTS} label="Public request-to-speak" />
-          </div>
-
-          {/* Footer */}
-          <div className="flex items-center justify-end gap-3 pt-3 border-t border-outline-static -mx-6 px-6">
-            <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
+          {/* Footer actions */}
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-outline-static">
+            <button
+              onClick={onBack}
+              className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors"
+            >
               Cancel
             </button>
             <button
@@ -572,8 +585,8 @@ function CreateMeetingModal({
             </button>
           </div>
         </div>
-      )}
-    </Modal>
+      </div>
+    </div>
   );
 }
 
@@ -937,6 +950,7 @@ export default function MeetingsPage() {
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Meeting | null>(null);
   const [detailView, setDetailView] = useState<DetailView>(null);
+  const [createView, setCreateView] = useState<{ templateId: string } | null>(null);
 
   // Year accordion for Previous tab
   const [expandedYears, setExpandedYears] = useState<Set<number>>(() => new Set([2026]));
@@ -1015,8 +1029,13 @@ export default function MeetingsPage() {
   const previousYears = Object.keys(previousByYear).map(Number).sort((a, b) => b - a);
 
   // CRUD handlers
+  const handleSelectTemplate = (templateId: string) => {
+    setCreateView({ templateId });
+  };
+
   const handleCreateMeeting = (meeting: Meeting) => {
     setMeetings((prev) => [meeting, ...prev]);
+    setCreateView(null);
     setDetailView({ meetingId: meeting.id });
   };
 
@@ -1039,6 +1058,20 @@ export default function MeetingsPage() {
   const handleUpdateMeeting = (updated: Meeting) => {
     setMeetings((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
   };
+
+  // If create view is active
+  if (createView) {
+    const tmpl = templates.find((t) => t.id === createView.templateId);
+    if (tmpl) {
+      return (
+        <CreateMeetingPage
+          template={tmpl}
+          onBack={() => setCreateView(null)}
+          onCreateMeeting={handleCreateMeeting}
+        />
+      );
+    }
+  }
 
   // If detail view is active
   if (detailView) {
@@ -1393,11 +1426,11 @@ export default function MeetingsPage() {
       )}
 
       {/* ── Modals ──────────────────────────────────────────────────── */}
-      <CreateMeetingModal
+      <TemplatePickerModal
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         templates={templates}
-        onCreateMeeting={handleCreateMeeting}
+        onSelectTemplate={handleSelectTemplate}
       />
       <DuplicateMeetingModal
         open={duplicateOpen}

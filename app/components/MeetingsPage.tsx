@@ -395,8 +395,11 @@ function TemplatePickerModal({
   const activeTemplates = templates.filter((t) => t.status === "Active");
 
   return (
-    <Modal open={open} onClose={onClose} title="New Meeting — Select Template">
-      <div className="p-6 flex flex-col gap-2">
+    <Modal open={open} onClose={onClose} title="New meeting">
+      <div className="px-6 -mt-2 pb-4">
+        <p className="text-sm text-type-muted">To add a new meeting, first select a template.</p>
+      </div>
+      <div className="px-6 pb-6 flex flex-col gap-2">
         {activeTemplates.map((tmpl) => (
           <button
             key={tmpl.id}
@@ -413,6 +416,20 @@ function TemplatePickerModal({
             <Icon name="chevron_right" size={16} className="text-type-disabled shrink-0" />
           </button>
         ))}
+
+        {/* From scratch option */}
+        <button
+          onClick={() => { onSelectTemplate(""); onClose(); }}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-outline-static text-left hover:bg-selection-hover transition-colors"
+        >
+          <div className="w-8 h-8 rounded-lg bg-surface-variant flex items-center justify-center shrink-0">
+            <Icon name="add" size={16} className="text-type-muted" />
+          </div>
+          <div>
+            <p className="text-sm font-medium text-type">Start from scratch</p>
+            <p className="text-xs text-type-muted">Create a blank meeting without a template</p>
+          </div>
+        </button>
       </div>
     </Modal>
   );
@@ -425,14 +442,15 @@ function CreateMeetingPage({
   onBack,
   onCreateMeeting,
 }: {
-  template: MeetingTemplate;
+  template: MeetingTemplate | null;
   onBack: () => void;
   onCreateMeeting: (meeting: Meeting) => void;
 }) {
-  const [name, setName] = useState(template.name);
+  const [name, setName] = useState(template?.name || "");
   const [date, setDate] = useState("");
-  const [time, setTime] = useState(template.time || "");
-  const [location, setLocation] = useState(template.location || "");
+  const [time, setTime] = useState(template?.time || "");
+  const [location, setLocation] = useState(template?.location || "");
+  const [committee, setCommittee] = useState(template?.committee || "");
   const [description, setDescription] = useState("");
   const [access, setAccess] = useState<MeetingVisibility>("Public");
   const [videoUrl, setVideoUrl] = useState("");
@@ -443,6 +461,7 @@ function CreateMeetingPage({
     const errs: string[] = [];
     if (!name.trim()) errs.push("Name is required.");
     if (!date) errs.push("Date is required.");
+    if (!committee) errs.push("Committee is required.");
     if (errs.length > 0) {
       setErrors(errs);
       return;
@@ -454,18 +473,18 @@ function CreateMeetingPage({
       date,
       time: time || undefined,
       location: location || undefined,
-      committee: template.committee,
+      committee,
       status: "Draft",
       visibility: access,
       agendaStatus: "Not Published",
       agendaCategories: 0,
       agendaItems: 0,
-      membersOnly: template.membersOnly,
-      publicRTS: template.publicRTS,
+      membersOnly: template?.membersOnly ?? false,
+      publicRTS: template?.publicRTS ?? false,
       description: description || undefined,
       videoUrl: videoUrl || undefined,
       showVideo,
-      templateId: template.id,
+      templateId: template?.id,
     };
     onCreateMeeting(newMeeting);
   };
@@ -483,9 +502,13 @@ function CreateMeetingPage({
       {/* Title */}
       <div className="px-8 pb-6">
         <h1 className="text-2xl font-semibold text-type tracking-tight">Draft Meeting</h1>
-        <p className="text-sm text-type-muted mt-1">
-          Template: {template.name} · {template.committee}
-        </p>
+        {template ? (
+          <p className="text-sm text-type-muted mt-1">
+            Template: {template.name} · {template.committee}
+          </p>
+        ) : (
+          <p className="text-sm text-type-muted mt-1">Creating from scratch</p>
+        )}
       </div>
 
       {/* Form */}
@@ -516,6 +539,18 @@ function CreateMeetingPage({
           <FormField label="Location">
             <TextInput value={location} onChange={setLocation} placeholder="e.g. District Office · Board Room" />
           </FormField>
+
+          {/* Committee — only shown when no template */}
+          {!template && (
+            <FormField label="Committee" required>
+              <SelectInput
+                value={committee}
+                onChange={setCommittee}
+                placeholder="Select committee"
+                options={COMMITTEES.map((c) => ({ value: c, label: c }))}
+              />
+            </FormField>
+          )}
 
           {/* Description */}
           <FormField label="Description">
@@ -1061,16 +1096,16 @@ export default function MeetingsPage() {
 
   // If create view is active
   if (createView) {
-    const tmpl = templates.find((t) => t.id === createView.templateId);
-    if (tmpl) {
-      return (
-        <CreateMeetingPage
-          template={tmpl}
-          onBack={() => setCreateView(null)}
-          onCreateMeeting={handleCreateMeeting}
-        />
-      );
-    }
+    const tmpl = createView.templateId
+      ? templates.find((t) => t.id === createView.templateId) ?? null
+      : null;
+    return (
+      <CreateMeetingPage
+        template={tmpl}
+        onBack={() => setCreateView(null)}
+        onCreateMeeting={handleCreateMeeting}
+      />
+    );
   }
 
   // If detail view is active

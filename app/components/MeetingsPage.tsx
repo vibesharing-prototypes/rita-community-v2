@@ -573,14 +573,11 @@ function CreateMeetingPage({
             />
           </FormField>
 
-          {/* Live video */}
-          <ToggleSwitch checked={showVideo} onChange={setShowVideo} label="Show live video" />
-
-          {showVideo && (
-            <FormField label="Video URL">
-              <TextInput value={videoUrl} onChange={setVideoUrl} placeholder="https://www.youtube.com/watch?v=..." />
-            </FormField>
-          )}
+          {/* Meeting link */}
+          <FormField label="Meeting link">
+            <TextInput value={videoUrl} onChange={setVideoUrl} placeholder="Enter the meeting link here" />
+          </FormField>
+          <ToggleSwitch checked={showVideo} onChange={setShowVideo} label="Show meeting link button" />
 
           {/* Footer actions */}
           <div className="flex items-center justify-end gap-3 pt-4 border-t border-outline-static">

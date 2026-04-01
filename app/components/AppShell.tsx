@@ -651,7 +651,7 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
           {/* Recent */}
           <div className="px-5 pt-3 pb-4 border-t border-outline-static bg-surface">
             <p className="text-xs font-semibold text-type-muted uppercase tracking-wide mb-2">Recent</p>
-            <ul className="flex flex-col gap-0.5">
+            <ul className="flex flex-col divide-y divide-outline-static">
               {RECENT_MEETINGS.map((m) => (
                 <li key={m.id}
                   className="flex items-center justify-between gap-3 py-1.5 px-2 -mx-2 rounded-lg cursor-pointer hover:bg-selection-hover transition-colors"

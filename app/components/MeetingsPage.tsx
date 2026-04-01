@@ -345,6 +345,36 @@ function ToggleSwitch({ checked, onChange, label }: { checked: boolean; onChange
   );
 }
 
+// ── Segmented toggle (pill group) ────────────────────────────────────
+
+function SegmentedToggle({
+  options,
+  value,
+  onChange,
+}: {
+  options: string[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="inline-flex rounded-full border border-outline-static overflow-hidden self-start">
+      {options.map((opt) => (
+        <button
+          key={opt}
+          onClick={() => onChange(opt)}
+          className={`px-4 py-1.5 text-sm font-medium transition-colors ${
+            value === opt
+              ? "bg-type text-surface"
+              : "bg-surface text-type hover:bg-selection-hover"
+          }`}
+        >
+          {opt}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 // ── Creation modal ───────────────────────────────────────────────────
 
 function CreateMeetingModal({
@@ -884,9 +914,19 @@ export default function MeetingsPage() {
   const [activeTab, setActiveTab] = useState<MeetingTab>("upcoming");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("date-asc");
-  const [statusFilter, setStatusFilter] = useState<"" | MeetingStatus>("");
+  // Applied filters
+  const [statusFilter, setStatusFilter] = useState<"All" | MeetingStatus>("All");
+  const [visibilityFilter, setVisibilityFilter] = useState<"All" | MeetingVisibility>("All");
   const [committeeFilter, setCommitteeFilter] = useState("");
-  const [showFilters, setShowFilters] = useState(false);
+  const [startDateFilter, setStartDateFilter] = useState("");
+  const [endDateFilter, setEndDateFilter] = useState("");
+  // Draft filters (pending Apply)
+  const [draftStatus, setDraftStatus] = useState<"All" | MeetingStatus>("All");
+  const [draftVisibility, setDraftVisibility] = useState<"All" | MeetingVisibility>("All");
+  const [draftCommittee, setDraftCommittee] = useState("");
+  const [draftStartDate, setDraftStartDate] = useState("");
+  const [draftEndDate, setDraftEndDate] = useState("");
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
 
   // Modals
@@ -909,11 +949,50 @@ export default function MeetingsPage() {
     });
   };
 
+  // Count active filters
+  const activeFilterCount = [
+    committeeFilter !== "",
+    statusFilter !== "All",
+    visibilityFilter !== "All",
+    startDateFilter !== "",
+    endDateFilter !== "",
+  ].filter(Boolean).length;
+
+  // Open panel: sync draft to applied
+  const openFilterPanel = () => {
+    setDraftStatus(statusFilter);
+    setDraftVisibility(visibilityFilter);
+    setDraftCommittee(committeeFilter);
+    setDraftStartDate(startDateFilter);
+    setDraftEndDate(endDateFilter);
+    setFilterPanelOpen(true);
+  };
+
+  const applyFilters = () => {
+    setStatusFilter(draftStatus);
+    setVisibilityFilter(draftVisibility);
+    setCommitteeFilter(draftCommittee);
+    setStartDateFilter(draftStartDate);
+    setEndDateFilter(draftEndDate);
+    setFilterPanelOpen(false);
+  };
+
+  const clearAllFilters = () => {
+    setDraftStatus("All");
+    setDraftVisibility("All");
+    setDraftCommittee("");
+    setDraftStartDate("");
+    setDraftEndDate("");
+  };
+
   // Filter meetings
   const filteredMeetings = meetings.filter((m) => {
     if (searchQuery && !m.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    if (statusFilter && m.status !== statusFilter) return false;
+    if (statusFilter !== "All" && m.status !== statusFilter) return false;
+    if (visibilityFilter !== "All" && m.visibility !== visibilityFilter) return false;
     if (committeeFilter && m.committee !== committeeFilter) return false;
+    if (startDateFilter && m.date < startDateFilter) return false;
+    if (endDateFilter && m.date > endDateFilter) return false;
     return true;
   });
 
@@ -1057,17 +1136,22 @@ export default function MeetingsPage() {
                 />
               </div>
 
-              {/* Filter — tertiary icon + text button */}
+              {/* Filter — tertiary button with active count */}
               <button
-                onClick={() => setShowFilters((v) => !v)}
+                onClick={openFilterPanel}
                 className={`inline-flex items-center gap-2 px-3 py-2 mb-px text-sm font-medium rounded-lg transition-colors ${
-                  showFilters
+                  activeFilterCount > 0
                     ? "text-action-primary"
                     : "text-type-muted hover:text-type"
                 }`}
               >
                 <Icon name="filter_list" size={18} />
                 Filter
+                {activeFilterCount > 0 && (
+                  <span className="min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-semibold text-action-primary-on-primary bg-action-primary leading-none">
+                    {activeFilterCount}
+                  </span>
+                )}
               </button>
             </>
           )}
@@ -1078,35 +1162,6 @@ export default function MeetingsPage() {
             </div>
           )}
         </div>
-
-        {/* ── Expanded filters ──────────────────────────────────── */}
-        {showFilters && activeTab !== "templates" && (
-          <div className="flex items-center gap-3 pb-4 -mt-1">
-            <SelectInput
-              value={statusFilter}
-              onChange={(v) => setStatusFilter(v as "" | MeetingStatus)}
-              placeholder="All statuses"
-              options={[
-                { value: "Draft", label: "Draft" },
-                { value: "Published", label: "Published" },
-              ]}
-            />
-            <SelectInput
-              value={committeeFilter}
-              onChange={setCommitteeFilter}
-              placeholder="All committees"
-              options={COMMITTEES.map((c) => ({ value: c, label: c }))}
-            />
-            {(statusFilter || committeeFilter) && (
-              <button
-                onClick={() => { setStatusFilter(""); setCommitteeFilter(""); }}
-                className="text-xs text-action-primary hover:underline whitespace-nowrap"
-              >
-                Clear filters
-              </button>
-            )}
-          </div>
-        )}
       </div>
 
       {/* ── Content area ────────────────────────────────────────────── */}
@@ -1240,6 +1295,101 @@ export default function MeetingsPage() {
           </div>
         )}
       </div>
+
+      {/* ── Filter side panel ──────────────────────────────────────── */}
+      {filterPanelOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end" style={{ background: "var(--background-backdrop)" }} onClick={() => setFilterPanelOpen(false)}>
+          <div
+            className="w-[380px] h-full bg-surface flex flex-col shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-outline-static shrink-0">
+              <h2 className="text-lg font-semibold text-type">Filters</h2>
+              <button
+                onClick={() => setFilterPanelOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full text-type-muted hover:bg-selection-hover hover:text-type transition-colors"
+              >
+                <Icon name="close" size={20} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-6">
+              {/* Committee */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-semibold text-type">
+                  Committee <span className="font-normal text-type-muted">(Required)</span>
+                </label>
+                <SelectInput
+                  value={draftCommittee}
+                  onChange={setDraftCommittee}
+                  placeholder="All categories"
+                  options={COMMITTEES.map((c) => ({ value: c, label: c }))}
+                />
+              </div>
+
+              {/* Meeting state */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-type">Meeting state</label>
+                <SegmentedToggle
+                  options={["All", "Published", "Draft"]}
+                  value={draftStatus}
+                  onChange={(v) => setDraftStatus(v as "All" | MeetingStatus)}
+                />
+              </div>
+
+              {/* Meeting visibility */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-type">Meeting visibility</label>
+                <SegmentedToggle
+                  options={["All", "Public", "Internal"]}
+                  value={draftVisibility}
+                  onChange={(v) => setDraftVisibility(v as "All" | MeetingVisibility)}
+                />
+              </div>
+
+              {/* Date range */}
+              <div className="flex flex-col gap-2">
+                <p className="text-xs text-type-muted leading-relaxed">
+                  Show events within the time frame you select below:
+                </p>
+                <FormField label="Start date">
+                  <TextInput type="date" value={draftStartDate} onChange={setDraftStartDate} placeholder="MM/DD/YYYY" />
+                </FormField>
+                <FormField label="End date">
+                  <TextInput type="date" value={draftEndDate} onChange={setDraftEndDate} placeholder="MM/DD/YYYY" />
+                </FormField>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="shrink-0 flex items-center justify-between px-6 py-4 border-t border-outline-static">
+              <button
+                onClick={clearAllFilters}
+                className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors"
+              >
+                Clear all
+              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setFilterPanelOpen(false)}
+                  className="px-4 py-2 text-sm font-semibold text-type-muted hover:text-type transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={applyFilters}
+                  className="px-5 py-2 text-sm font-semibold text-action-primary-on-primary rounded-xl transition-colors"
+                  style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}
+                >
+                  Apply
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Modals ──────────────────────────────────────────────────── */}
       <CreateMeetingModal

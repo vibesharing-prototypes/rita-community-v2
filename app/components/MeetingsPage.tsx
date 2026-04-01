@@ -396,7 +396,7 @@ function TemplatePickerModal({
 
   return (
     <Modal open={open} onClose={onClose} title="New meeting">
-      <div className="px-6 -mt-2 pb-4">
+      <div className="px-6 pt-4 pb-5">
         <p className="text-sm text-type-muted">To add a new meeting, first select a template.</p>
       </div>
       <div className="px-6 pb-6 flex flex-col gap-2">

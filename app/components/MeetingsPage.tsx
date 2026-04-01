@@ -854,7 +854,7 @@ function MeetingDetailView({
             {/* More actions */}
             <OverflowMenu
               items={[
-                { label: "Download agenda as PDF", icon: "picture_as_pdf", onClick: () => {} },
+                { label: "Download agenda", icon: "download", onClick: () => {} },
                 { label: "Share by email", icon: "mail", onClick: () => {} },
               ]}
             />

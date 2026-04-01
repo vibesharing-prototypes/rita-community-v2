@@ -1115,17 +1115,7 @@ export default function MeetingsPage() {
     <div className="flex flex-col h-full">
       {/* ── Page header ─────────────────────────────────────────────── */}
       <div className="shrink-0 px-8 pt-6 pb-0">
-        <div className="flex items-center justify-between mb-5">
-          <h1 className="text-2xl font-semibold text-type tracking-tight">Meetings</h1>
-          <button
-            onClick={() => setCreateOpen(true)}
-            className="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-action-primary-on-primary transition-colors"
-            style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}
-          >
-            <Icon name="add" size={18} className="text-action-primary-on-primary" />
-            New Meeting
-          </button>
-        </div>
+        <h1 className="text-2xl font-semibold text-type tracking-tight mb-5">Meetings</h1>
 
         {/* ── Tab bar + search/filter toolbar (Books-style) ─────── */}
         <div className="border-b border-outline-static">
@@ -1211,6 +1201,16 @@ export default function MeetingsPage() {
               <ToggleSwitch checked={showArchived} onChange={setShowArchived} label="Show archived" />
             </div>
           )}
+
+          {/* + New meeting button — always in toolbar */}
+          <button
+            onClick={() => setCreateOpen(true)}
+            className="ml-auto inline-flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-action-primary-on-primary transition-colors shrink-0 mb-px"
+            style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}
+          >
+            <Icon name="add" size={18} className="text-action-primary-on-primary" />
+            New meeting
+          </button>
         </div>
       </div>
 

@@ -1027,13 +1027,17 @@ export default function MeetingsPage() {
     return true;
   });
 
+  const sortFn = sortBy === "date-desc"
+    ? (a: Meeting, b: Meeting) => b.date.localeCompare(a.date)
+    : (a: Meeting, b: Meeting) => a.date.localeCompare(b.date);
+
   const upcomingMeetings = filteredMeetings
     .filter((m) => isUpcoming(m.date))
-    .sort((a, b) => a.date.localeCompare(b.date));
+    .sort(sortFn);
 
   const previousMeetings = filteredMeetings
     .filter((m) => !isUpcoming(m.date))
-    .sort((a, b) => b.date.localeCompare(a.date));
+    .sort(sortFn);
 
   // Group previous by year
   const previousByYear = previousMeetings.reduce<Record<number, Meeting[]>>((acc, m) => {
@@ -1171,7 +1175,6 @@ export default function MeetingsPage() {
                   options={[
                     { value: "date-asc", label: "Meeting date ascending" },
                     { value: "date-desc", label: "Meeting date descending" },
-                    { value: "name", label: "Name" },
                   ]}
                 />
               </div>

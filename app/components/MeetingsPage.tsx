@@ -435,29 +435,35 @@ function TemplatePickerModal({
   );
 }
 
-// ── Create meeting page (full-page form) ─────────────────────────────
+// ── Meeting form page (shared for create + edit) ─────────────────────
 
-function CreateMeetingPage({
+function MeetingFormPage({
+  mode,
+  meeting,
   template,
   onBack,
-  onCreateMeeting,
+  onSubmit,
 }: {
-  template: MeetingTemplate | null;
+  mode: "create" | "edit";
+  meeting?: Meeting;
+  template?: MeetingTemplate | null;
   onBack: () => void;
-  onCreateMeeting: (meeting: Meeting) => void;
+  onSubmit: (meeting: Meeting) => void;
 }) {
-  const [name, setName] = useState(template?.name || "");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState(template?.time || "");
-  const [location, setLocation] = useState(template?.location || "");
-  const [committee, setCommittee] = useState(template?.committee || "");
-  const [description, setDescription] = useState("");
-  const [access, setAccess] = useState<MeetingVisibility>("Public");
-  const [videoUrl, setVideoUrl] = useState("");
-  const [showVideo, setShowVideo] = useState(false);
+  const [name, setName] = useState(meeting?.name ?? template?.name ?? "");
+  const [date, setDate] = useState(meeting?.date ?? "");
+  const [time, setTime] = useState(meeting?.time ?? template?.time ?? "");
+  const [location, setLocation] = useState(meeting?.location ?? template?.location ?? "");
+  const [committee, setCommittee] = useState(meeting?.committee ?? template?.committee ?? "");
+  const [description, setDescription] = useState(meeting?.description ?? "");
+  const [access, setAccess] = useState<MeetingVisibility>(meeting?.visibility ?? "Public");
+  const [videoUrl, setVideoUrl] = useState(meeting?.videoUrl ?? "");
+  const [showVideo, setShowVideo] = useState(meeting?.showVideo ?? false);
   const [errors, setErrors] = useState<string[]>([]);
 
-  const handleCreate = () => {
+  const showCommitteeField = mode === "create" && !template;
+
+  const handleSubmit = () => {
     const errs: string[] = [];
     if (!name.trim()) errs.push("Name is required.");
     if (!date) errs.push("Date is required.");
@@ -467,27 +473,44 @@ function CreateMeetingPage({
       return;
     }
 
-    const newMeeting: Meeting = {
-      id: `m-new-${Date.now()}`,
-      name: name.trim(),
-      date,
-      time: time || undefined,
-      location: location || undefined,
-      committee,
-      status: "Draft",
-      visibility: access,
-      agendaStatus: "Not Published",
-      agendaCategories: 0,
-      agendaItems: 0,
-      membersOnly: template?.membersOnly ?? false,
-      publicRTS: template?.publicRTS ?? false,
-      description: description || undefined,
-      videoUrl: videoUrl || undefined,
-      showVideo,
-      templateId: template?.id,
-    };
-    onCreateMeeting(newMeeting);
+    if (mode === "edit" && meeting) {
+      onSubmit({
+        ...meeting,
+        name: name.trim(),
+        date,
+        time: time || undefined,
+        location: location || undefined,
+        committee,
+        visibility: access,
+        description: description || undefined,
+        videoUrl: videoUrl || undefined,
+        showVideo,
+      });
+    } else {
+      onSubmit({
+        id: `m-new-${Date.now()}`,
+        name: name.trim(),
+        date,
+        time: time || undefined,
+        location: location || undefined,
+        committee,
+        status: "Draft",
+        visibility: access,
+        agendaStatus: "Not Published",
+        agendaCategories: 0,
+        agendaItems: 0,
+        membersOnly: template?.membersOnly ?? false,
+        publicRTS: template?.publicRTS ?? false,
+        description: description || undefined,
+        videoUrl: videoUrl || undefined,
+        showVideo,
+        templateId: template?.id,
+      });
+    }
   };
+
+  const pageTitle = mode === "edit" ? "Edit Meeting" : "Draft Meeting";
+  const submitLabel = mode === "edit" ? "Save Changes" : "Create Draft";
 
   return (
     <div className="flex flex-col h-full">
@@ -503,8 +526,8 @@ function CreateMeetingPage({
 
       {/* Title */}
       <div className="px-8 pb-6">
-        <h1 className="text-2xl font-semibold text-type tracking-tight">Draft Meeting</h1>
-        {template && (
+        <h1 className="text-2xl font-semibold text-type tracking-tight">{pageTitle}</h1>
+        {mode === "create" && template && (
           <p className="text-sm text-type-muted mt-1">
             Template: {template.name} · {template.committee}
           </p>
@@ -520,8 +543,8 @@ function CreateMeetingPage({
         )}
 
         <div className="flex flex-col gap-5">
-          {/* Committee — only shown when no template */}
-          {!template && (
+          {/* Committee — only for create from scratch */}
+          {showCommitteeField && (
             <FormField label="Committee" required>
               <SelectInput
                 value={committee}
@@ -594,11 +617,11 @@ function CreateMeetingPage({
             Cancel
           </button>
           <button
-            onClick={handleCreate}
+            onClick={handleSubmit}
             className="px-5 py-2 text-sm font-semibold text-action-primary-on-primary rounded-xl transition-colors"
             style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}
           >
-            Create Draft
+            {submitLabel}
           </button>
         </div>
       </div>
@@ -781,10 +804,12 @@ function MeetingDetailView({
   meeting,
   onBack,
   onUpdateMeeting,
+  onEdit,
 }: {
   meeting: Meeting;
   onBack: () => void;
   onUpdateMeeting: (updated: Meeting) => void;
+  onEdit: () => void;
 }) {
   const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const [showUnpublishConfirm, setShowUnpublishConfirm] = useState(false);
@@ -830,7 +855,7 @@ function MeetingDetailView({
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {/* Edit button */}
-            <button className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
+            <button onClick={onEdit} className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors">
               Edit
             </button>
             {/* Publish / Unpublish */}
@@ -953,6 +978,7 @@ export default function MeetingsPage() {
   const [deleteTarget, setDeleteTarget] = useState<Meeting | null>(null);
   const [detailView, setDetailView] = useState<DetailView>(null);
   const [createView, setCreateView] = useState<{ templateId: string } | null>(null);
+  const [editView, setEditView] = useState<{ meetingId: string } | null>(null);
 
   // Year accordion for Previous tab
   const [expandedYears, setExpandedYears] = useState<Set<number>>(() => new Set([2026]));
@@ -1065,16 +1091,36 @@ export default function MeetingsPage() {
     setMeetings((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
   };
 
+  // If edit view is active
+  if (editView) {
+    const meeting = meetings.find((m) => m.id === editView.meetingId);
+    if (meeting) {
+      return (
+        <MeetingFormPage
+          mode="edit"
+          meeting={meeting}
+          onBack={() => { setEditView(null); setDetailView({ meetingId: meeting.id }); }}
+          onSubmit={(updated) => {
+            handleUpdateMeeting(updated);
+            setEditView(null);
+            setDetailView({ meetingId: updated.id });
+          }}
+        />
+      );
+    }
+  }
+
   // If create view is active
   if (createView) {
     const tmpl = createView.templateId
       ? templates.find((t) => t.id === createView.templateId) ?? null
       : null;
     return (
-      <CreateMeetingPage
+      <MeetingFormPage
+        mode="create"
         template={tmpl}
         onBack={() => setCreateView(null)}
-        onCreateMeeting={handleCreateMeeting}
+        onSubmit={handleCreateMeeting}
       />
     );
   }
@@ -1088,6 +1134,7 @@ export default function MeetingsPage() {
           meeting={meeting}
           onBack={() => setDetailView(null)}
           onUpdateMeeting={handleUpdateMeeting}
+          onEdit={() => { setDetailView(null); setEditView({ meetingId: meeting.id }); }}
         />
       );
     }

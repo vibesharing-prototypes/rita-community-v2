@@ -1202,14 +1202,14 @@ export default function MeetingsPage() {
             </div>
           )}
 
-          {/* + New meeting button — always in toolbar */}
+          {/* + New meeting / New template button */}
           <button
             onClick={() => setCreateOpen(true)}
             className="ml-auto inline-flex items-center gap-2 px-5 py-2 rounded-xl text-sm font-semibold text-action-primary-on-primary transition-colors shrink-0 mb-px"
             style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}
           >
             <Icon name="add" size={18} className="text-action-primary-on-primary" />
-            New meeting
+            {activeTab === "templates" ? "New template" : "New meeting"}
           </button>
         </div>
       </div>

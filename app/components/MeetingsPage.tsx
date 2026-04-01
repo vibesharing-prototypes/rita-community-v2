@@ -490,7 +490,9 @@ function CreateMeetingPage({
   };
 
   return (
-    <div className="flex flex-col h-full overflow-auto">
+    <div className="flex flex-col h-full">
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto">
       {/* Back link */}
       <div className="px-8 pt-6 pb-2">
         <button onClick={onBack} className="flex items-center gap-1 text-sm text-action-primary hover:underline">
@@ -578,23 +580,26 @@ function CreateMeetingPage({
             <TextInput value={videoUrl} onChange={setVideoUrl} placeholder="Enter the meeting link here" />
           </FormField>
           <ToggleSwitch checked={showVideo} onChange={setShowVideo} label="Show meeting link button" />
+        </div>
+      </div>
+    </div>
 
-          {/* Footer actions */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-outline-static">
-            <button
-              onClick={onBack}
-              className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleCreate}
-              className="px-5 py-2 text-sm font-semibold text-action-primary-on-primary rounded-xl transition-colors"
-              style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}
-            >
-              Create Draft
-            </button>
-          </div>
+      {/* Fixed footer */}
+      <div className="shrink-0 border-t border-outline-static bg-surface">
+        <div className="flex items-center justify-end gap-3 px-8 py-4">
+          <button
+            onClick={onBack}
+            className="px-4 py-2 text-sm font-semibold text-action-secondary-on-secondary rounded-xl border border-action-secondary-outline hover:bg-action-secondary-hover transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCreate}
+            className="px-5 py-2 text-sm font-semibold text-action-primary-on-primary rounded-xl transition-colors"
+            style={{ background: "linear-gradient(to right, var(--action-primary-default-gradient-start), var(--action-primary-default-gradient-end))" }}
+          >
+            Create Draft
+          </button>
         </div>
       </div>
     </div>

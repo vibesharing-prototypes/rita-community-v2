@@ -599,12 +599,12 @@ function HomePage({ onNavigate, onViewMeeting }: { onNavigate: (id: PageId) => v
   const visibleAgenda = agendaExpanded ? sortedAgenda : sortedAgenda.slice(0, 3);
 
   return (
-    <div className="flex flex-col gap-6 p-6 pb-12 h-full overflow-auto">
+    <div className="flex flex-col gap-6 p-6 pb-12">
 
       {/* Page title */}
       <h1 className="text-2xl font-semibold text-type tracking-tight shrink-0">Home</h1>
 
-      <div className="flex gap-6 items-start flex-1 min-h-0">
+      <div className="flex gap-6 items-start">
 
       {/* ── Left column (primary) ── */}
       <div className="flex-1 min-w-0 flex flex-col gap-6">

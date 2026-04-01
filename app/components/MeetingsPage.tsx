@@ -1287,11 +1287,13 @@ function MeetingRow({
   const overflowItems =
     meeting.status === "Draft"
       ? [
+          { label: "Edit", icon: "edit", onClick: onView },
           { label: "Publish", icon: "publish", onClick: onPublish },
           { label: "Duplicate", icon: "content_copy", onClick: onDuplicate },
           { label: "Delete", icon: "delete", danger: true as const, onClick: onDelete },
         ]
       : [
+          { label: "Edit", icon: "edit", onClick: onView },
           { label: "Unpublish", icon: "unpublished", onClick: onUnpublish },
           { label: "Duplicate", icon: "content_copy", onClick: onDuplicate },
           { label: "Delete", icon: "delete", danger: true as const, onClick: onDelete },

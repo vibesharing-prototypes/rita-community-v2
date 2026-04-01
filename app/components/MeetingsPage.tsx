@@ -502,12 +502,10 @@ function CreateMeetingPage({
       {/* Title */}
       <div className="px-8 pb-6">
         <h1 className="text-2xl font-semibold text-type tracking-tight">Draft Meeting</h1>
-        {template ? (
+        {template && (
           <p className="text-sm text-type-muted mt-1">
             Template: {template.name} · {template.committee}
           </p>
-        ) : (
-          <p className="text-sm text-type-muted mt-1">Creating from scratch</p>
         )}
       </div>
 
@@ -520,6 +518,18 @@ function CreateMeetingPage({
         )}
 
         <div className="flex flex-col gap-5">
+          {/* Committee — only shown when no template */}
+          {!template && (
+            <FormField label="Committee" required>
+              <SelectInput
+                value={committee}
+                onChange={setCommittee}
+                placeholder="Select committee"
+                options={COMMITTEES.map((c) => ({ value: c, label: c }))}
+              />
+            </FormField>
+          )}
+
           {/* Name */}
           <FormField label="Name" required>
             <TextInput value={name} onChange={setName} placeholder="Meeting name" />
@@ -539,18 +549,6 @@ function CreateMeetingPage({
           <FormField label="Location">
             <TextInput value={location} onChange={setLocation} placeholder="e.g. District Office · Board Room" />
           </FormField>
-
-          {/* Committee — only shown when no template */}
-          {!template && (
-            <FormField label="Committee" required>
-              <SelectInput
-                value={committee}
-                onChange={setCommittee}
-                placeholder="Select committee"
-                options={COMMITTEES.map((c) => ({ value: c, label: c }))}
-              />
-            </FormField>
-          )}
 
           {/* Description */}
           <FormField label="Description">

@@ -19,7 +19,7 @@ This prototype is deployed via [VibeSharing](https://vibesharing.app).
    npm run dev
    ```
 
-4. Make your changes to `app/page.tsx`
+4. Make your changes in `src/`
 
 5. Push to deploy:
    ```bash
@@ -30,8 +30,12 @@ This prototype is deployed via [VibeSharing](https://vibesharing.app).
 
 Your changes will be live in ~30 seconds.
 
+## Deployment
+
+Netlify builds with `npm run build` and serves `dist` per `netlify.toml`.
+
 ## Tech Stack
 
-- Next.js 14
-- Tailwind CSS
-- TypeScript
+- Vite
+- React
+- Atlas (MUI-based)

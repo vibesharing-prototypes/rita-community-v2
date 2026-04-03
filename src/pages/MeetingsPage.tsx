@@ -3,9 +3,7 @@ import AddIcon from "@diligentcorp/atlas-react-bundle/icons/Add";
 import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
 import CloseIcon from "@diligentcorp/atlas-react-bundle/icons/Close";
 import FilterIcon from "@diligentcorp/atlas-react-bundle/icons/Filter";
-import MoreIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import SearchIcon from "@diligentcorp/atlas-react-bundle/icons/Search";
-import TemplateIcon from "@diligentcorp/atlas-react-bundle/icons/Document";
 import ArchiveIcon from "@diligentcorp/atlas-react-bundle/icons/Archive";
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
 import UnarchiveIcon from "@diligentcorp/atlas-react-bundle/icons/Unarchive";
@@ -22,7 +20,6 @@ import {
   FormLabel,
   IconButton,
   InputAdornment,
-  Chip,
   MenuItem,
   Select,
   Stack,
@@ -400,7 +397,7 @@ export default function MeetingsPage() {
                   <TableRow key={template.id} id={`template-row-${template.id}`}>
                     <TableCell>
                       <Stack direction="row" spacing={1} alignItems="center">
-                        <Typography variant="body2" sx={{ fontWeight: 600 }}>{template.name}</Typography>
+                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{template.name}</Typography>
                         {template.status === "Archived" && <StatusChip label="Archived" />}
                       </Stack>
                     </TableCell>
@@ -550,7 +547,7 @@ export default function MeetingsPage() {
                     </ToggleButtonGroup>
                   </FormControl>
                   <FormControl>
-                    <Typography variant="body2" sx={{ mb: 1, color: "#6F7377" }}>
+                    <Typography variant="body1" sx={{ mb: 1, color: "#6F7377" }}>
                       Show meetings within the time frame you select below:
                     </Typography>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>

@@ -7,7 +7,7 @@ import {
 } from "@diligentcorp/atlas-react-bundle/global-nav";
 import HomeIcon from "@diligentcorp/atlas-react-bundle/icons/Home";
 import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
-import SuccessIcon from "@diligentcorp/atlas-react-bundle/icons/Success";
+import ListIcon from "@diligentcorp/atlas-react-bundle/icons/List";
 import PolicyIcon from "@diligentcorp/atlas-react-bundle/icons/Policy";
 import FolderIcon from "@diligentcorp/atlas-react-bundle/icons/Folder";
 import DocumentIcon from "@diligentcorp/atlas-react-bundle/icons/Document";
@@ -52,12 +52,20 @@ export default function Navigation() {
           <CalendarIcon slot="icon" />
         </RoutedNavLink>
         <RoutedNavLink to="/agenda" label="Agenda items">
-          <SuccessIcon slot="icon" />
+          <ListIcon slot="icon" />
         </RoutedNavLink>
         <RoutedNavLink to="/policies" label="Policies">
           <PolicyIcon slot="icon" />
         </RoutedNavLink>
 
+        <Box sx={{
+          "--lens-component-global-nav-list-gap": "0px",
+          ...(libraryOpen && {
+            borderRadius: "12px",
+            overflow: "hidden",
+            ...(!isLibraryRoute && { border: `1px solid ${mutedBorder}` }),
+          }),
+        }}>
         <NavSection
           label="Library"
           isOpen={libraryOpen}
@@ -66,19 +74,12 @@ export default function Navigation() {
           onClose={() => setLibraryOpen(false)}
         >
           <FolderIcon slot="icon" />
-          <RoutedNavLink to="/library/files" label="Files">
-            <DocumentIcon slot="icon" />
-          </RoutedNavLink>
-          <RoutedNavLink to="/library/goals" label="Goals">
-            <FlagIcon slot="icon" />
-          </RoutedNavLink>
-          <RoutedNavLink to="/library/events" label="Events">
-            <TimeAndDateIcon slot="icon" />
-          </RoutedNavLink>
-          <RoutedNavLink to="/library/members" label="Board members">
-            <GroupIcon slot="icon" />
-          </RoutedNavLink>
+          <RoutedNavLink to="/library/files" label="Files" />
+          <RoutedNavLink to="/library/goals" label="Goals" />
+          <RoutedNavLink to="/library/events" label="Events" />
+          <RoutedNavLink to="/library/members" label="Board members" />
         </NavSection>
+        </Box>
       </Box>
 
       <Box

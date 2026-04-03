@@ -1,2 +1,7 @@
 @import "@diligentcorp/atlas-react-bundle/styles";
 @import "@diligentcorp/atlas-react-bundle/global-nav.css";
+
+main[data-atlas-gn-app] {
+  border-left: 1px solid var(--lens-component-global-nav-list-divider-border-color);
+  min-height: 100dvh;
+}

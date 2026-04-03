@@ -122,7 +122,6 @@ export default function MeetingsPage() {
       <MeetingDetailView
         meeting={detailView}
         onBack={() => setDetailView(null)}
-        onEdit={() => { setEditView(detailView); setDetailView(null); }}
         onUpdate={(updated) => {
           setMeetings((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
           setDetailView(updated);
@@ -271,7 +270,13 @@ export default function MeetingsPage() {
                   }}
                 >
                   <Stack flex={1} gap={0.5}>
-                    <Typography variant="subtitle2">{meeting.name}</Typography>
+                    <Typography
+                      variant="subtitle2"
+                      onClick={() => setDetailView(meeting)}
+                      sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                    >
+                      {meeting.name}
+                    </Typography>
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, mr: "4px", color: "text.secondary", flexShrink: 0 }}>
                         <CalendarIcon />
@@ -330,7 +335,13 @@ export default function MeetingsPage() {
                           }}
                         >
                           <Stack flex={1} gap={0.5}>
-                            <Typography variant="subtitle2">{meeting.name}</Typography>
+                            <Typography
+                              variant="subtitle2"
+                              onClick={() => setDetailView(meeting)}
+                              sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                            >
+                              {meeting.name}
+                            </Typography>
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                               <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, mr: "4px", color: "text.secondary", flexShrink: 0 }}>
                                 <CalendarIcon />
@@ -547,7 +558,7 @@ export default function MeetingsPage() {
                     </ToggleButtonGroup>
                   </FormControl>
                   <FormControl>
-                    <Typography variant="body1" sx={{ mb: 1, color: "#6F7377" }}>
+                    <Typography variant="body1" sx={{ mb: 1, color: "#6F7377", fontSize: "12px", lineHeight: "16px" }}>
                       Show meetings within the time frame you select below:
                     </Typography>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>

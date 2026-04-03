@@ -28,7 +28,7 @@ Meetings are the primary object in Community v2. Everything else (agenda, minute
 | D3 | Explicit `+ New Meeting` button always visible in the top right of the Meetings list. |
 | D4 | Meeting creation flow starts with a template selector as step 1. |
 | D5 | Templates are accessible as a tab within the Meetings section, not under Settings. |
-| D6 | Every meeting list row shows a status badge (Draft / Active) and an agenda status badge. |
+| D6 | Every meeting list row shows a status badge: `Draft` for draft meetings, or `Published` + `Internal`/`Public` for published meetings. Visibility setting determines audience access and is surfaced directly on the badge — no separate agenda status badge. |
 | D7 | Creating a meeting from a template pre-populates both the agenda structure and the minutes structure. |
 | D8 | Template list rows include a direct "Create meeting from this template" action. |
 | D9 | All status transitions are server-validated. No optimistic client-side updates. Errors returned as structured JSON and displayed inline. |
@@ -42,7 +42,7 @@ Meetings are the primary object in Community v2. Everything else (agenda, minute
 [TEMPLATE] ──(Create from template)──→ [DRAFT]
                                            │
                          (Publish)         │       (Unpublish)
-                            └─────────→ [ACTIVE] ←──────────┘
+                            └─────────→ [PUBLISHED] ←─────────┘
                                            │
                                      (Delete) ↓
                                         [DELETED]
@@ -53,10 +53,10 @@ TEMPLATE ──(Delete)──→ DELETED
 
 **Rules:**
 - Templates only produce Drafts (via duplication). No direct activation from template.
-- `DRAFT → ACTIVE`: server validates. Rejects with structured errors if invalid (e.g. missing date).
-- `ACTIVE → DRAFT`: allowed. Warns if meeting date is in the past.
-- No `ACTIVE → TEMPLATE` path. Templates are created independently or duplicated from templates.
-- Deletion of a Draft with approved agenda items requires explicit confirmation listing at-risk items.
+- `DRAFT → PUBLISHED`: server validates. Rejects with structured errors if invalid (e.g. missing date).
+- `PUBLISHED → DRAFT`: allowed. Warns if meeting date is in the past.
+- No `PUBLISHED → TEMPLATE` path. Templates are created independently or duplicated from templates.
+- Deletion of a Draft requires explicit confirmation.
 - All transitions are server-validated. Client never optimistically updates status.
 
 ---
@@ -88,8 +88,7 @@ The Meetings page defaults to the Upcoming tab. Three tabs total: Upcoming, Prev
 |-------|-------|
 | Date | `MMM DD, YYYY` |
 | Meeting name | From template or manual |
-| Status badge | `Draft` / `Active` |
-| Agenda status badge | `Not Published` / `Published` / `Out of Sync` — shown on both list row and meeting detail |
+| Status badge | `Draft` for draft meetings. `Published` + `Internal` or `Published` + `Public` for published meetings — visibility determines audience access. |
 | Primary action button | Context-sensitive (see §4.3) |
 | Row overflow menu `⋯` | Context-sensitive (see §4.3) |
 
@@ -98,11 +97,11 @@ The Meetings page defaults to the Upcoming tab. Three tabs total: Upcoming, Prev
 | Status | Primary Button | Overflow Menu `⋯` |
 |--------|---------------|-------------------|
 | Draft | Edit Agenda | Publish · Duplicate · Delete |
-| Active | View | Make Draft · Duplicate · Delete |
+| Published | View | Unpublish · Duplicate · Delete |
 
 **Notes:**
-- "Make Draft" on an Active meeting with a past date → confirmation warning.
-- "Delete" on a Draft with approved agenda items → confirmation listing at-risk items.
+- "Unpublish" on a Published meeting with a past date → confirmation warning.
+- "Delete" on a Draft requires explicit confirmation.
 - Pre-migration legacy meetings: Duplicate action hidden.
 
 ### 4.4 Filters
@@ -186,12 +185,12 @@ VIDEO
 
 ### 6.2 Status Control
 
-- Status badge (`Draft` / `Active`) is **read-only**. It communicates state, it does not trigger actions.
+- Status badge (`Draft` / `Published · Internal` / `Published · Public`) is **read-only**. It communicates state, it does not trigger actions.
 - Status transitions are driven by explicit CTA buttons:
   - Draft meeting → `[ Publish ]` button (prominent, in the meeting header action area)
-  - Active meeting → `[ Unpublish ]` button (secondary, in the meeting header action area)
+  - Published meeting → `[ Unpublish ]` button (secondary, in the meeting header action area)
 - Server validates on action. Errors displayed inline below the header (not HTML dialog).
-- Unpublishing an Active meeting with a past date → confirmation dialog before proceeding.
+- Unpublishing a Published meeting with a past date → confirmation dialog before proceeding.
 
 ### 6.3 Meeting Details Edit
 
@@ -314,9 +313,9 @@ Three-tab structure (from Community — keep this, it's correct):
 |---|----------|----------|
 | E1 | Creating a meeting with no templates | "No template" option in picker. Meeting created blank. |
 | E2 | Org with single committee | Committee field hidden in creation form (auto-assigned). |
-| E3 | Publish (Draft → Active) fails validation | Inline error list below status control. Meeting stays Draft. |
-| E4 | Unpublish Active meeting with past date | Confirmation dialog: "This meeting date has passed. Unpublish anyway?" |
-| E5 | Delete Draft with approved agenda items | Confirmation dialog listing item names. Explicit confirm required. |
+| E3 | Publish (Draft → Published) fails validation | Inline error list below status control. Meeting stays Draft. |
+| E4 | Unpublish Published meeting with past date | Confirmation dialog: "This meeting date has passed. Unpublish anyway?" |
+| E5 | Delete Draft meeting | Confirmation dialog. Explicit confirm required. |
 | E6 | Delete template used by existing meetings | Blocked. Show count: "This template was used to create 12 meetings." |
 | E7 | Duplicate — double-click prevention | Duplicate button disabled after first click. |
 | E8 | Meeting release window | Release window is configured per committee. If `meetingRelease ≥ 0`, meeting hidden from non-privileged users until N days before meeting date. Super users and committee members exempt. |

@@ -25,6 +25,7 @@
     "@mui/x-date-pickers-pro": "^8",
     "@mui/x-license": "^8",
     "@mui/x-tree-view": "^8",
+    "date-fns": "^4.1.0",
     "lit": "^3",
     "react": "^19",
     "react-dom": "^19",

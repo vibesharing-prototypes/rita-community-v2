@@ -123,59 +123,6 @@ function EditableMultilineField({
   );
 }
 
-// ── Inline-editable title ──────────────────────────────────────────────────
-
-function EditableTitle({
-  value,
-  onSave,
-}: {
-  value: string;
-  onSave: (val: string) => void;
-}) {
-  const [editing, setEditing] = useState(false);
-  const [local, setLocal] = useState(value);
-
-  const commit = () => {
-    setEditing(false);
-    if (local.trim() && local !== value) onSave(local.trim());
-    else setLocal(value);
-  };
-
-  if (editing) {
-    return (
-      <TextField
-        value={local}
-        onChange={(e) => setLocal(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => { if (e.key === "Enter") commit(); if (e.key === "Escape") { setLocal(value); setEditing(false); } }}
-        autoFocus
-        fullWidth
-        inputProps={{ style: { fontSize: "1.5rem", fontWeight: 600, lineHeight: 1.3, padding: "2px 0" } }}
-        variant="standard"
-      />
-    );
-  }
-
-  return (
-    <Typography
-      variant="h5"
-      onClick={() => { setLocal(value); setEditing(true); }}
-      sx={{
-        fontWeight: 600,
-        fontSize: "1.5rem",
-        lineHeight: 1.3,
-        cursor: "text",
-        borderRadius: "4px",
-        px: 0.5,
-        mx: -0.5,
-        "&:hover": { backgroundColor: "action.hover" },
-      }}
-    >
-      {value}
-    </Typography>
-  );
-}
-
 // ── Right-column card shell ────────────────────────────────────────────────
 
 function StatusCard({
@@ -218,7 +165,7 @@ function VisibilityConfirmDialog({
 }) {
   const toPublic = targetVisibility === "Public";
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
       <DialogTitle>
         {toPublic ? "Publish to public site?" : "Make meeting internal?"}
         <Box component="p" sx={{ m: 0 }}>
@@ -237,7 +184,7 @@ function VisibilityConfirmDialog({
       <DialogContent>
         <Stack direction="row" spacing={1.5} justifyContent="flex-end" sx={{ pt: 1 }}>
           <Button variant="outlined" onClick={onClose}>Cancel</Button>
-          <Button variant="contained" color={toPublic ? "primary" : "warning"} onClick={onConfirm}>
+          <Button variant="contained" color={(toPublic ? "primary" : "error") as "primary"} onClick={onConfirm}>
             {toPublic ? "Publish to public" : "Make internal"}
           </Button>
         </Stack>
@@ -282,11 +229,6 @@ export default function MeetingDetailView({
   };
 
   const isPublic = draft.visibility === "Public";
-  const minutesStatusColor: Record<MinutesStatus, string> = {
-    None: "#9E9E9E",
-    Draft: "#ED6C02",
-    Adopted: "#2E7D32",
-  };
 
   return (
     <PageLayout id="page-meeting-detail">
@@ -302,9 +244,9 @@ export default function MeetingDetailView({
           >
             {(item) =>
               item.isCurrent ? (
-                <Typography variant="body2">{item.label}</Typography>
+                <Typography variant="body1">{item.label}</Typography>
               ) : (
-                <Link underline="hover" variant="body2" sx={{ cursor: "pointer" }} onClick={onBack}>
+                <Link underline="hover" variant="body1" sx={{ cursor: "pointer" }} onClick={onBack}>
                   {item.label}
                 </Link>
               )
@@ -407,7 +349,7 @@ export default function MeetingDetailView({
                   border: `1px solid ${isPublic ? "#A5D6A7" : "#FFE082"}`,
                 }}
               >
-                <Typography variant="body2" sx={{ fontWeight: 600, color: isPublic ? "#2E7D32" : "#E65100" }}>
+                <Typography variant="body1" sx={{ fontWeight: 600, color: isPublic ? "#2E7D32" : "#E65100" }}>
                   {isPublic ? "Published — visible on public site" : "Internal — admins only"}
                 </Typography>
               </Box>
@@ -415,7 +357,7 @@ export default function MeetingDetailView({
                 fullWidth
                 variant="outlined"
                 size="small"
-                color={isPublic ? "warning" : "primary"}
+                color={(isPublic ? "error" : "primary") as "primary"}
                 onClick={() => requestVisibilityChange(isPublic ? "Internal" : "Public")}
               >
                 {isPublic ? "Make internal" : "Publish to public"}
@@ -438,7 +380,7 @@ export default function MeetingDetailView({
                 </Button>
               </Stack>
             </Stack>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" color="text.secondary">
               {draft.agendaCategories} {draft.agendaCategories === 1 ? "category" : "categories"} · {draft.agendaItems} {draft.agendaItems === 1 ? "item" : "items"}
             </Typography>
           </Box>

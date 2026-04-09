@@ -29,7 +29,9 @@
       "agendaCategories": 2,
       "agendaItems": 8,
       "membersOnly": false,
-      "publicRTS": false
+      "publicRTS": false,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Quarterly review of district financial statements, budget variances, and procurement approvals. Restricted to finance committee members and senior staff."
     },
     {
       "id": "m3",
@@ -59,7 +61,9 @@
       "agendaCategories": 4,
       "agendaItems": 15,
       "membersOnly": false,
-      "publicRTS": false
+      "publicRTS": false,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Annual review of internal audit findings, risk register updates, and compliance status across all district departments."
     },
     {
       "id": "m5",
@@ -89,7 +93,9 @@
       "agendaCategories": 5,
       "agendaItems": 18,
       "membersOnly": false,
-      "publicRTS": true
+      "publicRTS": true,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Monthly open board meeting covering policy approvals, superintendent report, and public comment. Streamed live for community members."
     },
     {
       "id": "m7",
@@ -104,7 +110,9 @@
       "agendaCategories": 3,
       "agendaItems": 10,
       "membersOnly": false,
-      "publicRTS": false
+      "publicRTS": false,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Review of Q1 audit findings, internal controls assessment, and progress report on prior audit recommendations."
     },
     {
       "id": "m8",
@@ -119,7 +127,9 @@
       "agendaCategories": 2,
       "agendaItems": 7,
       "membersOnly": false,
-      "publicRTS": false
+      "publicRTS": false,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Mid-year budget review including revenue projections, expenditure trends, and discussion of proposed budget adjustments."
     },
     {
       "id": "m9",
@@ -134,7 +144,9 @@
       "agendaCategories": 5,
       "agendaItems": 20,
       "membersOnly": false,
-      "publicRTS": true
+      "publicRTS": true,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Year-end board meeting with adoption of the annual report, recognition of outgoing board members, and community comment period."
     },
     {
       "id": "m10",
@@ -149,7 +161,9 @@
       "agendaCategories": 2,
       "agendaItems": 9,
       "membersOnly": false,
-      "publicRTS": false
+      "publicRTS": false,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "End-of-year financial close review covering final accounts, reserve fund status, and preparation for the annual external audit."
     },
     {
       "id": "m11",
@@ -164,7 +178,9 @@
       "agendaCategories": 3,
       "agendaItems": 11,
       "membersOnly": false,
-      "publicRTS": false
+      "publicRTS": false,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Third quarter audit committee meeting reviewing internal audit progress, external auditor communications, and risk management updates."
     },
     {
       "id": "m12",
@@ -179,7 +195,9 @@
       "agendaCategories": 4,
       "agendaItems": 16,
       "membersOnly": false,
-      "publicRTS": true
+      "publicRTS": true,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "September board meeting covering back-to-school initiatives, facilities update, staffing report, and approval of consent agenda."
     },
     {
       "id": "m13",
@@ -194,7 +212,9 @@
       "agendaCategories": 2,
       "agendaItems": 6,
       "membersOnly": false,
-      "publicRTS": false
+      "publicRTS": false,
+      "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
+      "description": "Annual budget planning workshop to establish priorities, review enrollment projections, and outline resource allocation for the upcoming fiscal year."
     }
   ],
   "templates": [
@@ -233,5 +253,9 @@
       "meetingsCreated": 3
     }
   ],
-  "committees": ["Regular board", "Finance", "Audit"]
+  "committees": [
+    "Regular board",
+    "Finance",
+    "Audit"
+  ]
 }

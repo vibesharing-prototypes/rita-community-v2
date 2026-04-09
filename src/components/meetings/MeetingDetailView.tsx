@@ -1,32 +1,104 @@
 import { OverflowBreadcrumbs, PageHeader } from "@diligentcorp/atlas-react-bundle";
+import AgendaIcon from "@diligentcorp/atlas-react-bundle/icons/Agenda";
 import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
-import DownloadIcon from "@diligentcorp/atlas-react-bundle/icons/Download";
+import ClockIcon from "@diligentcorp/atlas-react-bundle/icons/Clock";
+import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
+import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
 import LocationIcon from "@diligentcorp/atlas-react-bundle/icons/Location";
-import NotesIcon from "@diligentcorp/atlas-react-bundle/icons/Notes";
 import MoreIcon from "@diligentcorp/atlas-react-bundle/icons/More";
+import NotesIcon from "@diligentcorp/atlas-react-bundle/icons/Notes";
+import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
+import UnlockedIcon from "@diligentcorp/atlas-react-bundle/icons/Unlocked";
 import VideoIcon from "@diligentcorp/atlas-react-bundle/icons/Video";
 import {
   Box,
   Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
+  Divider,
   IconButton,
   Link,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Stack,
   SvgIcon,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format, parse } from "date-fns";
 import { useState } from "react";
+
+import ConfirmDialog from "./ConfirmDialog";
 
 import PageLayout from "../PageLayout";
 import type { Meeting, MeetingVisibility } from "../../types/meetings";
-import { formatDateLong } from "../../utils/meetings";
+import { isUpcoming } from "../../utils/meetings";
 import StatusChip from "./StatusChip";
 
 type MinutesStatus = "None" | "Draft" | "Adopted";
+
+// ── Date + Time picker field ───────────────────────────────────────────────
+
+const PICKER_INPUT_SX = {
+  "& .MuiInput-root": {
+    borderRadius: "4px",
+    "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
+  },
+  "& .MuiInput-input.MuiInput-input": { pl: "4px", pr: 0, pt: "4px", pb: "4px" },
+  "& .MuiInput-root::before": { borderBottom: "none !important" },
+  "& .MuiInput-root::after": { borderBottom: "none" },
+};
+
+function DateTimeField({
+  date,
+  time,
+  onSaveDate,
+  onSaveTime,
+}: {
+  date: string;
+  time?: string;
+  onSaveDate: (val: string) => void;
+  onSaveTime: (val: string) => void;
+}) {
+  const { presets } = useTheme();
+  const datePresets = (presets as any).DatePickerPresets?.withAtlasActionBar({ cancelButtonLabel: "Cancel", clearButtonLabel: "Clear" });
+  const timePresets = (presets as any).TimePickerPresets?.withAtlasActionBar({ cancelButtonLabel: "Cancel", clearButtonLabel: "Clear" });
+
+  const dateValue = new Date(`${date}T12:00:00`);
+  const timeValue = time ? parse(time, "h:mm a", new Date()) : null;
+
+  return (
+    <Box>
+      <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}>
+        <CalendarIcon />
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+          Date and time
+        </Typography>
+      </Stack>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Stack direction="row" alignItems="center" gap={1} sx={{ pl: "28px" }}>
+          <DatePicker
+            value={dateValue}
+            onChange={(val) => { if (val) onSaveDate(format(val, "yyyy-MM-dd")); }}
+            {...datePresets}
+            slotProps={{ textField: { variant: "standard", sx: { ...PICKER_INPUT_SX, minWidth: 0 } } }}
+          />
+          <TimePicker
+            value={timeValue}
+            onChange={(val) => { if (val) onSaveTime(format(val, "h:mm a")); }}
+            {...timePresets}
+            slotProps={{ textField: { variant: "standard", sx: { ...PICKER_INPUT_SX, width: 110 } } }}
+          />
+        </Stack>
+      </LocalizationProvider>
+    </Box>
+  );
+}
 
 // ── Inline-editable single-line field ──────────────────────────────────────
 
@@ -49,7 +121,7 @@ function EditableField({
 
   return (
     <Box>
-      <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: "4px", "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}>
+      <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}>
         {icon}
         <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
           {label}
@@ -68,7 +140,7 @@ function EditableField({
             borderRadius: "4px",
             "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
           },
-          "& .MuiInput-input.MuiInput-input": { pl: "28px", pr: 0, ...inputSx },
+          "& .MuiInput-input.MuiInput-input": { pl: "28px", pr: 0, pt: "4px", pb: "4px", ...inputSx },
           "& .MuiInput-root::before": { borderBottom: "none !important" },
         }}
       />
@@ -95,7 +167,7 @@ function EditableMultilineField({
 
   return (
     <Box>
-      <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: "4px", "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}>
+      <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}>
         {icon}
         <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
           {label}
@@ -115,7 +187,7 @@ function EditableMultilineField({
             borderRadius: "4px",
             "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
           },
-          "& .MuiInput-input.MuiInput-input": { pl: "28px", pr: 0 },
+          "& .MuiInput-input.MuiInput-input": { pl: "28px", pr: 0, pt: "4px", pb: "4px" },
           "& .MuiInput-root::before": { borderBottom: "none !important" },
         }}
       />
@@ -150,82 +222,34 @@ function StatusCard({
   );
 }
 
-// ── Visibility confirmation dialog ────────────────────────────────────────
-
-function VisibilityConfirmDialog({
-  open,
-  targetVisibility,
-  onConfirm,
-  onClose,
-}: {
-  open: boolean;
-  targetVisibility: MeetingVisibility | null;
-  onConfirm: () => void;
-  onClose: () => void;
-}) {
-  const toPublic = targetVisibility === "Public";
-  return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        {toPublic ? "Publish to public site?" : "Make meeting internal?"}
-        <Box component="p" sx={{ m: 0 }}>
-          {toPublic
-            ? "This meeting will be visible to anyone on the public site, including agenda and documents."
-            : "This meeting will be hidden from the public site and accessible to admins only."}
-        </Box>
-        <IconButton
-          aria-label="Close"
-          onClick={onClose}
-          sx={{ position: "absolute", top: 8, right: 8 }}
-        >
-          <SvgIcon><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" /></SvgIcon>
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <Stack direction="row" spacing={1.5} justifyContent="flex-end" sx={{ pt: 1 }}>
-          <Button variant="outlined" onClick={onClose}>Cancel</Button>
-          <Button variant="contained" color={(toPublic ? "primary" : "error") as "primary"} onClick={onConfirm}>
-            {toPublic ? "Publish to public" : "Make internal"}
-          </Button>
-        </Stack>
-      </DialogContent>
-    </Dialog>
-  );
-}
-
 // ── Main component ─────────────────────────────────────────────────────────
 
 export default function MeetingDetailView({
   meeting,
   onBack,
   onUpdate,
+  onDuplicate,
+  onDelete,
 }: {
   meeting: Meeting;
   onBack: () => void;
   onUpdate: (meeting: Meeting) => void;
+  onDuplicate?: () => void;
+  onDelete?: () => void;
 }) {
   const { tokens } = useTheme();
   const dividerColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
 
   const [draft, setDraft] = useState<Meeting>({ ...meeting });
   const [minutesStatus] = useState<MinutesStatus>("None");
-  const [visibilityConfirmOpen, setVisibilityConfirmOpen] = useState(false);
-  const [pendingVisibility, setPendingVisibility] = useState<MeetingVisibility | null>(null);
+  const [moreMenuAnchor, setMoreMenuAnchor] = useState<HTMLElement | null>(null);
+  type PendingAction = 'make-public' | 'make-internal' | 'duplicate' | 'delete';
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
   const save = (partial: Partial<Meeting>) => {
     const updated = { ...draft, ...partial };
     setDraft(updated);
     onUpdate(updated);
-  };
-
-  const requestVisibilityChange = (to: MeetingVisibility) => {
-    setPendingVisibility(to);
-    setVisibilityConfirmOpen(true);
-  };
-
-  const confirmVisibilityChange = () => {
-    if (pendingVisibility) save({ visibility: pendingVisibility });
-    setVisibilityConfirmOpen(false);
-    setPendingVisibility(null);
   };
 
   const isPublic = draft.visibility === "Public";
@@ -239,11 +263,14 @@ export default function MeetingDetailView({
           <OverflowBreadcrumbs
             items={[
               { id: "meetings", label: "Meetings" },
+              { id: "tab", label: isUpcoming(draft.date) ? "Upcoming" : "Previous" },
               { id: "current", label: draft.name, isCurrent: true },
             ]}
           >
             {(item) =>
               item.isCurrent ? (
+                <Typography variant="body1">{item.label}</Typography>
+              ) : item.id === "meetings" ? (
                 <Typography variant="body1">{item.label}</Typography>
               ) : (
                 <Link underline="hover" variant="body1" sx={{ cursor: "pointer" }} onClick={onBack}>
@@ -273,9 +300,9 @@ export default function MeetingDetailView({
               {draft.committee}
             </Box>
             <StatusChip label={draft.status} />
+            {draft.status === "Published" && <StatusChip label={draft.visibility} />}
           </Stack>
         }
-        slotProps={{ backButton: { onClick: onBack, "aria-label": "Back to meetings" } }}
         moreButton={
           <Stack direction="row" spacing={1} alignItems="center">
             {draft.status === "Draft" ? (
@@ -287,12 +314,50 @@ export default function MeetingDetailView({
                 Unpublish
               </Button>
             )}
-            <IconButton aria-label="More actions">
+            <IconButton aria-label="More actions" onClick={(e) => setMoreMenuAnchor(e.currentTarget)}>
               <MoreIcon />
             </IconButton>
+            <Menu
+              anchorEl={moreMenuAnchor}
+              open={Boolean(moreMenuAnchor)}
+              onClose={() => setMoreMenuAnchor(null)}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+              {draft.status === "Published" && (
+                <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction(isPublic ? "make-internal" : "make-public"); }}>
+                  <ListItemIcon>{isPublic ? <LockedIcon /> : <UnlockedIcon />}</ListItemIcon>
+                  <ListItemText>{isPublic ? "Make internal" : "Make public"}</ListItemText>
+                </MenuItem>
+              )}
+              <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("duplicate"); }}>
+                <ListItemIcon><CopyIcon /></ListItemIcon>
+                <ListItemText>Duplicate</ListItemText>
+              </MenuItem>
+              <Divider />
+              <MenuItem
+                onClick={() => { setMoreMenuAnchor(null); setPendingAction("delete"); }}
+                sx={{
+                  color: "var(--lens-semantic-color-status-error-text)",
+                  "& .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+                  "& .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+                  "&:hover .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+                  "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+                }}
+              >
+                <ListItemIcon><TrashIcon /></ListItemIcon>
+                <ListItemText>Delete</ListItemText>
+              </MenuItem>
+            </Menu>
           </Stack>
         }
-        containerProps={{ sx: { "--lens-component-page-header-desktop-middle-container-padding-bottom": "0px", "--lens-component-page-header-desktop-container-gap": "8px" } }}
+        containerProps={{ sx: {
+          "--lens-component-page-header-desktop-middle-container-padding-bottom": "0px",
+          "--lens-component-page-header-desktop-container-gap": "8px",
+          "--lens-component-page-header-desktop-title-container-gap": "12px",
+          "--lens-component-page-header-tablet-title-container-gap": "12px",
+          "& nav.MuiBreadcrumbs-root li:first-child a": { pl: 0 },
+        } }}
       />
       </Box>
 
@@ -303,12 +368,11 @@ export default function MeetingDetailView({
         <Stack flex={1} gap="24px" minWidth={0}>
 
           {/* Fields */}
-          <EditableField
-            icon={<CalendarIcon />}
-            label="Date and time"
-            value={`${formatDateLong(draft.date)}${draft.time ? ` · ${draft.time}` : ""}`}
-            placeholder="Add date and time…"
-            onSave={(val) => save({ time: val })}
+          <DateTimeField
+            date={draft.date}
+            time={draft.time}
+            onSaveDate={(val) => save({ date: val })}
+            onSaveTime={(val) => save({ time: val })}
           />
           <EditableField
             icon={<LocationIcon />}
@@ -334,61 +398,55 @@ export default function MeetingDetailView({
           />
         </Stack>
 
-        {/* Right column — status cards */}
-        <Stack gap={2} sx={{ width: 300, flexShrink: 0 }}>
+        {/* Right column — meeting content */}
+        <Stack gap={1.5} sx={{ width: 300, flexShrink: 0 }}>
 
-          {/* Visibility card — only shown for published meetings */}
-          {draft.status === "Published" && (
-            <StatusCard title="Visibility" dividerColor={dividerColor}>
-              <Box
-                sx={{
-                  borderRadius: "8px",
-                  p: 1.5,
-                  mb: 1.5,
-                  backgroundColor: isPublic ? "#F0FFF4" : "#FFF8E1",
-                  border: `1px solid ${isPublic ? "#A5D6A7" : "#FFE082"}`,
-                }}
-              >
-                <Typography variant="body1" sx={{ fontWeight: 600, color: isPublic ? "#2E7D32" : "#E65100" }}>
-                  {isPublic ? "Published — visible on public site" : "Internal — admins only"}
-                </Typography>
-              </Box>
-              <Button
-                fullWidth
-                variant="outlined"
-                size="small"
-                color={(isPublic ? "error" : "primary") as "primary"}
-                onClick={() => requestVisibilityChange(isPublic ? "Internal" : "Public")}
-              >
-                {isPublic ? "Make internal" : "Publish to public"}
-              </Button>
-            </StatusCard>
-          )}
+          <Typography variant="h3" sx={{ fontSize: 22, fontWeight: 600, lineHeight: "28px", letterSpacing: 0 }}>
+            Meeting content
+          </Typography>
 
           {/* Agenda card */}
-          <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2 }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
-              <Typography variant="subtitle2">Agenda</Typography>
-              <Stack direction="row" spacing={1}>
-                <IconButton size="small" aria-label="Download agenda">
-                  <DownloadIcon />
-                </IconButton>
-                <Button variant="outlined" size="small" endIcon={
-                  <SvgIcon sx={{ width: 16, height: 16 }}><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" /></SvgIcon>
-                }>
-                  View
-                </Button>
-              </Stack>
+          <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2, backgroundColor: "white" }}>
+            <Stack direction="row" alignItems="center" gap={1.5}>
+              <Box sx={{
+                backgroundColor: "#E4F3FF",
+                borderRadius: "12px",
+                p: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}>
+                <AgendaIcon sx={{ width: 24, height: 24 }} />
+              </Box>
+              <Box flex={1} minWidth={0}>
+                <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
+                  Agenda
+                </Typography>
+              </Box>
+              <Button variant="outlined" size="small">View</Button>
             </Stack>
-            <Typography variant="body1" color="text.secondary">
-              {draft.agendaCategories} {draft.agendaCategories === 1 ? "category" : "categories"} · {draft.agendaItems} {draft.agendaItems === 1 ? "item" : "items"}
-            </Typography>
           </Box>
 
           {/* Minutes card */}
-          <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2 }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="subtitle2">Minutes</Typography>
+          <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2, backgroundColor: "white" }}>
+            <Stack direction="row" alignItems="center" gap={1.5}>
+              <Box sx={{
+                backgroundColor: "#E4F3FF",
+                borderRadius: "12px",
+                p: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}>
+                <ClockIcon sx={{ width: 24, height: 24 }} />
+              </Box>
+              <Box flex={1} minWidth={0}>
+                <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
+                  Minutes
+                </Typography>
+              </Box>
               {minutesStatus === "None" ? (
                 <Button variant="outlined" size="small" startIcon={
                   <SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>
@@ -408,12 +466,35 @@ export default function MeetingDetailView({
         </Stack>
       </Box>
 
-      {/* ── Visibility confirmation dialog ── */}
-      <VisibilityConfirmDialog
-        open={visibilityConfirmOpen}
-        targetVisibility={pendingVisibility}
-        onConfirm={confirmVisibilityChange}
-        onClose={() => { setVisibilityConfirmOpen(false); setPendingVisibility(null); }}
+      <ConfirmDialog
+        open={Boolean(pendingAction)}
+        title={
+          pendingAction === 'make-public' ? 'Make public' :
+          pendingAction === 'make-internal' ? 'Make internal' :
+          pendingAction === 'duplicate' ? 'Duplicate meeting' :
+          'Delete meeting'
+        }
+        message={
+          pendingAction === 'make-public' ? `Make "${draft.name}" public? It will be visible to all site visitors.` :
+          pendingAction === 'make-internal' ? `Make "${draft.name}" internal? Only members will be able to see it.` :
+          pendingAction === 'duplicate' ? `Duplicate "${draft.name}"? A copy will be created as a draft.` :
+          `Delete "${draft.name}"? This action cannot be undone.`
+        }
+        confirmLabel={
+          pendingAction === 'make-public' ? 'Make public' :
+          pendingAction === 'make-internal' ? 'Make internal' :
+          pendingAction === 'duplicate' ? 'Duplicate' :
+          'Delete'
+        }
+        destructive={pendingAction === 'delete'}
+        onConfirm={() => {
+          if (pendingAction === 'make-public') save({ visibility: 'Public' as const });
+          else if (pendingAction === 'make-internal') save({ visibility: 'Internal' as const });
+          else if (pendingAction === 'duplicate') onDuplicate?.();
+          else if (pendingAction === 'delete') { setPendingAction(null); onDelete?.(); return; }
+          setPendingAction(null);
+        }}
+        onClose={() => setPendingAction(null)}
       />
     </PageLayout>
   );

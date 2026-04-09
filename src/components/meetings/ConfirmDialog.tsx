@@ -5,8 +5,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   IconButton,
-  Stack,
   Typography,
 } from "@mui/material";
 
@@ -15,6 +15,7 @@ export default function ConfirmDialog({
   title,
   message,
   confirmLabel,
+  destructive = false,
   onConfirm,
   onClose,
 }: {
@@ -22,29 +23,48 @@ export default function ConfirmDialog({
   title: string;
   message: string;
   confirmLabel: string;
+  destructive?: boolean;
   onConfirm: () => void;
   onClose: () => void;
 }) {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle component="div">
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">{title}</Typography>
-          <IconButton aria-label="Close" onClick={onClose}>
-            <CloseIcon />
-          </IconButton>
-        </Stack>
+      <DialogTitle
+        component="div"
+        sx={{
+          fontSize: "20px",
+          fontWeight: 600,
+          lineHeight: "24px",
+          letterSpacing: 0,
+          color: "var(--lens-semantic-color-type-default)",
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 1,
+          pb: "24px",
+        }}
+      >
+        {title}
+        <IconButton aria-label="Close" size="small" onClick={onClose} sx={{ flexShrink: 0, mt: "-2px", mr: "-4px" }}>
+          <CloseIcon />
+        </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Typography variant="textSm" color="text.secondary">
+        <Typography sx={{ fontSize: "14px", fontWeight: 400, lineHeight: "20px", letterSpacing: "0.2px", color: "var(--lens-semantic-color-type-default)" }}>
           {message}
         </Typography>
       </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" onClick={onClose}>
+      <Divider />
+      <DialogActions sx={{ px: 3, py: 2, justifyContent: "space-between" }}>
+        <Button variant="outlined" size="medium" onClick={onClose}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={onConfirm}>
+        <Button
+          variant="contained"
+          size="medium"
+          color={destructive ? "error" : "primary"}
+          onClick={onConfirm}
+        >
           {confirmLabel}
         </Button>
       </DialogActions>

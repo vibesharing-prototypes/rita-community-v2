@@ -1,6 +1,7 @@
 import { PageHeader } from "@diligentcorp/atlas-react-bundle";
 import AddIcon from "@diligentcorp/atlas-react-bundle/icons/Add";
 import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
+import GroupIcon from "@diligentcorp/atlas-react-bundle/icons/Group";
 import CloseIcon from "@diligentcorp/atlas-react-bundle/icons/Close";
 import FilterIcon from "@diligentcorp/atlas-react-bundle/icons/Filter";
 import SearchIcon from "@diligentcorp/atlas-react-bundle/icons/Search";
@@ -79,10 +80,12 @@ export default function MeetingsPage() {
   const [startDateFilter, setStartDateFilter] = useState<Date | null>(null);
   const [endDateFilter, setEndDateFilter] = useState<Date | null>(null);
   const [showArchived, setShowArchived] = useState(false);
+  type PendingAction =
+    | { type: "publish" | "unpublish" | "make-public" | "make-internal" | "delete"; meeting: Meeting };
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [duplicateSource, setDuplicateSource] = useState<Meeting | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<Meeting | null>(null);
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
   const [detailView, setDetailView] = useState<Meeting | null>(null);
   const [editView, setEditView] = useState<Meeting | null>(null);
   const [createTemplateId, setCreateTemplateId] = useState<string | null>(null);
@@ -269,20 +272,14 @@ export default function MeetingsPage() {
                     alignItems: "center",
                   }}
                 >
-                  <Stack flex={1} gap={0.5}>
-                    <Typography
-                      variant="subtitle2"
-                      onClick={() => setDetailView(meeting)}
-                      sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
-                    >
-                      {meeting.name}
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, mr: "4px", color: "text.secondary", flexShrink: 0 }}>
-                        <CalendarIcon />
-                      </Box>
-                      <Typography variant="caption" color="text.secondary" sx={{ mr: "12px" }}>
-                        {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
+                  <Stack flex={1} gap="4px" minWidth={0}>
+                    <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
+                      <Typography
+                        variant="subtitle2"
+                        onClick={() => setDetailView(meeting)}
+                        sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                      >
+                        {meeting.name}
                       </Typography>
                       <Stack direction="row" spacing={1} alignItems="center">
                         {meeting.status === "Draft" ? (
@@ -294,14 +291,34 @@ export default function MeetingsPage() {
                           </>
                         )}
                       </Stack>
-                    </Box>
+                    </Stack>
+                    <Stack direction="row" alignItems="center" gap="12px">
+                      <Stack direction="row" alignItems="center" gap="4px">
+                        <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}>
+                          <CalendarIcon />
+                        </Box>
+                        <Typography variant="caption" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>
+                          {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" alignItems="center" gap="4px">
+                        <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}>
+                          <GroupIcon />
+                        </Box>
+                        <Typography variant="caption" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>
+                          {meeting.committee}
+                        </Typography>
+                      </Stack>
+                    </Stack>
                   </Stack>
                   <MeetingRowActions
                     status={meeting.status}
-                    onPublish={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Published" } : m)))}
-                    onUnpublish={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Draft" } : m)))}
+                    visibility={meeting.visibility}
+                    onPublish={() => setPendingAction({ type: "publish", meeting })}
+                    onUnpublish={() => setPendingAction({ type: "unpublish", meeting })}
+                    onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "make-public" : "make-internal", meeting })}
                     onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
-                    onDelete={() => setDeleteTarget(meeting)}
+                    onDelete={() => setPendingAction({ type: "delete", meeting })}
                   />
                 </Box>
               ))
@@ -334,20 +351,14 @@ export default function MeetingsPage() {
                             alignItems: "center",
                           }}
                         >
-                          <Stack flex={1} gap={0.5}>
-                            <Typography
-                              variant="subtitle2"
-                              onClick={() => setDetailView(meeting)}
-                              sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
-                            >
-                              {meeting.name}
-                            </Typography>
-                            <Box sx={{ display: "flex", alignItems: "center" }}>
-                              <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, mr: "4px", color: "text.secondary", flexShrink: 0 }}>
-                                <CalendarIcon />
-                              </Box>
-                              <Typography variant="caption" color="text.secondary" sx={{ mr: "12px" }}>
-                                {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
+                          <Stack flex={1} gap="4px" minWidth={0}>
+                            <Stack direction="row" alignItems="center" gap={1} flexWrap="wrap">
+                              <Typography
+                                variant="subtitle2"
+                                onClick={() => setDetailView(meeting)}
+                                sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                              >
+                                {meeting.name}
                               </Typography>
                               <Stack direction="row" spacing={1} alignItems="center">
                                 {meeting.status === "Draft" ? (
@@ -359,7 +370,25 @@ export default function MeetingsPage() {
                                   </>
                                 )}
                               </Stack>
-                            </Box>
+                            </Stack>
+                            <Stack direction="row" alignItems="center" gap="12px">
+                              <Stack direction="row" alignItems="center" gap="4px">
+                                <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}>
+                                  <CalendarIcon />
+                                </Box>
+                                <Typography variant="caption" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>
+                                  {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
+                                </Typography>
+                              </Stack>
+                              <Stack direction="row" alignItems="center" gap="4px">
+                                <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}>
+                                  <GroupIcon />
+                                </Box>
+                                <Typography variant="caption" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>
+                                  {meeting.committee}
+                                </Typography>
+                              </Stack>
+                            </Stack>
                           </Stack>
                           <MeetingRowActions
                             status={meeting.status}
@@ -626,21 +655,47 @@ export default function MeetingsPage() {
         onDuplicate={(meeting) => setMeetings((prev) => [meeting, ...prev])}
       />
       <ConfirmDialog
-        open={Boolean(deleteTarget)}
-        title="Delete meeting?"
-        message={
-          deleteTarget
-            ? `Delete “${deleteTarget.name}”? This action cannot be undone.`
-            : ""
+        open={Boolean(pendingAction)}
+        title={
+          pendingAction?.type === 'publish' ? 'Publish meeting' :
+          pendingAction?.type === 'unpublish' ? 'Unpublish meeting' :
+          pendingAction?.type === 'make-public' ? 'Make public' :
+          pendingAction?.type === 'make-internal' ? 'Make internal' :
+          'Delete meeting'
         }
-        confirmLabel="Delete"
+        message={
+          !pendingAction ? '' :
+          pendingAction.type === 'publish' ? `Publish "${pendingAction.meeting.name}"? It will become visible to members.` :
+          pendingAction.type === 'unpublish' ? `Unpublish "${pendingAction.meeting.name}"? It will be hidden from members.` :
+          pendingAction.type === 'make-public' ? `Make "${pendingAction.meeting.name}" public? It will be visible to all site visitors.` :
+          pendingAction.type === 'make-internal' ? `Make "${pendingAction.meeting.name}" internal? Only members will be able to see it.` :
+          `Delete "${pendingAction.meeting.name}"? This action cannot be undone.`
+        }
+        confirmLabel={
+          pendingAction?.type === 'publish' ? 'Publish' :
+          pendingAction?.type === 'unpublish' ? 'Unpublish' :
+          pendingAction?.type === 'make-public' ? 'Make public' :
+          pendingAction?.type === 'make-internal' ? 'Make internal' :
+          'Delete'
+        }
+        destructive={pendingAction?.type === "delete"}
         onConfirm={() => {
-          if (deleteTarget) {
-            setMeetings((prev) => prev.filter((meeting) => meeting.id !== deleteTarget.id));
+          if (!pendingAction) return;
+          const { type, meeting } = pendingAction;
+          if (type === 'publish') {
+            setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, status: 'Published' as const } : m));
+          } else if (type === 'unpublish') {
+            setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, status: 'Draft' as const } : m));
+          } else if (type === 'make-public') {
+            setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, visibility: 'Public' as const } : m));
+          } else if (type === 'make-internal') {
+            setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, visibility: 'Internal' as const } : m));
+          } else if (type === 'delete') {
+            setMeetings((prev) => prev.filter((m) => m.id !== meeting.id));
           }
-          setDeleteTarget(null);
+          setPendingAction(null);
         }}
-        onClose={() => setDeleteTarget(null)}
+        onClose={() => setPendingAction(null)}
       />
     </PageLayout>
   );

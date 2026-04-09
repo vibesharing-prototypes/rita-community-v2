@@ -2,27 +2,56 @@ import { Box, Typography, useTheme } from "@mui/material";
 
 export default function DateBadge({ month, day }: { month: string; day: string }) {
   const { tokens } = useTheme();
-  const indigo = tokens.core.color.indigo;
-  const background = indigo["95"]?.value ?? indigo["90"]?.value;
-  const foreground = indigo["40"]?.value ?? indigo["35"]?.value;
+
+  const background = "#E4F3FF";
+  const textColor = tokens.semantic?.color?.type?.default?.value
+    ?? "var(--lens-semantic-color-type-default)";
+  const semiBold = tokens.core?.fontWeight?.semiBold?.value
+    ?? "var(--lens-core-font-weight-semi-bold)";
+  const regular = tokens.core?.fontWeight?.regular?.value
+    ?? "var(--lens-core-font-weight-regular)";
 
   return (
     <Box
       sx={{
-        width: 56,
+        width: 59,
+        flexShrink: 0,
+        alignSelf: "stretch",
         textAlign: "center",
-        borderRadius: tokens.semantic.radius.md.value,
+        borderRadius: tokens.semantic?.radius?.lg?.value ?? "12px",
         backgroundColor: background,
-        color: foreground,
-        py: 1,
+        color: textColor,
+        px: "20px",
+        py: "12px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Typography variant="labelSm" sx={{ fontWeight: tokens.core.fontWeight.semiBold.value }}>
+      <Typography
+        component="span"
+        sx={{
+          fontSize: "12px",
+          fontWeight: regular,
+          lineHeight: "16px",
+          letterSpacing: "0.3px",
+          display: "block",
+          width: "100%",
+        }}
+      >
         {month}
       </Typography>
       <Typography
-        variant="h4"
-        sx={{ fontWeight: tokens.core.fontWeight.semiBold.value, lineHeight: 1.05 }}
+        component="span"
+        sx={{
+          fontSize: "14px",
+          fontWeight: semiBold,
+          lineHeight: "20px",
+          letterSpacing: "0.2px",
+          display: "block",
+          width: "100%",
+        }}
       >
         {day}
       </Typography>

@@ -5,6 +5,7 @@ import "./styles.css";
 import Navigation from "./Navigation.js";
 import HomePage from "./pages/HomePage.js";
 import MeetingsPage from "./pages/MeetingsPage.js";
+import MeetingDetailPage from "./pages/MeetingDetailPage.js";
 import PlaceholderPage from "./pages/PlaceholderPage.js";
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
       >
         <Route index element={<HomePage />} />
         <Route path="meetings" element={<MeetingsPage />} />
+        <Route path="meetings/:id" element={<MeetingDetailPage />} />
         <Route path="agenda" element={<PlaceholderPage title="Agenda items" />} />
         <Route path="policies" element={<PlaceholderPage title="Policies" />} />
         <Route path="library/files" element={<PlaceholderPage title="Files" />} />

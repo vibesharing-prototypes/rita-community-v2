@@ -5,3 +5,8 @@ main[data-atlas-gn-app] {
   border-left: 1px solid var(--lens-component-global-nav-list-divider-border-color);
   min-height: 100dvh;
 }
+
+mock-hb-global-navigator {
+  z-index: 100 !important;
+  background-color: var(--lens-semantic-color-surface-default, #ffffff) !important;
+}

@@ -6,6 +6,10 @@
     { "id": "a4", "title": "Staff recognition program", "status": "Approved" },
     { "id": "a5", "title": "Community outreach initiative", "status": "Submitted" }
   ],
+  "featuredMeetings": [
+    { "id": "m1", "title": "Regular board meeting", "date": "Jan 20, 2026", "committee": "Finance" },
+    { "id": "m2", "title": "Finance committee", "date": "Jan 20, 2026", "committee": "Finance" }
+  ],
   "featuredPolicies": [
     { "id": "p1", "title": "Board governance policy", "subtitle": "Section 2.4" },
     { "id": "p2", "title": "Conflict of interest policy", "subtitle": "Section 7.1" }
@@ -16,7 +20,6 @@
   ],
   "featuredGoals": [
     { "id": "g1", "title": "Student achievement rate", "progress": 78 },
-    { "id": "g2", "title": "Budget utilization", "progress": 100 },
     { "id": "g3", "title": "Community engagement index", "progress": 32 }
   ],
   "boardMembers": [

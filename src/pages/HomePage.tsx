@@ -1,19 +1,25 @@
 import { PageHeader } from "@diligentcorp/atlas-react-bundle";
-import ArrowRightIcon from "@diligentcorp/atlas-react-bundle/icons/ArrowRight";
-import SuccessIcon from "@diligentcorp/atlas-react-bundle/icons/Success";
+import BookPublishIcon from "@diligentcorp/atlas-react-bundle/icons/BookPublish";
+import BookUnpublishIcon from "@diligentcorp/atlas-react-bundle/icons/BookUnpublish";
+import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
 import DocumentIcon from "@diligentcorp/atlas-react-bundle/icons/Document";
-import FlagIcon from "@diligentcorp/atlas-react-bundle/icons/Flag";
+import GoalIcon from "@diligentcorp/atlas-react-bundle/icons/Goal";
+import MoreOptionsIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import PolicyIcon from "@diligentcorp/atlas-react-bundle/icons/Policy";
-import TimeAndDateIcon from "@diligentcorp/atlas-react-bundle/icons/TimeAndDate";
+import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
+import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
 import {
   Box,
-  Button,
   Card,
-  CardContent,
-  CardHeader,
+  Divider,
+  IconButton,
   LinearProgress,
   List,
   ListItem,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Stack,
   Typography,
 } from "@mui/material";
@@ -21,7 +27,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import PageLayout from "../components/PageLayout.js";
-import StatusPill from "../components/common/StatusPill";
 import DateBadge from "../components/home/DateBadge";
 import type { Meeting } from "../types/meetings";
 import meetingsData from "../data/meetings.json";
@@ -36,31 +41,54 @@ import {
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [welcomeExpanded, setWelcomeExpanded] = useState(false);
+  const [meetings, setMeetings] = useState<Meeting[]>(meetingsData.meetings as Meeting[]);
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const [menuMeeting, setMenuMeeting] = useState<Meeting | null>(null);
+
+  const handleMenuOpen = (e: React.MouseEvent<HTMLElement>, meeting: Meeting) => {
+    e.stopPropagation();
+    setMenuAnchor(e.currentTarget);
+    setMenuMeeting(meeting);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchor(null);
+    setMenuMeeting(null);
+  };
+
+  const handlePublishToggle = () => {
+    if (!menuMeeting) return;
+    setMeetings((prev) =>
+      prev.map((m) =>
+        m.id === menuMeeting.id
+          ? { ...m, status: m.status === "Published" ? "Draft" : "Published" }
+          : m,
+      ),
+    );
+    handleMenuClose();
+  };
+
+  const handleDelete = () => {
+    if (!menuMeeting) return;
+    setMeetings((prev) => prev.filter((m) => m.id !== menuMeeting.id));
+    handleMenuClose();
+  };
+
   const {
-    agendaItems,
+    featuredMeetings,
     featuredPolicies,
     featuredDocuments,
     featuredGoals,
-    boardMembers,
-    welcomeParagraphs,
   } = homeData;
-  const meetings = meetingsData.meetings as Meeting[];
-
   const upcomingMeetings = meetings
     .filter((meeting) => isUpcoming(meeting.date))
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, 4)
     .map((meeting) => ({
-      id: meeting.id,
+      ...meeting,
       month: getMonthAbbrev(meeting.date),
       day: getDayOfMonth(meeting.date),
-      name: meeting.name,
       fullDate: formatDateLong(meeting.date),
-      time: meeting.time,
-      location: meeting.location,
-      status: meeting.status,
-      visibility: meeting.visibility,
     }));
 
   const recentMeetings = meetings
@@ -68,36 +96,9 @@ export default function HomePage() {
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 3)
     .map((meeting) => ({
-      id: meeting.id,
-      name: meeting.name,
-      date: formatDate(meeting.date),
-      status: meeting.status,
+      ...meeting,
+      formattedDate: formatDate(meeting.date),
     }));
-
-  const statusColor = (status: string) => {
-    switch (status) {
-      case "Draft":
-        return "subtle";
-      case "Published":
-        return "success";
-      case "Public":
-        return "information";
-      case "Internal":
-        return "generic";
-      case "Action needed":
-        return "warning";
-      case "Submitted":
-        return "information";
-      case "Approved":
-        return "success";
-      case "Rejected":
-        return "error";
-      case "Draft agenda":
-        return "subtle";
-      default:
-        return "generic";
-    }
-  };
 
   return (
     <PageLayout id="page-home">
@@ -110,303 +111,308 @@ export default function HomePage() {
           gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" },
         }}
       >
-        <Box>
-          <Stack gap={3} id="home-primary-column">
-            <Card id="home-meetings-card">
-              <Stack direction="row" alignItems="center">
-                <Typography variant="h2">Meetings</Typography>
-                <Button
-                  variant="text"
-                  size="small"
-                  endIcon={<ArrowRightIcon />}
-                  onClick={() => navigate("/meetings")}
-                  sx={{ textTransform: "none", fontSize: "0.75rem", ml: "auto" }}
-                >
-                  View all meetings
-                </Button>
-              </Stack>
-              <CardContent>
-                <Stack gap={2} id="home-meetings-content">
-                  <Typography variant="overline" color="text.secondary">
-                    Upcoming
-                  </Typography>
-                  <Box
-                    id="home-upcoming-grid"
-                    sx={{
-                      display: "grid",
-                      gap: 2,
-                      gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 1fr))" },
-                    }}
-                  >
-                    {upcomingMeetings.map((meeting) => (
-                      <Box key={meeting.id}>
-                        <Card
-                          variant="outlined"
-                          id={`home-upcoming-${meeting.id}`}
-                          sx={{ cursor: "pointer" }}
-                          onClick={() => navigate("/meetings")}
-                        >
-                          <CardContent>
-                            <Stack direction="row" spacing={2}>
-                                <DateBadge month={meeting.month} day={meeting.day} />
-                              <Stack spacing={0.5} flex={1} minWidth={0}>
-                                <Typography variant="subtitle2" noWrap>
-                                  {meeting.name}
-                                </Typography>
-                                <Typography variant="textSm" color="text.secondary" noWrap>
-                                  {meeting.fullDate} · {meeting.time}
-                                </Typography>
-                                <Stack direction="row" spacing={1} alignItems="center">
-                                  <StatusPill
-                                    label={meeting.status}
-                                    color={statusColor(meeting.status) as "success" | "subtle"}
-                                  />
-                                  {meeting.status === "Published" && (
-                                    <StatusPill
-                                      label={meeting.visibility}
-                                      color={statusColor(meeting.visibility) as "information" | "generic"}
-                                    />
-                                  )}
-                                </Stack>
-                              </Stack>
-                            </Stack>
-                          </CardContent>
-                        </Card>
-                      </Box>
-                    ))}
-                  </Box>
+        {/* Left column — Meetings */}
+        <Card id="home-meetings-card" variant="outlined" sx={{ borderRadius: "12px", p: "0 !important", borderColor: "var(--lens-semantic-color-ui-divider-default)" }}>
+          <Stack sx={{ p: 3, gap: "12px" }}>
+            <Typography variant="h3" fontWeight={600}>Meetings</Typography>
 
-                  <Stack spacing={1} pt={1}>
-                    <Typography variant="overline" color="text.secondary">
-                      Recent
-                    </Typography>
-                    <List disablePadding id="home-recent-list">
-                      {recentMeetings.map((meeting) => (
-                        <ListItem
-                          key={meeting.id}
-                          sx={{ px: 0, cursor: "pointer" }}
-                          id={`home-recent-${meeting.id}`}
-                          onClick={() => navigate("/meetings")}
-                        >
-                          <Stack direction="row" spacing={1} alignItems="center" flex={1}>
-                            <TimeAndDateIcon />
-                            <Typography variant="textSm" noWrap>
-                              {meeting.name}
-                            </Typography>
-                          </Stack>
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography variant="textSm" color="text.secondary">
-                              {meeting.date}
-                            </Typography>
-                            <StatusPill
-                              label={meeting.status}
-                              color={statusColor(meeting.status) as "success" | "subtle"}
-                            />
-                          </Stack>
-                        </ListItem>
-                      ))}
-                    </List>
-                  </Stack>
-                </Stack>
-              </CardContent>
-            </Card>
-
-            <Card id="home-agenda-card">
-              <CardHeader title="My agenda items" />
-              <CardContent>
-                <List disablePadding id="home-agenda-list">
-                  {agendaItems.map((item) => (
-                    <ListItem
-                      key={item.id}
-                      sx={{ px: 0, cursor: "pointer" }}
-                      id={`home-agenda-${item.id}`}
-                      onClick={() => navigate("/agenda")}
-                    >
-                      <Stack direction="row" spacing={1} alignItems="center" flex={1}>
-                        <SuccessIcon />
-                        <Typography variant="textSm" noWrap>
-                          {item.title}
-                        </Typography>
-                      </Stack>
-                      <StatusPill
-                        label={item.status}
-                        color={
-                          statusColor(
-                            item.status === "Draft" ? "Draft agenda" : item.status,
-                          ) as "warning" | "information" | "success" | "error" | "subtle"
-                        }
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </CardContent>
-            </Card>
-
-            <Stack gap={2} id="home-featured-section">
-              <Stack id="home-featured-header">
-                <Typography variant="subtitle1">Featured</Typography>
-                <Typography variant="textSm" color="text.secondary">
-                  Selected by your administrator
+            <Stack gap={3}>
+              {/* Upcoming */}
+              <Stack gap={1}>
+                <Typography variant="overline" color="text.secondary">
+                  Upcoming
                 </Typography>
-              </Stack>
-
-              <Box
-                id="home-featured-grid"
-                sx={{
-                  display: "grid",
-                  gap: 2,
-                  gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 1fr))" },
-                }}
-              >
-                <Box>
-                  <Card id="home-featured-policies-card">
-                    <CardHeader
-                      title="Policies"
-                      action={
-                        <Button variant="text" onClick={() => navigate("/policies")}>
-                          View all
-                        </Button>
-                      }
-                    />
-                    <CardContent>
-                      <List disablePadding id="home-featured-policies-list">
-                        {featuredPolicies.map((policy) => (
-                          <ListItem
-                            key={policy.id}
-                            sx={{ px: 0, cursor: "pointer" }}
-                            id={`home-featured-policy-${policy.id}`}
-                            onClick={() => navigate("/policies")}
-                          >
-                            <Stack direction="row" spacing={1} alignItems="center" flex={1}>
-                              <PolicyIcon />
-                              <Typography variant="textSm" noWrap>
-                                {policy.title}
-                              </Typography>
-                            </Stack>
-                            <Typography variant="textSm" color="text.secondary">
-                              {policy.subtitle}
-                            </Typography>
-                          </ListItem>
-                        ))}
-                      </List>
-                    </CardContent>
-                  </Card>
-                </Box>
-                <Box>
-                  <Card id="home-featured-files-card">
-                    <CardHeader
-                      title="Files"
-                      action={
-                        <Button variant="text" onClick={() => navigate("/library/files")}>
-                          View all
-                        </Button>
-                      }
-                    />
-                    <CardContent>
-                      <List disablePadding id="home-featured-files-list">
-                        {featuredDocuments.map((doc) => (
-                          <ListItem
-                            key={doc.id}
-                            sx={{ px: 0, cursor: "pointer" }}
-                            id={`home-featured-file-${doc.id}`}
-                            onClick={() => navigate("/library/files")}
-                          >
-                            <Stack direction="row" spacing={1} alignItems="center">
-                              <DocumentIcon />
-                              <Typography variant="textSm">{doc.title}</Typography>
-                            </Stack>
-                          </ListItem>
-                        ))}
-                      </List>
-                    </CardContent>
-                  </Card>
-                </Box>
-              </Box>
-
-              <Card id="home-featured-goals-card">
-                <CardHeader
-                  title="Goals"
-                  action={
-                    <Button variant="text" onClick={() => navigate("/library/goals")}>
-                      View all
-                    </Button>
-                  }
-                />
-                <CardContent>
-                  <Stack spacing={2} id="home-featured-goals-list">
-                    {featuredGoals.map((goal) => (
-                      <Stack key={goal.id} spacing={1} id={`home-featured-goal-${goal.id}`}>
-                        <Stack direction="row" justifyContent="space-between" alignItems="center">
-                          <Stack direction="row" spacing={1} alignItems="center">
-                            <FlagIcon />
-                            <Typography variant="textSm">{goal.title}</Typography>
-                          </Stack>
-                          <Typography variant="textSm" color="text.secondary">
-                            {goal.progress}%
+                <Box
+                  sx={{
+                    display: "grid",
+                    gap: "12px",
+                    gridTemplateColumns: { xs: "1fr", md: "repeat(2, minmax(0, 1fr))" },
+                  }}
+                >
+                  {upcomingMeetings.map((meeting) => (
+                    <Box
+                      key={meeting.id}
+                      sx={{
+                        border: "1px solid",
+                        borderColor: "var(--lens-semantic-color-ui-divider-default)",
+                        borderRadius: "12px",
+                        overflow: "hidden",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => navigate(`/meetings/${meeting.id}`)}
+                    >
+                      <Stack direction="row" alignItems="center" sx={{ gap: "12px", pl: "12px", pr: "12px", py: "12px" }}>
+                        <DateBadge month={meeting.month} day={meeting.day} />
+                        <Stack flex={1} minWidth={0} gap="2px">
+                          <Typography noWrap sx={{
+                            fontSize: "14px",
+                            fontWeight: "var(--lens-core-font-weight-semi-bold)",
+                            lineHeight: "20px",
+                            letterSpacing: "0.2px",
+                            color: "var(--lens-semantic-color-type-default)",
+                          }}>
+                            {meeting.name}
+                          </Typography>
+                          <Typography noWrap sx={{
+                            fontSize: "12px",
+                            fontWeight: "var(--lens-core-font-weight-regular)",
+                            lineHeight: "16px",
+                            letterSpacing: "0.3px",
+                            color: "var(--lens-semantic-color-type-default)",
+                          }}>
+                            {meeting.fullDate} · {meeting.time}
+                          </Typography>
+                          <Typography noWrap sx={{
+                            fontSize: "12px",
+                            fontWeight: "var(--lens-core-font-weight-regular)",
+                            lineHeight: "16px",
+                            letterSpacing: "0.3px",
+                            color: "var(--lens-semantic-color-type-muted)",
+                          }}>
+                            {meeting.committee}
                           </Typography>
                         </Stack>
-                        <LinearProgress variant="determinate" value={goal.progress} />
+                        <IconButton
+                          size="small"
+                          onClick={(e) => handleMenuOpen(e, meeting)}
+                          sx={{ flexShrink: 0 }}
+                        >
+                          <MoreOptionsIcon />
+                        </IconButton>
                       </Stack>
-                    ))}
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Stack>
-          </Stack>
-        </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </Stack>
 
-        <Box>
-          <Stack gap={3} id="home-secondary-column">
-            <Card id="home-welcome-card">
-              <CardHeader
-                title="Emerald City School District"
-                action={
-                  <Box
-                    component="img"
-                    src="/org-logo.png"
-                    alt="Organization logo"
-                    sx={{ width: 48, height: 48 }}
-                  />
-                }
-              />
-              <CardContent>
-                <Typography variant="textSm" color="text.secondary" sx={{ mb: 2 }}>
-                  {welcomeExpanded ? welcomeParagraphs.join(" ") : welcomeParagraphs[0]}
+              {/* Recent */}
+              <Stack gap={1}>
+                <Typography variant="overline" color="text.secondary">
+                  Recent
                 </Typography>
-                <Button
-                  variant="text"
-                  id="home-welcome-toggle"
-                  onClick={() => setWelcomeExpanded((prev) => !prev)}
-                >
-                  {welcomeExpanded ? "Show less" : "Show more"}
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card id="home-board-members-card">
-              <CardHeader title="Board members" />
-              <CardContent>
-                <List disablePadding id="home-board-members-list">
-                  {boardMembers.map((member) => (
+                <List disablePadding>
+                  {recentMeetings.map((meeting, i) => (
                     <ListItem
-                      key={member.name}
-                      sx={{ px: 0 }}
-                      id={`home-board-${member.name.toLowerCase().replace(/\s+/g, "-")}`}
+                      key={meeting.id}
+                      disablePadding
+                      divider={i < recentMeetings.length - 1}
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => navigate(`/meetings/${meeting.id}`)}
                     >
-                      <Stack direction="row" spacing={1}>
-                        <Typography variant="textSm">{member.name}</Typography>
-                        <Typography variant="textSm" color="text.secondary">
-                          · {member.role}
-                        </Typography>
+                      <Stack direction="row" alignItems="center" sx={{ flex: 1, pr: "12px", py: 1 }} minWidth={0}>
+                        <Stack flex={1} minWidth={0} gap="4px">
+                          <Typography noWrap sx={{
+                            fontSize: "14px",
+                            fontWeight: "var(--lens-core-font-weight-semi-bold)",
+                            lineHeight: "20px",
+                            letterSpacing: "0.2px",
+                            color: "var(--lens-semantic-color-type-default)",
+                          }}>
+                            {meeting.name}
+                          </Typography>
+                          <Typography sx={{
+                            fontSize: "12px",
+                            fontWeight: "var(--lens-core-font-weight-regular)",
+                            lineHeight: "16px",
+                            letterSpacing: "0.3px",
+                            color: "var(--lens-semantic-color-type-muted)",
+                          }}>
+                            {meeting.formattedDate} · {meeting.committee}
+                          </Typography>
+                        </Stack>
+                        <IconButton
+                          size="small"
+                          onClick={(e) => handleMenuOpen(e, meeting)}
+                          sx={{ flexShrink: 0 }}
+                        >
+                          <MoreOptionsIcon />
+                        </IconButton>
                       </Stack>
                     </ListItem>
                   ))}
                 </List>
-              </CardContent>
-            </Card>
+              </Stack>
+            </Stack>
           </Stack>
-        </Box>
+        </Card>
+
+        {/* Right column — Featured */}
+        <Stack gap="12px" id="home-featured-section" sx={{ pt: 3 }}>
+          <Stack gap="8px" id="home-featured-header">
+            <Typography variant="h3" fontWeight={600}>Featured</Typography>
+            <Typography variant="textSm" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>
+              Selected by your administrator
+            </Typography>
+          </Stack>
+
+          {/* Featured Meetings */}
+          <Stack gap="12px">
+            <Typography variant="subtitle2">Meetings</Typography>
+            <Stack gap="12px">
+              {featuredMeetings.map((meeting) => (
+                <Stack
+                  key={meeting.id}
+                  direction="row"
+                  gap="8px"
+                  alignItems="center"
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => navigate("/meetings")}
+                >
+                  <Box sx={{
+                    width: 32, height: 32, flexShrink: 0, borderRadius: "8px",
+                    backgroundColor: "#E4F3FF",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <CalendarIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                  </Box>
+                  <Stack flex={1} minWidth={0} gap="4px">
+                    <Typography noWrap sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                      {meeting.title}
+                    </Typography>
+                    <Typography sx={{ fontSize: "10px", fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: "12px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)" }}>
+                      {meeting.date} · {meeting.committee}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              ))}
+            </Stack>
+          </Stack>
+
+          <Divider />
+
+          {/* Featured Policies */}
+          <Stack gap="12px">
+            <Typography variant="subtitle2">Policies</Typography>
+            <Stack gap="12px">
+              {featuredPolicies.map((policy) => (
+                <Stack
+                  key={policy.id}
+                  direction="row"
+                  gap="8px"
+                  alignItems="center"
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => navigate("/policies")}
+                >
+                  <Box sx={{
+                    width: 32, height: 32, flexShrink: 0, borderRadius: "8px",
+                    backgroundColor: "#E4F3FF",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <PolicyIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                  </Box>
+                  <Stack flex={1} minWidth={0} gap="4px">
+                    <Typography noWrap sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                      {policy.title}
+                    </Typography>
+                    <Typography sx={{ fontSize: "10px", fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: "12px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)" }}>
+                      {policy.subtitle}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              ))}
+            </Stack>
+          </Stack>
+
+          <Divider />
+
+          {/* Featured Documents */}
+          <Stack gap="12px">
+            <Typography variant="subtitle2">Documents</Typography>
+            <Stack gap="12px">
+              {featuredDocuments.map((doc) => (
+                <Stack
+                  key={doc.id}
+                  direction="row"
+                  gap="8px"
+                  alignItems="center"
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => navigate("/library/files")}
+                >
+                  <Box sx={{
+                    width: 32, height: 32, flexShrink: 0, borderRadius: "8px",
+                    backgroundColor: "#E4F3FF",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <DocumentIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                  </Box>
+                  <Stack flex={1} minWidth={0} gap="4px">
+                    <Typography noWrap sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                      {doc.title}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              ))}
+            </Stack>
+          </Stack>
+
+          <Divider />
+
+          {/* Featured Goals */}
+          <Stack gap="12px">
+            <Typography variant="subtitle2">Goals</Typography>
+            <Stack gap="12px">
+              {featuredGoals.map((goal) => (
+                <Stack
+                  key={goal.id}
+                  direction="row"
+                  gap="8px"
+                  alignItems="center"
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => navigate("/library/goals")}
+                >
+                  <Box sx={{
+                    width: 32, height: 32, flexShrink: 0, borderRadius: "8px",
+                    backgroundColor: "#E4F3FF",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>
+                    <GoalIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                  </Box>
+                  <Stack flex={1} minWidth={0} gap="4px">
+                    <Stack direction="row" alignItems="center" gap="4px">
+                      <Typography noWrap flex={1} sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                        {goal.title}
+                      </Typography>
+                      <Typography sx={{ fontSize: "10px", fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: "12px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}>
+                        {goal.progress}%
+                      </Typography>
+                    </Stack>
+                    <LinearProgress
+                      variant="determinate"
+                      value={goal.progress}
+                    />
+                  </Stack>
+                </Stack>
+              ))}
+            </Stack>
+          </Stack>
+        </Stack>
       </Box>
+
+      {/* More menu */}
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleMenuClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MenuItem onClick={handlePublishToggle}>
+          <ListItemIcon>
+            {menuMeeting?.status === "Published" ? <BookUnpublishIcon /> : <BookPublishIcon />}
+          </ListItemIcon>
+          <ListItemText>
+            {menuMeeting?.status === "Published" ? "Unpublish" : "Publish"}
+          </ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleMenuClose}>
+          <ListItemIcon><CopyIcon /></ListItemIcon>
+          <ListItemText>Duplicate</ListItemText>
+        </MenuItem>
+        <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+          <ListItemIcon sx={{ color: "error.main" }}><TrashIcon /></ListItemIcon>
+          <ListItemText>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
     </PageLayout>
   );
 }

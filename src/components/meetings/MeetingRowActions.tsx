@@ -1,49 +1,108 @@
-import BookPublishIcon from "@diligentcorp/atlas-react-bundle/icons/BookPublish";
-import BookUnpublishIcon from "@diligentcorp/atlas-react-bundle/icons/BookUnpublish";
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
+import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
+import MoreOptionsIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
-import { IconButton, Stack, Tooltip } from "@mui/material";
+import UnlockedIcon from "@diligentcorp/atlas-react-bundle/icons/Unlocked";
+import { Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from "@mui/material";
+import { useState } from "react";
 
-import type { MeetingStatus } from "../../types/meetings";
+import type { MeetingStatus, MeetingVisibility } from "../../types/meetings";
 
 export default function MeetingRowActions({
   onPublish,
   onUnpublish,
   onDuplicate,
   onDelete,
+  onToggleVisibility,
   status,
+  visibility,
 }: {
   onPublish: () => void;
   onUnpublish: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
+  onToggleVisibility: () => void;
   status: MeetingStatus;
+  visibility: MeetingVisibility;
 }) {
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+
+  const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setMenuAnchor(e.currentTarget);
+  };
+
+  const handleMenuClose = () => setMenuAnchor(null);
+
   return (
-    <Stack direction="row" alignItems="center">
-      {status === "Draft" ? (
-        <Tooltip title="Publish">
-          <IconButton size="medium" onClick={onPublish} aria-label="Publish">
-            <BookPublishIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Unpublish">
-          <IconButton size="medium" onClick={onUnpublish} aria-label="Unpublish">
-            <BookUnpublishIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-      <Tooltip title="Duplicate">
-        <IconButton size="medium" onClick={onDuplicate} aria-label="Duplicate">
-          <CopyIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Delete">
-        <IconButton size="medium" onClick={onDelete} aria-label="Delete">
-          <TrashIcon />
-        </IconButton>
-      </Tooltip>
+    <Stack direction="row" alignItems="center" gap="8px">
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={(e) => {
+          e.stopPropagation();
+          status === "Draft" ? onPublish() : onUnpublish();
+        }}
+      >
+        {status === "Draft" ? "Publish" : "Unpublish"}
+      </Button>
+
+      <IconButton size="medium" onClick={handleMenuOpen} aria-label="More options">
+        <MoreOptionsIcon />
+      </IconButton>
+
+      <Menu
+        anchorEl={menuAnchor}
+        open={Boolean(menuAnchor)}
+        onClose={handleMenuClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        {status === "Published" && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMenuClose();
+              onToggleVisibility();
+            }}
+          >
+            <ListItemIcon>
+              {visibility === "Internal" ? <UnlockedIcon /> : <LockedIcon />}
+            </ListItemIcon>
+            <ListItemText>
+              {visibility === "Internal" ? "Make public" : "Make internal"}
+            </ListItemText>
+          </MenuItem>
+        )}
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            handleMenuClose();
+            onDuplicate();
+          }}
+        >
+          <ListItemIcon><CopyIcon /></ListItemIcon>
+          <ListItemText>Duplicate</ListItemText>
+        </MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={(e) => {
+            e.stopPropagation();
+            handleMenuClose();
+            onDelete();
+          }}
+          sx={{
+            color: "var(--lens-semantic-color-status-error-text)",
+            "& .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+            "& .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+            "&:hover .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+            "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+          }}
+        >
+          <ListItemIcon><TrashIcon /></ListItemIcon>
+          <ListItemText>Delete</ListItemText>
+        </MenuItem>
+      </Menu>
     </Stack>
   );
 }

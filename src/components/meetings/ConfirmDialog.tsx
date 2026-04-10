@@ -62,8 +62,12 @@ export default function ConfirmDialog({
         <Button
           variant="contained"
           size="medium"
-          color={destructive ? "error" : "primary"}
           onClick={onConfirm}
+          sx={destructive ? {
+            backgroundColor: "var(--lens-semantic-color-status-error-default)",
+            color: "#fff",
+            "&:hover": { backgroundColor: "var(--lens-semantic-color-status-error-text)" },
+          } : {}}
         >
           {confirmLabel}
         </Button>

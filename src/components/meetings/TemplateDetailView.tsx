@@ -23,11 +23,94 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { useState } from "react";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format, parse } from "date-fns";
+import { useRef, useState } from "react";
 
 import ConfirmDialog from "./ConfirmDialog";
 import PageLayout from "../PageLayout";
 import type { MeetingTemplate } from "../../types/meetings";
+
+// ── Shared picker styles ───────────────────────────────────────────────────
+
+const HIDDEN_FIELD_SX = {
+  position: "absolute" as const,
+  width: 0,
+  height: 0,
+  overflow: "hidden",
+  opacity: 0,
+  pointerEvents: "none" as const,
+};
+
+const TRIGGER_SX = {
+  borderRadius: "4px",
+  px: "4px",
+  py: "4px",
+  cursor: "pointer",
+  fontSize: "1rem",
+  lineHeight: 1.5,
+  userSelect: "none" as const,
+  "&:hover": { backgroundColor: "action.hover" },
+};
+
+// ── Time picker field ──────────────────────────────────────────────────────
+
+function TimeField({
+  time,
+  onSave,
+}: {
+  time?: string;
+  onSave: (val: string | undefined) => void;
+}) {
+  const { presets } = useTheme();
+  const timePresets = (presets as any).TimePickerPresets?.withAtlasActionBar({
+    cancelButtonLabel: "Cancel",
+    clearButtonLabel: "Clear",
+  });
+  const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const timeValue = time ? parse(time, "h:mm a", new Date()) : null;
+
+  return (
+    <Box>
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}
+      >
+        <ClockIcon />
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+          Time
+        </Typography>
+      </Stack>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Stack direction="row" alignItems="center" sx={{ pl: "28px" }}>
+          <Box ref={triggerRef} onClick={() => setOpen(true)} sx={TRIGGER_SX}>
+            {time ?? <Box component="span" sx={{ color: "text.disabled" }}>Add default time…</Box>}
+          </Box>
+          <TimePicker
+            open={open}
+            onClose={() => setOpen(false)}
+            value={timeValue}
+            onChange={(val) => {
+              if (val) onSave(format(val, "h:mm a"));
+              else onSave(undefined);
+            }}
+            {...timePresets}
+            slotProps={{
+              ...(timePresets?.slotProps ?? {}),
+              textField: { sx: HIDDEN_FIELD_SX },
+              popper: { anchorEl: triggerRef.current },
+            }}
+          />
+        </Stack>
+      </LocalizationProvider>
+    </Box>
+  );
+}
 
 // ── Inline-editable page title ─────────────────────────────────────────────
 
@@ -370,12 +453,9 @@ export default function TemplateDetailView({
       <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
         {/* Left column — metadata */}
         <Stack flex={1} gap="24px" minWidth={0}>
-          <EditableField
-            icon={<ClockIcon />}
-            label="Time"
-            value={draft.time ?? ""}
-            placeholder="Add default time…"
-            onSave={(val) => save({ time: val || undefined })}
+          <TimeField
+            time={draft.time}
+            onSave={(val) => save({ time: val })}
           />
           <EditableField
             icon={<LocationIcon />}

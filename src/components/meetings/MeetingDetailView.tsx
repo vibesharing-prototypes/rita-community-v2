@@ -31,7 +31,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { format, parse } from "date-fns";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import ConfirmDialog from "./ConfirmDialog";
 
@@ -44,14 +44,25 @@ type MinutesStatus = "None" | "Draft" | "Adopted";
 
 // ── Date + Time picker field ───────────────────────────────────────────────
 
-const PICKER_INPUT_SX = {
-  "& .MuiInput-root": {
-    borderRadius: "4px",
-    "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
-  },
-  "& .MuiInput-input.MuiInput-input": { pl: "4px", pr: 0, pt: "4px", pb: "4px" },
-  "& .MuiInput-root::before": { borderBottom: "none !important" },
-  "& .MuiInput-root::after": { borderBottom: "none" },
+// Hides the picker's own text field completely — we render our own trigger instead.
+const HIDDEN_FIELD_SX = {
+  position: "absolute" as const,
+  width: 0,
+  height: 0,
+  overflow: "hidden",
+  opacity: 0,
+  pointerEvents: "none" as const,
+};
+
+const TRIGGER_SX = {
+  borderRadius: "4px",
+  px: "4px",
+  py: "4px",
+  cursor: "pointer",
+  fontSize: "1rem",
+  lineHeight: 1.5,
+  userSelect: "none" as const,
+  "&:hover": { backgroundColor: "action.hover" },
 };
 
 function DateTimeField({
@@ -66,8 +77,12 @@ function DateTimeField({
   onSaveTime: (val: string) => void;
 }) {
   const { presets } = useTheme();
-  const datePresets = (presets as any).DatePickerPresets?.withAtlasActionBar({ cancelButtonLabel: "Cancel", clearButtonLabel: "Clear" });
   const timePresets = (presets as any).TimePickerPresets?.withAtlasActionBar({ cancelButtonLabel: "Cancel", clearButtonLabel: "Clear" });
+
+  const [dateOpen, setDateOpen] = useState(false);
+  const [timeOpen, setTimeOpen] = useState(false);
+  const dateRef = useRef<HTMLDivElement>(null);
+  const timeRef = useRef<HTMLDivElement>(null);
 
   const dateValue = new Date(`${date}T12:00:00`);
   const timeValue = time ? parse(time, "h:mm a", new Date()) : null;
@@ -81,19 +96,50 @@ function DateTimeField({
         </Typography>
       </Stack>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Stack direction="row" alignItems="center" gap={1} sx={{ pl: "28px" }}>
+        <Stack direction="row" alignItems="center" sx={{ pl: "28px" }}>
+
+          {/* Clickable date text */}
+          <Box ref={dateRef} onClick={() => setDateOpen(true)} sx={TRIGGER_SX}>
+            {format(dateValue, "EEEE, MMMM d, yyyy")}
+          </Box>
+
+          <Typography sx={{ px: "4px", userSelect: "none", color: "text.secondary" }}>·</Typography>
+
+          {/* Clickable time text */}
+          <Box ref={timeRef} onClick={() => setTimeOpen(true)} sx={TRIGGER_SX}>
+            {time ?? "—"}
+          </Box>
+
+          {/* Date picker — field hidden, popper anchored to dateRef */}
           <DatePicker
+            open={dateOpen}
+            onClose={() => setDateOpen(false)}
             value={dateValue}
-            onChange={(val) => { if (val) onSaveDate(format(val, "yyyy-MM-dd")); }}
-            {...datePresets}
-            slotProps={{ textField: { variant: "standard", sx: { ...PICKER_INPUT_SX, minWidth: 0 } } }}
+            onChange={(val) => {
+              if (val) { onSaveDate(format(val, "yyyy-MM-dd")); setDateOpen(false); }
+            }}
+            closeOnSelect
+            slots={{ actionBar: () => null }}
+            slotProps={{
+              textField: { sx: HIDDEN_FIELD_SX },
+              popper: { anchorEl: dateRef.current },
+            }}
           />
+
+          {/* Time picker — field hidden, popper anchored to timeRef */}
           <TimePicker
+            open={timeOpen}
+            onClose={() => setTimeOpen(false)}
             value={timeValue}
             onChange={(val) => { if (val) onSaveTime(format(val, "h:mm a")); }}
             {...timePresets}
-            slotProps={{ textField: { variant: "standard", sx: { ...PICKER_INPUT_SX, width: 110 } } }}
+            slotProps={{
+              ...(timePresets?.slotProps ?? {}),
+              textField: { sx: HIDDEN_FIELD_SX },
+              popper: { anchorEl: timeRef.current },
+            }}
           />
+
         </Stack>
       </LocalizationProvider>
     </Box>

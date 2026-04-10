@@ -364,7 +364,6 @@ export default function MeetingDetailView({
               {draft.committee}
             </Box>
             <StatusChip label={draft.status} />
-            {draft.status === "Published" && <StatusChip label={draft.visibility} />}
           </Stack>
         }
         moreButton={
@@ -388,12 +387,6 @@ export default function MeetingDetailView({
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               transformOrigin={{ vertical: "top", horizontal: "right" }}
             >
-              {draft.status === "Published" && (
-                <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction(isPublic ? "make-internal" : "make-public"); }}>
-                  <ListItemIcon>{isPublic ? <LockedIcon /> : <UnlockedIcon />}</ListItemIcon>
-                  <ListItemText>{isPublic ? "Make internal" : "Make public"}</ListItemText>
-                </MenuItem>
-              )}
               <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("duplicate"); }}>
                 <ListItemIcon><CopyIcon /></ListItemIcon>
                 <ListItemText>Duplicate</ListItemText>
@@ -463,9 +456,42 @@ export default function MeetingDetailView({
           />
         </Stack>
 
-        {/* Right column — meeting content */}
-        <Stack gap={1.5} sx={{ width: 300, flexShrink: 0 }}>
+        {/* Right column */}
+        <Stack gap={0} sx={{ width: 300, flexShrink: 0 }}>
 
+          {/* ── Visibility section ── */}
+          <Box sx={{ pb: 2.5 }}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
+              <Typography sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}>
+                Meeting visibility
+              </Typography>
+              {draft.status === "Published" && (
+                <StatusChip label={draft.visibility} />
+              )}
+            </Stack>
+            <Typography sx={{ fontSize: 14, lineHeight: "20px", letterSpacing: "0.2px", color: "text.primary", mb: draft.status === "Published" ? 1.5 : 0 }}>
+              {draft.status === "Draft"
+                ? "Publish this meeting to control its public visibility."
+                : isPublic
+                ? "This meeting, including its agenda and minutes, is visible on the public portal."
+                : "This meeting, including its agenda and minutes, is only visible to internal users."}
+            </Typography>
+            {draft.status === "Published" && (
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={isPublic ? <LockedIcon /> : <UnlockedIcon />}
+                onClick={() => setPendingAction(isPublic ? "make-internal" : "make-public")}
+              >
+                {isPublic ? "Make internal" : "Make public"}
+              </Button>
+            )}
+          </Box>
+
+          <Divider sx={{ mb: 2.5 }} />
+
+          {/* ── Meeting content ── */}
+          <Stack gap={1.5}>
           <Typography variant="h3" sx={{ fontSize: 22, fontWeight: 600, lineHeight: "28px", letterSpacing: 0 }}>
             Meeting content
           </Typography>
@@ -528,7 +554,8 @@ export default function MeetingDetailView({
             </Stack>
           </Box>
 
-        </Stack>
+          </Stack>{/* end meeting content */}
+        </Stack>{/* end right column */}
       </Box>
 
       <ConfirmDialog

@@ -348,7 +348,7 @@ export default function MeetingDetailView({
   const [draft, setDraft] = useState<Meeting>({ ...meeting });
   const [minutesStatus] = useState<MinutesStatus>("None");
   const [moreMenuAnchor, setMoreMenuAnchor] = useState<HTMLElement | null>(null);
-  type PendingAction = 'make-public' | 'make-internal' | 'duplicate' | 'delete';
+  type PendingAction = 'publish' | 'unpublish' | 'make-public' | 'make-internal' | 'duplicate' | 'delete';
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const save = (partial: Partial<Meeting>) => {
@@ -410,11 +410,11 @@ export default function MeetingDetailView({
         moreButton={
           <Stack direction="row" spacing={1} alignItems="center">
             {draft.status === "Draft" ? (
-              <Button variant="contained" onClick={() => save({ status: "Published" })}>
+              <Button variant="contained" onClick={() => setPendingAction("publish")}>
                 Publish
               </Button>
             ) : (
-              <Button variant="outlined" onClick={() => save({ status: "Draft" })}>
+              <Button variant="outlined" onClick={() => setPendingAction("unpublish")}>
                 Unpublish
               </Button>
             )}
@@ -610,18 +610,24 @@ export default function MeetingDetailView({
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={
+          pendingAction === 'publish' ? 'Publish meeting' :
+          pendingAction === 'unpublish' ? 'Unpublish meeting' :
           pendingAction === 'make-public' ? 'Make public' :
           pendingAction === 'make-internal' ? 'Make internal' :
           pendingAction === 'duplicate' ? 'Duplicate meeting' :
           'Delete meeting'
         }
         message={
+          pendingAction === 'publish' ? `Publish "${draft.name}"? It will become visible to members.` :
+          pendingAction === 'unpublish' ? `Unpublish "${draft.name}"? It will be hidden from members.` :
           pendingAction === 'make-public' ? `Make "${draft.name}" public? It will be visible to all site visitors.` :
           pendingAction === 'make-internal' ? `Make "${draft.name}" internal? Only members will be able to see it.` :
           pendingAction === 'duplicate' ? `Duplicate "${draft.name}"? A copy will be created as a draft.` :
           `Delete "${draft.name}"? This action cannot be undone.`
         }
         confirmLabel={
+          pendingAction === 'publish' ? 'Publish' :
+          pendingAction === 'unpublish' ? 'Unpublish' :
           pendingAction === 'make-public' ? 'Make public' :
           pendingAction === 'make-internal' ? 'Make internal' :
           pendingAction === 'duplicate' ? 'Duplicate' :
@@ -629,7 +635,9 @@ export default function MeetingDetailView({
         }
         destructive={pendingAction === 'delete'}
         onConfirm={() => {
-          if (pendingAction === 'make-public') save({ visibility: 'Public' as const });
+          if (pendingAction === 'publish') save({ status: 'Published' as const });
+          else if (pendingAction === 'unpublish') save({ status: 'Draft' as const });
+          else if (pendingAction === 'make-public') save({ visibility: 'Public' as const });
           else if (pendingAction === 'make-internal') save({ visibility: 'Internal' as const });
           else if (pendingAction === 'duplicate') onDuplicate?.();
           else if (pendingAction === 'delete') { setPendingAction(null); onDelete?.(); return; }

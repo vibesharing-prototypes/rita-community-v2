@@ -14,7 +14,7 @@
       "agendaItems": 12,
       "membersOnly": false,
       "publicRTS": true,
-      "description": "Monthly public meeting with scheduled votes and community comment."
+      "description": "The regular board meeting provides a public forum for the board of directors to conduct official business, review reports from district leadership, and approve key resolutions. Community members are invited to attend and participate in the public comment period.\n\nThis recurring meeting covers standing agenda items including the superintendent's report, consent agenda, policy updates, and any action items brought forward by board committees."
     },
     {
       "id": "m2",
@@ -31,7 +31,7 @@
       "membersOnly": false,
       "publicRTS": false,
       "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
-      "description": "Quarterly review of district financial statements, budget variances, and procurement approvals. Restricted to finance committee members and senior staff."
+      "description": "The finance committee meeting brings together committee members and district finance staff to review the district's financial position, monitor budget performance, and provide oversight of major expenditures. Discussions are based on current financial reports and variance analysis prepared by the finance department.\n\nThis meeting is a working session for committee members and relevant staff. Action items and recommendations from this meeting are reported to the full board for approval."
     },
     {
       "id": "m3",
@@ -63,7 +63,7 @@
       "membersOnly": false,
       "publicRTS": false,
       "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
-      "description": "Annual review of internal audit findings, risk register updates, and compliance status across all district departments."
+      "description": "The audit and risk committee meets to oversee the district's internal audit program, review findings from internal and external auditors, and monitor the status of the risk register. The committee ensures that controls are operating effectively and that significant risks are being actively managed.\n\nThis meeting includes updates from the internal audit team, discussion of any emerging compliance issues, and follow-up on outstanding audit recommendations from prior periods."
     },
     {
       "id": "m5",
@@ -95,7 +95,7 @@
       "membersOnly": false,
       "publicRTS": true,
       "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
-      "description": "Monthly open board meeting covering policy approvals, superintendent report, and public comment. Streamed live for community members."
+      "description": "The regular board meeting provides a public forum for the board of directors to conduct official business, review reports from district leadership, and approve key resolutions. Community members are invited to attend and participate in the public comment period.\n\nThis recurring meeting covers standing agenda items including the superintendent's report, consent agenda, policy updates, and any action items brought forward by board committees."
     },
     {
       "id": "m7",
@@ -129,7 +129,7 @@
       "membersOnly": false,
       "publicRTS": false,
       "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
-      "description": "Mid-year budget review including revenue projections, expenditure trends, and discussion of proposed budget adjustments."
+      "description": "The finance committee meeting brings together committee members and district finance staff to review the district's financial position, monitor budget performance, and provide oversight of major expenditures. Discussions are based on current financial reports and variance analysis prepared by the finance department.\n\nThis meeting is a working session for committee members and relevant staff. Action items and recommendations from this meeting are reported to the full board for approval."
     },
     {
       "id": "m9",
@@ -146,7 +146,7 @@
       "membersOnly": false,
       "publicRTS": true,
       "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
-      "description": "Year-end board meeting with adoption of the annual report, recognition of outgoing board members, and community comment period."
+      "description": "The regular board meeting provides a public forum for the board of directors to conduct official business, review reports from district leadership, and approve key resolutions. Community members are invited to attend and participate in the public comment period.\n\nThis recurring meeting covers standing agenda items including the superintendent's report, consent agenda, policy updates, and any action items brought forward by board committees."
     },
     {
       "id": "m10",
@@ -163,7 +163,7 @@
       "membersOnly": false,
       "publicRTS": false,
       "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
-      "description": "End-of-year financial close review covering final accounts, reserve fund status, and preparation for the annual external audit."
+      "description": "The finance committee meeting brings together committee members and district finance staff to review the district's financial position, monitor budget performance, and provide oversight of major expenditures. Discussions are based on current financial reports and variance analysis prepared by the finance department.\n\nThis meeting is a working session for committee members and relevant staff. Action items and recommendations from this meeting are reported to the full board for approval."
     },
     {
       "id": "m11",
@@ -197,7 +197,7 @@
       "membersOnly": false,
       "publicRTS": true,
       "videoUrl": "https://www.youtube.com/watch?v=CF1YIfnS85U",
-      "description": "September board meeting covering back-to-school initiatives, facilities update, staffing report, and approval of consent agenda."
+      "description": "The regular board meeting provides a public forum for the board of directors to conduct official business, review reports from district leadership, and approve key resolutions. Community members are invited to attend and participate in the public comment period.\n\nThis recurring meeting covers standing agenda items including the superintendent's report, consent agenda, policy updates, and any action items brought forward by board committees."
     },
     {
       "id": "m13",
@@ -225,7 +225,8 @@
       "time": "6:00 PM",
       "location": "District office · Board room",
       "status": "Active",
-      "meetingsCreated": 24
+      "meetingsCreated": 24,
+      "description": "The regular board meeting provides a public forum for the board of directors to conduct official business, review reports from district leadership, and approve key resolutions. Community members are invited to attend and participate in the public comment period.\n\nThis recurring meeting covers standing agenda items including the superintendent's report, consent agenda, policy updates, and any action items brought forward by board committees."
     },
     {
       "id": "t2",
@@ -234,7 +235,8 @@
       "time": "5:30 PM",
       "location": "District office · Room 204",
       "status": "Active",
-      "meetingsCreated": 12
+      "meetingsCreated": 12,
+      "description": "The finance committee meeting brings together committee members and district finance staff to review the district's financial position, monitor budget performance, and provide oversight of major expenditures. Discussions are based on current financial reports and variance analysis prepared by the finance department.\n\nThis meeting is a working session for committee members and relevant staff. Action items and recommendations from this meeting are reported to the full board for approval."
     },
     {
       "id": "t3",
@@ -243,14 +245,16 @@
       "time": "3:00 PM",
       "location": "District office · Room 101",
       "status": "Active",
-      "meetingsCreated": 8
+      "meetingsCreated": 8,
+      "description": "The audit and risk committee meets to oversee the district's internal audit program, review findings from internal and external auditors, and monitor the status of the risk register. The committee ensures that controls are operating effectively and that significant risks are being actively managed.\n\nThis meeting includes updates from the internal audit team, discussion of any emerging compliance issues, and follow-up on outstanding audit recommendations from prior periods."
     },
     {
       "id": "t4",
       "name": "Special session",
       "committee": "Regular board",
       "status": "Archived",
-      "meetingsCreated": 3
+      "meetingsCreated": 3,
+      "description": "A special session is convened to address urgent or time-sensitive matters that cannot wait for the next regularly scheduled board meeting. The agenda is focused and limited to the specific items for which the session was called.\n\nNotice of a special session is provided in accordance with district policy and open meeting requirements. Only items listed in the meeting notice may be acted upon during a special session."
     }
   ],
   "committees": [

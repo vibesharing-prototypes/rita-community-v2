@@ -454,7 +454,7 @@ export default function MeetingDetailView({
           "--lens-component-page-header-desktop-container-gap": "8px",
           "--lens-component-page-header-desktop-title-container-gap": "12px",
           "--lens-component-page-header-tablet-title-container-gap": "12px",
-          "& nav.MuiBreadcrumbs-root li:first-child a": { pl: 0 },
+          "& nav.MuiBreadcrumbs-root li:first-child a": { pl: "4px" },
           // Force the Atlas title container (flex: 0 1 auto by default) to grow
           "& .MuiStack-root:has(.MuiTextField-root)": { flex: "1 1 auto !important" },
         } }}

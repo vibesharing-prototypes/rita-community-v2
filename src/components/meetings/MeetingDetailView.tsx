@@ -374,9 +374,9 @@ export default function MeetingDetailView({
           >
             {(item) =>
               item.isCurrent ? (
-                <Typography variant="body1">{item.label}</Typography>
+                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "text.secondary" }}>{item.label}</Typography>
               ) : item.id === "meetings" ? (
-                <Typography variant="body1">{item.label}</Typography>
+                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "text.secondary" }}>{item.label}</Typography>
               ) : (
                 <Link underline="hover" variant="body1" sx={{ cursor: "pointer" }} onClick={onBack}>
                   {item.label}

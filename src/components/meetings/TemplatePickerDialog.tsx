@@ -113,7 +113,7 @@ export default function TemplatePickerDialog({
 
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle>
+      <DialogTitle sx={{ pl: "20px" }}>
         <Stack direction="row" alignItems="center" gap={1}>
           {step === 2 && (
             <IconButton

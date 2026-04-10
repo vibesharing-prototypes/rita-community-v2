@@ -56,8 +56,7 @@ const HIDDEN_FIELD_SX = {
 
 const TRIGGER_SX = {
   borderRadius: "4px",
-  pl: 0,
-  pr: "4px",
+  px: "4px",
   py: "4px",
   cursor: "pointer",
   fontSize: "1rem",
@@ -97,7 +96,7 @@ function DateTimeField({
         </Typography>
       </Stack>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Stack direction="row" alignItems="center" sx={{ pl: "28px" }}>
+        <Stack direction="row" alignItems="center" sx={{ pl: "24px" }}>
 
           {/* Clickable date text */}
           <Box ref={dateRef} onClick={() => setDateOpen(true)} sx={TRIGGER_SX}>

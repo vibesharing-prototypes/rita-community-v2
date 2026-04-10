@@ -113,7 +113,7 @@ export default function TemplatePickerDialog({
   return (
     <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       {/* Custom header — bypasses Atlas DialogTitle grid to control alignment */}
-      <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", px: "20px", pt: "20px", pb: "12px" }}>
+      <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", px: "24px", pt: "24px", pb: "24px" }}>
         <Stack direction="row" alignItems="center" gap={0.5} flex={1} minWidth={0}>
           {step === 2 && (
             <IconButton
@@ -142,7 +142,7 @@ export default function TemplatePickerDialog({
           <CloseIcon />
         </IconButton>
       </Box>
-      <DialogContent sx={{ pt: "0 !important", pb: "20px", px: "20px" }}>
+      <DialogContent sx={{ pt: "0 !important", pb: "24px", px: "24px" }}>
         {step === 1 ? (
           <Stack gap={1.5}>
             {activeTemplates.map((template) => (

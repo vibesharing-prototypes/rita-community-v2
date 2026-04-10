@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import TemplateDetailView from "../components/meetings/TemplateDetailView";
 import meetingsData from "../data/meetings.json";
-import type { MeetingTemplate } from "../types/meetings";
+import type { Meeting, MeetingTemplate } from "../types/meetings";
 
 export default function TemplateDetailPage() {
   const { id } = useParams();
@@ -26,6 +26,25 @@ export default function TemplateDetailPage() {
       onDuplicate={(copy) =>
         navigate(`/meetings/templates/${copy.id}`, { state: { template: copy } })
       }
+      onUseTemplate={() => {
+        const newMeeting: Meeting = {
+          id: `m-new-${Date.now()}`,
+          name: template.name,
+          date: new Date().toISOString().slice(0, 10),
+          time: template.time,
+          location: template.location,
+          description: template.description,
+          committee: template.committee,
+          status: "Draft",
+          visibility: "Internal",
+          agendaStatus: "Not published",
+          agendaCategories: 0,
+          agendaItems: 0,
+          membersOnly: false,
+          publicRTS: false,
+        };
+        navigate(`/meetings/${newMeeting.id}`, { state: { meeting: newMeeting } });
+      }}
     />
   );
 }

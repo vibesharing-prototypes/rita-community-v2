@@ -198,11 +198,13 @@ export default function TemplateDetailView({
   onBack,
   onUpdate,
   onDuplicate,
+  onUseTemplate,
 }: {
   template: MeetingTemplate;
   onBack: () => void;
   onUpdate: (template: MeetingTemplate) => void;
   onDuplicate?: (copy: MeetingTemplate) => void;
+  onUseTemplate?: () => void;
 }) {
   const { tokens } = useTheme();
   const dividerColor =
@@ -282,25 +284,30 @@ export default function TemplateDetailView({
             (<EditableTitleField value={draft.name} onSave={(val) => save({ name: val })} />) as unknown as string
           }
           pageSubtitle={
-            <Box
-              component="span"
-              sx={{
-                display: "inline-flex",
-                alignItems: "center",
-                border: "1px solid #76777A",
-                borderRadius: "100px",
-                px: 1.5,
-                height: 24,
-                fontSize: 12,
-                lineHeight: 1,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {draft.committee}
-            </Box>
+            <Stack direction="row" alignItems="center">
+              <Box
+                component="span"
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  border: "1px solid #76777A",
+                  borderRadius: "100px",
+                  px: 1.5,
+                  height: 24,
+                  fontSize: 12,
+                  lineHeight: 1,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {draft.committee}
+              </Box>
+            </Stack>
           }
           moreButton={
-            <Stack direction="row" alignItems="center">
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Button variant="outlined" onClick={onUseTemplate}>
+                Use template
+              </Button>
               <IconButton
                 aria-label="More actions"
                 onClick={(e) => setMoreMenuAnchor(e.currentTarget)}

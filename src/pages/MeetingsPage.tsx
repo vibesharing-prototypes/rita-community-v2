@@ -88,7 +88,6 @@ export default function MeetingsPage() {
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
   const [detailView, setDetailView] = useState<Meeting | null>(null);
   const [editView, setEditView] = useState<Meeting | null>(null);
-  const [createTemplateId, setCreateTemplateId] = useState<string | null>(null);
 
   const filteredMeetings = useMemo(() => {
     return meetings
@@ -133,25 +132,16 @@ export default function MeetingsPage() {
     );
   }
 
-  if (editView || createTemplateId !== null) {
-    const template = createTemplateId
-      ? templates.find((t) => t.id === createTemplateId) ?? null
-      : null;
+  if (editView) {
     return (
       <MeetingFormPage
-        mode={editView ? "edit" : "create"}
-        meeting={editView ?? undefined}
-        template={template}
+        mode="edit"
+        meeting={editView}
         committees={committees}
-        onBack={() => { setEditView(null); setCreateTemplateId(null); }}
+        onBack={() => setEditView(null)}
         onSubmit={(meeting) => {
-          if (editView) {
-            setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? meeting : m)));
-          } else {
-            setMeetings((prev) => [meeting, ...prev]);
-          }
+          setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? meeting : m)));
           setEditView(null);
-          setCreateTemplateId(null);
           setDetailView(meeting);
         }}
       />
@@ -641,10 +631,46 @@ export default function MeetingsPage() {
       <TemplatePickerDialog
         open={createDialogOpen}
         templates={templates}
+        committees={committees}
         onClose={() => setCreateDialogOpen(false)}
-        onSelect={(templateId) => {
+        onSelect={(templateId, committee) => {
           setCreateDialogOpen(false);
-          setCreateTemplateId(templateId);
+          const today = new Date().toISOString().slice(0, 10);
+          let newMeeting: Meeting;
+          if (templateId) {
+            const tpl = templates.find((t) => t.id === templateId)!;
+            newMeeting = {
+              id: `m-new-${Date.now()}`,
+              name: tpl.name,
+              date: today,
+              time: tpl.time,
+              location: tpl.location,
+              committee: tpl.committee,
+              status: "Draft",
+              visibility: "Internal",
+              agendaStatus: "Not published",
+              agendaCategories: 2,
+              agendaItems: 5,
+              membersOnly: false,
+              publicRTS: false,
+            };
+          } else {
+            newMeeting = {
+              id: `m-new-${Date.now()}`,
+              name: "New meeting",
+              date: today,
+              committee: committee!,
+              status: "Draft",
+              visibility: "Internal",
+              agendaStatus: "Not published",
+              agendaCategories: 0,
+              agendaItems: 0,
+              membersOnly: false,
+              publicRTS: false,
+            };
+          }
+          setMeetings((prev) => [newMeeting, ...prev]);
+          setDetailView(newMeeting);
         }}
       />
       <DuplicateMeetingDialog

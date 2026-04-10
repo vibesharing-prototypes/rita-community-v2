@@ -1,5 +1,6 @@
 import AddIcon from "@diligentcorp/atlas-react-bundle/icons/Add";
 import CloseIcon from "@diligentcorp/atlas-react-bundle/icons/Close";
+import GroupIcon from "@diligentcorp/atlas-react-bundle/icons/Group";
 import PageIcon from "@diligentcorp/atlas-react-bundle/icons/Page";
 import {
   Box,
@@ -13,7 +14,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-
+import { useEffect, useState } from "react";
 
 import type { MeetingTemplate } from "../../types/meetings";
 
@@ -87,50 +88,94 @@ function TemplateCard({
 export default function TemplatePickerDialog({
   open,
   templates,
+  committees,
   onClose,
   onSelect,
 }: {
   open: boolean;
   templates: MeetingTemplate[];
+  committees: string[];
   onClose: () => void;
-  onSelect: (templateId: string | null) => void;
+  onSelect: (templateId: string | null, committee: string | null) => void;
 }) {
   const { tokens } = useTheme();
   const dividerColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
   const activeTemplates = templates.filter((t) => t.status === "Active");
+  const [step, setStep] = useState<1 | 2>(1);
+
+  useEffect(() => {
+    if (!open) setStep(1);
+  }, [open]);
+
+  const handleClose = () => {
+    onClose();
+  };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        New meeting
-        <Box component="p" sx={{ m: 0 }}>
-          Start with a template or create a blank meeting.
-        </Box>
-        <IconButton aria-label="Close" onClick={onClose}>
+        <Stack direction="row" alignItems="center" gap={1}>
+          {step === 2 && (
+            <IconButton
+              aria-label="Back"
+              onClick={() => setStep(1)}
+              edge="start"
+              sx={{ flexShrink: 0 }}
+            >
+              <SvgIcon sx={{ width: 20, height: 20 }}>
+                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+              </SvgIcon>
+            </IconButton>
+          )}
+          <Box flex={1}>
+            New meeting
+            <Box component="p" sx={{ m: 0 }}>
+              {step === 1
+                ? "Start with a template or create a blank meeting."
+                : "Choose a committee for this meeting."}
+            </Box>
+          </Box>
+        </Stack>
+        <IconButton aria-label="Close" onClick={handleClose}>
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ pt: "0 !important", pb: "20px", px: "20px" }}>
-        <Stack gap={1.5}>
-          {activeTemplates.map((template) => (
+        {step === 1 ? (
+          <Stack gap={1.5}>
+            {activeTemplates.map((template) => (
+              <TemplateCard
+                key={template.id}
+                icon={<PageIcon />}
+                iconBg="#D7F6FF"
+                title={template.name}
+                subtitle={template.committee}
+                onClick={() => onSelect(template.id, null)}
+                borderColor={dividerColor}
+              />
+            ))}
             <TemplateCard
-              key={template.id}
-              icon={<PageIcon />}
-              iconBg="#D7F6FF"
-              title={template.name}
-              subtitle={template.committee}
-              onClick={() => onSelect(template.id)}
+              icon={<AddIcon />}
+              iconBg="#F0F0F0"
+              title="Create blank meeting"
+              onClick={() => setStep(2)}
               borderColor={dividerColor}
             />
-          ))}
-          <TemplateCard
-            icon={<AddIcon />}
-            iconBg="#F0F0F0"
-            title="Create blank meeting"
-            onClick={() => onSelect(null)}
-            borderColor={dividerColor}
-          />
-        </Stack>
+          </Stack>
+        ) : (
+          <Stack gap={1.5}>
+            {committees.map((committee) => (
+              <TemplateCard
+                key={committee}
+                icon={<GroupIcon />}
+                iconBg="#F0F0F0"
+                title={committee}
+                onClick={() => onSelect(null, committee)}
+                borderColor={dividerColor}
+              />
+            ))}
+          </Stack>
+        )}
       </DialogContent>
     </Dialog>
   );

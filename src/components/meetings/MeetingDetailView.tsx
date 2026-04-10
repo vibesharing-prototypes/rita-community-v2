@@ -515,7 +515,13 @@ export default function MeetingDetailView({
                   Agenda
                 </Typography>
               </Box>
-              <Button variant="outlined" size="small">View</Button>
+              {draft.agendaItems > 0 ? (
+                <Button variant="outlined" size="small">View</Button>
+              ) : (
+                <Button variant="outlined" size="small" startIcon={
+                  <SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>
+                }>Add</Button>
+              )}
             </Stack>
           </Box>
 

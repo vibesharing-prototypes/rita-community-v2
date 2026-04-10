@@ -56,7 +56,8 @@ const HIDDEN_FIELD_SX = {
 
 const TRIGGER_SX = {
   borderRadius: "4px",
-  px: "4px",
+  pl: 0,
+  pr: "4px",
   py: "4px",
   cursor: "pointer",
   fontSize: "1rem",

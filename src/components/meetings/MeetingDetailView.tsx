@@ -457,7 +457,7 @@ export default function MeetingDetailView({
         </Stack>
 
         {/* Right column */}
-        <Stack gap={0} sx={{ width: 300, flexShrink: 0 }}>
+        <Stack gap={0} sx={{ width: 336, flexShrink: 0 }}>
 
           {/* ── Visibility section ── */}
           <Box sx={{ pb: 2.5 }}>

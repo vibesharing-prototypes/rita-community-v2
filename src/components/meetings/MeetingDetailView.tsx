@@ -492,7 +492,7 @@ export default function MeetingDetailView({
 
           {/* ── Meeting content ── */}
           <Stack gap={1.5}>
-          <Typography variant="h3" sx={{ fontSize: 22, fontWeight: 600, lineHeight: "28px", letterSpacing: 0 }}>
+          <Typography variant="h3" sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}>
             Meeting content
           </Typography>
 

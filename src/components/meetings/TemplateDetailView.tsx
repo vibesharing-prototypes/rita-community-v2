@@ -1,0 +1,468 @@
+import { OverflowBreadcrumbs, PageHeader } from "@diligentcorp/atlas-react-bundle";
+import AgendaIcon from "@diligentcorp/atlas-react-bundle/icons/Agenda";
+import ArchiveIcon from "@diligentcorp/atlas-react-bundle/icons/Archive";
+import ClockIcon from "@diligentcorp/atlas-react-bundle/icons/Clock";
+import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
+import LocationIcon from "@diligentcorp/atlas-react-bundle/icons/Location";
+import MoreIcon from "@diligentcorp/atlas-react-bundle/icons/More";
+import NotesIcon from "@diligentcorp/atlas-react-bundle/icons/Notes";
+import UnarchiveIcon from "@diligentcorp/atlas-react-bundle/icons/Unarchive";
+import {
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  Link,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Stack,
+  SvgIcon,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import { useState } from "react";
+
+import ConfirmDialog from "./ConfirmDialog";
+import PageLayout from "../PageLayout";
+import type { MeetingTemplate } from "../../types/meetings";
+
+// ── Inline-editable page title ─────────────────────────────────────────────
+
+function EditableTitleField({
+  value,
+  onSave,
+}: {
+  value: string;
+  onSave: (val: string) => void;
+}) {
+  const [local, setLocal] = useState(value);
+
+  return (
+    <TextField
+      value={local}
+      onChange={(e) => setLocal(e.target.value)}
+      onBlur={() => {
+        const trimmed = local.trim();
+        if (trimmed && trimmed !== value) onSave(trimmed);
+        else setLocal(value);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") (e.target as HTMLElement).blur();
+        if (e.key === "Escape") {
+          setLocal(value);
+          (e.target as HTMLElement).blur();
+        }
+      }}
+      variant="standard"
+      fullWidth
+      sx={{
+        "& .MuiInput-root": {
+          borderRadius: "4px",
+          fontSize: "30px",
+          fontWeight: 600,
+          lineHeight: "38px",
+          "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
+        },
+        "& .MuiInput-input.MuiInput-input": {
+          p: "0 4px",
+          fontFamily: "inherit",
+          fontSize: "30px",
+          fontWeight: 600,
+          lineHeight: "38px",
+        },
+        "& .MuiInput-root::before": { borderBottom: "none !important" },
+      }}
+    />
+  );
+}
+
+// ── Inline-editable single-line field ─────────────────────────────────────
+
+function EditableField({
+  icon,
+  label,
+  value,
+  placeholder,
+  onSave,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  placeholder: string;
+  onSave: (val: string) => void;
+}) {
+  const [local, setLocal] = useState(value);
+
+  return (
+    <Box>
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}
+      >
+        {icon}
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+          {label}
+        </Typography>
+      </Stack>
+      <TextField
+        value={local}
+        onChange={(e) => setLocal(e.target.value)}
+        onBlur={() => {
+          if (local !== value) onSave(local);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") (e.target as HTMLElement).blur();
+          if (e.key === "Escape") setLocal(value);
+        }}
+        fullWidth
+        variant="standard"
+        placeholder={placeholder}
+        sx={{
+          "& .MuiInput-root": {
+            borderRadius: "4px",
+            "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
+          },
+          "& .MuiInput-input.MuiInput-input": { pl: "28px", pr: 0, pt: "4px", pb: "4px" },
+          "& .MuiInput-root::before": { borderBottom: "none !important" },
+        }}
+      />
+    </Box>
+  );
+}
+
+// ── Inline-editable multiline field ───────────────────────────────────────
+
+function EditableMultilineField({
+  icon,
+  label,
+  value,
+  placeholder,
+  onSave,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  placeholder: string;
+  onSave: (val: string) => void;
+}) {
+  const [local, setLocal] = useState(value);
+
+  return (
+    <Box>
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}
+      >
+        {icon}
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+          {label}
+        </Typography>
+      </Stack>
+      <TextField
+        value={local}
+        onChange={(e) => setLocal(e.target.value)}
+        onBlur={() => {
+          if (local !== value) onSave(local);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setLocal(value);
+        }}
+        fullWidth
+        multiline
+        variant="standard"
+        placeholder={placeholder}
+        sx={{
+          "& .MuiInput-root": {
+            borderRadius: "4px",
+            "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
+          },
+          "& .MuiInput-input.MuiInput-input": { pl: "28px", pr: 0, pt: "4px", pb: "4px" },
+          "& .MuiInput-root::before": { borderBottom: "none !important" },
+        }}
+      />
+    </Box>
+  );
+}
+
+// ── Main component ─────────────────────────────────────────────────────────
+
+export default function TemplateDetailView({
+  template,
+  onBack,
+  onUpdate,
+  onDuplicate,
+}: {
+  template: MeetingTemplate;
+  onBack: () => void;
+  onUpdate: (template: MeetingTemplate) => void;
+  onDuplicate?: (copy: MeetingTemplate) => void;
+}) {
+  const { tokens } = useTheme();
+  const dividerColor =
+    tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
+
+  const [draft, setDraft] = useState<MeetingTemplate>({ ...template });
+  const [moreMenuAnchor, setMoreMenuAnchor] = useState<HTMLElement | null>(null);
+  type PendingAction = "archive" | "unarchive";
+  const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
+  const save = (partial: Partial<MeetingTemplate>) => {
+    const updated = { ...draft, ...partial };
+    setDraft(updated);
+    onUpdate(updated);
+  };
+
+  const isArchived = draft.status === "Archived";
+
+  return (
+    <PageLayout id="page-template-detail">
+      {/* ── Atlas PageHeader ── */}
+      <Box sx={{ borderBottom: `1px solid ${dividerColor}`, pb: "12px" }}>
+        <PageHeader
+          breadcrumbs={
+            <OverflowBreadcrumbs
+              items={[
+                { id: "meetings", label: "Meetings" },
+                { id: "templates", label: "Templates" },
+                { id: "current", label: draft.name, isCurrent: true },
+              ]}
+            >
+              {(item) =>
+                item.isCurrent ? (
+                  <Typography
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      lineHeight: "20px",
+                      letterSpacing: "0.14px",
+                      color: "#6f7377",
+                      pl: "4px",
+                      pr: "12px",
+                      py: "4px",
+                    }}
+                  >
+                    {item.label}
+                  </Typography>
+                ) : item.id === "meetings" ? (
+                  <Typography
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      lineHeight: "20px",
+                      letterSpacing: "0.14px",
+                      color: "#6f7377",
+                      pl: "4px",
+                      pr: "12px",
+                      py: "4px",
+                    }}
+                  >
+                    {item.label}
+                  </Typography>
+                ) : (
+                  <Link
+                    underline="hover"
+                    variant="body1"
+                    sx={{ cursor: "pointer" }}
+                    onClick={onBack}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              }
+            </OverflowBreadcrumbs>
+          }
+          pageTitle={
+            (<EditableTitleField value={draft.name} onSave={(val) => save({ name: val })} />) as unknown as string
+          }
+          pageSubtitle={
+            <Box
+              component="span"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                border: "1px solid #76777A",
+                borderRadius: "100px",
+                px: 1.5,
+                height: 24,
+                fontSize: 12,
+                lineHeight: 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {draft.committee}
+            </Box>
+          }
+          moreButton={
+            <Stack direction="row" alignItems="center">
+              <IconButton
+                aria-label="More actions"
+                onClick={(e) => setMoreMenuAnchor(e.currentTarget)}
+              >
+                <MoreIcon />
+              </IconButton>
+              <Menu
+                anchorEl={moreMenuAnchor}
+                open={Boolean(moreMenuAnchor)}
+                onClose={() => setMoreMenuAnchor(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    setMoreMenuAnchor(null);
+                    const copy: MeetingTemplate = {
+                      ...draft,
+                      id: `t-dup-${Date.now()}`,
+                      name: `Copy of ${draft.name}`,
+                      meetingsCreated: 0,
+                    };
+                    onDuplicate?.(copy);
+                  }}
+                >
+                  <ListItemIcon>
+                    <CopyIcon />
+                  </ListItemIcon>
+                  <ListItemText>Duplicate</ListItemText>
+                </MenuItem>
+                <Divider />
+                <MenuItem
+                  onClick={() => {
+                    setMoreMenuAnchor(null);
+                    setPendingAction(isArchived ? "unarchive" : "archive");
+                  }}
+                >
+                  <ListItemIcon>
+                    {isArchived ? <UnarchiveIcon /> : <ArchiveIcon />}
+                  </ListItemIcon>
+                  <ListItemText>{isArchived ? "Unarchive" : "Archive"}</ListItemText>
+                </MenuItem>
+              </Menu>
+            </Stack>
+          }
+          containerProps={{
+            sx: {
+              "--lens-component-page-header-desktop-middle-container-padding-bottom": "0px",
+              "--lens-component-page-header-desktop-container-gap": "8px",
+              "--lens-component-page-header-desktop-title-container-gap": "12px",
+              "--lens-component-page-header-tablet-title-container-gap": "12px",
+              "& nav.MuiBreadcrumbs-root li:first-child a": { pl: 0 },
+              "& .MuiStack-root:has(.MuiTextField-root)": { flex: "1 1 auto !important" },
+            },
+          }}
+        />
+      </Box>
+
+      {/* ── Two-column body ── */}
+      <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
+        {/* Left column — metadata */}
+        <Stack flex={1} gap="24px" minWidth={0}>
+          <EditableField
+            icon={<ClockIcon />}
+            label="Time"
+            value={draft.time ?? ""}
+            placeholder="Add default time…"
+            onSave={(val) => save({ time: val || undefined })}
+          />
+          <EditableField
+            icon={<LocationIcon />}
+            label="Location"
+            value={draft.location ?? ""}
+            placeholder="Add default location…"
+            onSave={(val) => save({ location: val || undefined })}
+          />
+          <EditableMultilineField
+            icon={<NotesIcon />}
+            label="Description"
+            value={draft.description ?? ""}
+            placeholder="Add a description…"
+            onSave={(val) => save({ description: val || undefined })}
+          />
+        </Stack>
+
+        {/* Right column — template content */}
+        <Stack gap={0} sx={{ width: 336, flexShrink: 0 }}>
+          <Stack gap={1.5}>
+            <Typography
+              variant="h3"
+              sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}
+            >
+              Template content
+            </Typography>
+
+            {/* Agenda card */}
+            <Box
+              sx={{
+                border: `1px solid ${dividerColor}`,
+                borderRadius: "12px",
+                p: 2,
+                backgroundColor: "white",
+              }}
+            >
+              <Stack direction="row" alignItems="center" gap={1.5}>
+                <Box
+                  sx={{
+                    backgroundColor: "#E4F3FF",
+                    borderRadius: "12px",
+                    p: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <AgendaIcon sx={{ width: 24, height: 24 }} />
+                </Box>
+                <Box flex={1} minWidth={0}>
+                  <Typography
+                    sx={{
+                      fontSize: 18,
+                      fontWeight: 600,
+                      lineHeight: "28px",
+                      letterSpacing: "0.2px",
+                    }}
+                  >
+                    Agenda
+                  </Typography>
+                </Box>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={
+                    <SvgIcon sx={{ width: 16, height: 16 }}>
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+                    </SvgIcon>
+                  }
+                >
+                  Add
+                </Button>
+              </Stack>
+            </Box>
+          </Stack>
+        </Stack>
+      </Box>
+
+      <ConfirmDialog
+        open={Boolean(pendingAction)}
+        title={pendingAction === "archive" ? "Archive template" : "Unarchive template"}
+        message={
+          pendingAction === "archive"
+            ? `Archive "${draft.name}"? It will be hidden from the active templates list.`
+            : `Unarchive "${draft.name}"? It will appear in the active templates list.`
+        }
+        confirmLabel={pendingAction === "archive" ? "Archive" : "Unarchive"}
+        onConfirm={() => {
+          save({ status: pendingAction === "archive" ? "Archived" : "Active" });
+          setPendingAction(null);
+        }}
+        onClose={() => setPendingAction(null)}
+      />
+    </PageLayout>
+  );
+}

@@ -27,6 +27,7 @@ export type MeetingTemplate = {
   committee: string;
   time?: string;
   location?: string;
+  description?: string;
   status: TemplateStatus;
   meetingsCreated: number;
 };

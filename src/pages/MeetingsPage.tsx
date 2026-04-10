@@ -42,12 +42,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { useMemo, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 
 import PageLayout from "../components/PageLayout.js";
 import MeetingFormPage from "../components/meetings/MeetingFormPage";
 import MeetingDetailView from "../components/meetings/MeetingDetailView";
 import MeetingRowActions from "../components/meetings/MeetingRowActions";
 import TemplatePickerDialog from "../components/meetings/TemplatePickerDialog";
+import CommitteePickerDialog from "../components/meetings/CommitteePickerDialog";
 import DuplicateMeetingDialog from "../components/meetings/DuplicateMeetingDialog";
 import ConfirmDialog from "../components/meetings/ConfirmDialog";
 import StatusChip from "../components/meetings/StatusChip";
@@ -63,6 +65,8 @@ import meetingsData from "../data/meetings.json";
 
 export default function MeetingsPage() {
   const { presets, tokens } = useTheme();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { meetings: seedMeetings, templates: seedTemplates, committees } = meetingsData as {
     meetings: Meeting[];
     templates: MeetingTemplate[];
@@ -70,7 +74,8 @@ export default function MeetingsPage() {
   };
   const [meetings, setMeetings] = useState<Meeting[]>(seedMeetings);
   const [templates, setTemplates] = useState<MeetingTemplate[]>(seedTemplates);
-  const [activeTab, setActiveTab] = useState<MeetingTab>("upcoming");
+  const initialTab = (searchParams.get("tab") as MeetingTab | null) ?? "upcoming";
+  const [activeTab, setActiveTab] = useState<MeetingTab>(initialTab);
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("date-asc");
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
@@ -83,6 +88,7 @@ export default function MeetingsPage() {
   type PendingAction =
     | { type: "publish" | "unpublish" | "make-public" | "make-internal" | "delete"; meeting: Meeting };
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [newTemplateDialogOpen, setNewTemplateDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [duplicateSource, setDuplicateSource] = useState<Meeting | null>(null);
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
@@ -236,7 +242,11 @@ export default function MeetingsPage() {
             variant="contained"
             size="medium"
             startIcon={<AddIcon />}
-            onClick={() => setCreateDialogOpen(true)}
+            onClick={() =>
+              activeTab === "templates"
+                ? setNewTemplateDialogOpen(true)
+                : setCreateDialogOpen(true)
+            }
             sx={{ whiteSpace: "nowrap" }}
           >
             {activeTab === "templates" ? "New template" : "New meeting"}
@@ -427,7 +437,13 @@ export default function MeetingsPage() {
                   <TableRow key={template.id} id={`template-row-${template.id}`}>
                     <TableCell>
                       <Stack direction="row" spacing={1} alignItems="center">
-                        <Typography variant="body1" sx={{ fontWeight: 600 }}>{template.name}</Typography>
+                        <Typography
+                          variant="body1"
+                          sx={{ fontWeight: 600, cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                          onClick={() => navigate(`/meetings/templates/${template.id}`, { state: { template } })}
+                        >
+                          {template.name}
+                        </Typography>
                         {template.status === "Archived" && <StatusChip label="Archived" />}
                       </Stack>
                     </TableCell>
@@ -628,6 +644,22 @@ export default function MeetingsPage() {
         </Box>
       </Stack>
 
+      <CommitteePickerDialog
+        open={newTemplateDialogOpen}
+        committees={committees}
+        onClose={() => setNewTemplateDialogOpen(false)}
+        onSelect={(committee) => {
+          setNewTemplateDialogOpen(false);
+          const newTemplate: MeetingTemplate = {
+            id: `t-new-${Date.now()}`,
+            name: "Untitled template",
+            committee,
+            status: "Active",
+            meetingsCreated: 0,
+          };
+          navigate(`/meetings/templates/${newTemplate.id}`, { state: { template: newTemplate } });
+        }}
+      />
       <TemplatePickerDialog
         open={createDialogOpen}
         templates={templates}

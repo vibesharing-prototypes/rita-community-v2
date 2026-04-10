@@ -1,5 +1,6 @@
 import CloseIcon from "@diligentcorp/atlas-react-bundle/icons/Close";
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -59,18 +60,37 @@ export default function ConfirmDialog({
         <Button variant="outlined" size="medium" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          variant="contained"
-          size="medium"
-          onClick={onConfirm}
-          sx={destructive ? {
-            backgroundColor: "var(--lens-semantic-color-status-error-default)",
-            color: "#fff",
-            "&:hover": { backgroundColor: "var(--lens-semantic-color-status-error-text)" },
-          } : {}}
-        >
-          {confirmLabel}
-        </Button>
+        {destructive ? (
+          <Box
+            component="button"
+            onClick={onConfirm}
+            style={{ backgroundColor: "var(--lens-semantic-color-status-error-default)", color: "#fff" }}
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              px: "15px",
+              py: "5px",
+              fontSize: "0.875rem",
+              fontFamily: "inherit",
+              fontWeight: 500,
+              lineHeight: 1.75,
+              letterSpacing: "0.02857em",
+              textTransform: "uppercase",
+              borderRadius: "4px",
+              border: "none",
+              cursor: "pointer",
+              boxShadow: "none",
+              "&:hover": { filter: "brightness(0.9)" },
+            }}
+          >
+            {confirmLabel}
+          </Box>
+        ) : (
+          <Button variant="contained" size="medium" onClick={onConfirm}>
+            {confirmLabel}
+          </Button>
+        )}
       </DialogActions>
     </Dialog>
   );

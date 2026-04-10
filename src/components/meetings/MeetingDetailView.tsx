@@ -147,6 +147,48 @@ function DateTimeField({
   );
 }
 
+// ── Inline-editable page title ────────────────────────────────────────────
+
+function EditableTitleField({
+  value,
+  onSave,
+}: {
+  value: string;
+  onSave: (val: string) => void;
+}) {
+  const [local, setLocal] = useState(value);
+
+  return (
+    <TextField
+      value={local}
+      onChange={(e) => setLocal(e.target.value)}
+      onBlur={() => {
+        const trimmed = local.trim();
+        if (trimmed && trimmed !== value) onSave(trimmed);
+        else setLocal(value);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") (e.target as HTMLElement).blur();
+        if (e.key === "Escape") { setLocal(value); (e.target as HTMLElement).blur(); }
+      }}
+      variant="standard"
+      fullWidth
+      sx={{
+        "& .MuiInput-root": {
+          borderRadius: "4px",
+          fontSize: "1.75rem",
+          fontWeight: 700,
+          lineHeight: 1.2,
+          letterSpacing: "-0.5px",
+          "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
+        },
+        "& .MuiInput-input": { p: "2px 4px", ml: "-4px" },
+        "& .MuiInput-root::before": { borderBottom: "none !important" },
+      }}
+    />
+  );
+}
+
 // ── Inline-editable single-line field ──────────────────────────────────────
 
 function EditableField({
@@ -344,7 +386,7 @@ export default function MeetingDetailView({
             }
           </OverflowBreadcrumbs>
         }
-        pageTitle={draft.name}
+        pageTitle={(<EditableTitleField value={draft.name} onSave={(val) => save({ name: val })} />) as unknown as string}
         pageSubtitle={
           <Stack direction="row" spacing={1} alignItems="center">
             <Box
@@ -414,6 +456,8 @@ export default function MeetingDetailView({
           "--lens-component-page-header-desktop-title-container-gap": "12px",
           "--lens-component-page-header-tablet-title-container-gap": "12px",
           "& nav.MuiBreadcrumbs-root li:first-child a": { pl: 0 },
+          // Force the Atlas title container (flex: 0 1 auto by default) to grow
+          "& .MuiStack-root:has(.MuiTextField-root)": { flex: "1 1 auto !important" },
         } }}
       />
       </Box>

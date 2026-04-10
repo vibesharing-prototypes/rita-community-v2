@@ -635,7 +635,7 @@ export default function MeetingDetailView({
         }
         destructive={pendingAction === 'delete'}
         onConfirm={() => {
-          if (pendingAction === 'publish') save({ status: 'Published' as const });
+          if (pendingAction === 'publish') save({ status: 'Published' as const, visibility: 'Internal' as const });
           else if (pendingAction === 'unpublish') save({ status: 'Draft' as const });
           else if (pendingAction === 'make-public') save({ visibility: 'Public' as const });
           else if (pendingAction === 'make-internal') save({ visibility: 'Internal' as const });

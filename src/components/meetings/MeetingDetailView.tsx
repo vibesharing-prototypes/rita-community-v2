@@ -374,9 +374,9 @@ export default function MeetingDetailView({
           >
             {(item) =>
               item.isCurrent ? (
-                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "text.secondary" }}>{item.label}</Typography>
+                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377", pl: "4px", pr: "12px", py: "4px" }}>{item.label}</Typography>
               ) : item.id === "meetings" ? (
-                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "text.secondary" }}>{item.label}</Typography>
+                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377", pl: "4px", pr: "12px", py: "4px" }}>{item.label}</Typography>
               ) : (
                 <Link underline="hover" variant="body1" sx={{ cursor: "pointer" }} onClick={onBack}>
                   {item.label}
@@ -455,7 +455,6 @@ export default function MeetingDetailView({
           "--lens-component-page-header-desktop-title-container-gap": "12px",
           "--lens-component-page-header-tablet-title-container-gap": "12px",
           "& nav.MuiBreadcrumbs-root li:first-child a": { pl: 0 },
-          "& nav.MuiBreadcrumbs-root li:first-child p": { pl: "4px" },
           // Force the Atlas title container (flex: 0 1 auto by default) to grow
           "& .MuiStack-root:has(.MuiTextField-root)": { flex: "1 1 auto !important" },
         } }}

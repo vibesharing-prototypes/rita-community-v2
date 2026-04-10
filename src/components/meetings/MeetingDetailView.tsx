@@ -177,11 +177,11 @@ function EditableTitleField({
         "& .MuiInput-root": {
           borderRadius: "4px",
           fontSize: "30px",
-          fontWeight: 700,
+          fontWeight: 600,
           lineHeight: "38px",
           "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
         },
-        "& .MuiInput-input": { p: "0 4px", fontFamily: "inherit", fontSize: "30px", fontWeight: 700, lineHeight: "38px" },
+        "& .MuiInput-input": { p: "0 4px", fontFamily: "inherit", fontSize: "30px", fontWeight: 600, lineHeight: "38px" },
         "& .MuiInput-root::before": { borderBottom: "none !important" },
       }}
     />

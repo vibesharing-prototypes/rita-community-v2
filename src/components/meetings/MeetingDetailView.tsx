@@ -15,6 +15,7 @@ import {
   Button,
   Divider,
   IconButton,
+  InputAdornment,
   Link,
   ListItemIcon,
   ListItemText,
@@ -155,6 +156,7 @@ function EditableField({
   placeholder,
   onSave,
   inputSx,
+  href,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -162,6 +164,7 @@ function EditableField({
   placeholder: string;
   onSave: (val: string) => void;
   inputSx?: object;
+  href?: string;
 }) {
   const [local, setLocal] = useState(value);
 
@@ -181,6 +184,21 @@ function EditableField({
         fullWidth
         variant="standard"
         placeholder={placeholder}
+        InputProps={href ? {
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                size="small"
+                onClick={() => window.open(href, "_blank", "noopener,noreferrer")}
+                sx={{ color: "text.secondary", mr: "-4px" }}
+              >
+                <SvgIcon sx={{ width: 18, height: 18 }}>
+                  <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+                </SvgIcon>
+              </IconButton>
+            </InputAdornment>
+          ),
+        } : undefined}
         sx={{
           "& .MuiInput-root": {
             borderRadius: "4px",
@@ -441,6 +459,7 @@ export default function MeetingDetailView({
             placeholder="Add broadcast link…"
             onSave={(val) => save({ videoUrl: val })}
             inputSx={draft.videoUrl ? { fontWeight: 600, textDecoration: "underline" } : {}}
+            href={draft.videoUrl || undefined}
           />
         </Stack>
 

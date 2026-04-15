@@ -573,18 +573,14 @@ export default function MeetingDetailView({
                 <StatusChip label={draft.visibility} />
               )}
             </Stack>
-            <Typography sx={{ fontSize: 14, lineHeight: "20px", letterSpacing: "0.2px", color: "text.primary", mb: 1.5 }}>
+            <Typography sx={{ fontSize: 14, lineHeight: "20px", letterSpacing: "0.2px", color: "text.primary", mb: draft.status === "Active" ? 1.5 : 0 }}>
               {draft.status === "Draft"
                 ? "Make this meeting active to control its public site visibility."
                 : isPublic
                 ? "This meeting, including its agenda and minutes, is visible to anyone on the public site."
                 : "This meeting, including its agenda and minutes, is only visible to internal users."}
             </Typography>
-            {draft.status === "Draft" ? (
-              <Button variant="outlined" size="small" startIcon={<VisibleIcon />} disabled>
-                Publish to site
-              </Button>
-            ) : (
+            {draft.status === "Active" && (
               <Button
                 variant="outlined"
                 size="small"

@@ -1,4 +1,4 @@
-export type MeetingStatus = "Draft" | "Published";
+export type MeetingStatus = "Draft" | "Active";
 export type MeetingVisibility = "Public" | "Internal";
 export type AgendaStatus = "Not published" | "Published" | "Out of sync";
 export type TemplateStatus = "Active" | "Archived";

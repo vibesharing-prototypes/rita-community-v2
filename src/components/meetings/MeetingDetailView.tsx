@@ -348,7 +348,7 @@ export default function MeetingDetailView({
   const [draft, setDraft] = useState<Meeting>({ ...meeting });
   const [minutesStatus] = useState<MinutesStatus>("None");
   const [moreMenuAnchor, setMoreMenuAnchor] = useState<HTMLElement | null>(null);
-  type PendingAction = 'publish' | 'unpublish' | 'make-public' | 'make-internal' | 'duplicate' | 'delete';
+  type PendingAction = 'make-active' | 'make-draft' | 'publish-to-site' | 'remove-from-site' | 'duplicate' | 'delete';
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const save = (partial: Partial<Meeting>) => {
@@ -410,12 +410,12 @@ export default function MeetingDetailView({
         moreButton={
           <Stack direction="row" spacing={1} alignItems="center">
             {draft.status === "Draft" ? (
-              <Button variant="contained" onClick={() => setPendingAction("publish")}>
-                Publish
+              <Button variant="contained" onClick={() => setPendingAction("make-active")}>
+                Make Active
               </Button>
             ) : (
-              <Button variant="outlined" onClick={() => setPendingAction("unpublish")}>
-                Unpublish
+              <Button variant="outlined" onClick={() => setPendingAction("make-draft")}>
+                Make Draft
               </Button>
             )}
             <IconButton aria-label="More actions" onClick={(e) => setMoreMenuAnchor(e.currentTarget)}>
@@ -508,25 +508,34 @@ export default function MeetingDetailView({
               <Typography sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}>
                 Meeting visibility
               </Typography>
-              {draft.status === "Published" && (
+              {draft.status === "Active" && (
                 <StatusChip label={draft.visibility} />
               )}
             </Stack>
-            <Typography sx={{ fontSize: 14, lineHeight: "20px", letterSpacing: "0.2px", color: "text.primary", mb: draft.status === "Published" ? 1.5 : 0 }}>
+            <Typography sx={{ fontSize: 14, lineHeight: "20px", letterSpacing: "0.2px", color: "text.primary", mb: 1.5 }}>
               {draft.status === "Draft"
-                ? "Publish this meeting to control its public visibility."
+                ? "Make this meeting active to control its public site visibility."
                 : isPublic
-                ? "This meeting, including its agenda and minutes, is visible on the public portal."
+                ? "This meeting, including its agenda and minutes, is visible to anyone on the public site."
                 : "This meeting, including its agenda and minutes, is only visible to internal users."}
             </Typography>
-            {draft.status === "Published" && (
+            {draft.status === "Draft" ? (
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<UnlockedIcon />}
+                disabled
+              >
+                Publish to site
+              </Button>
+            ) : (
               <Button
                 variant="outlined"
                 size="small"
                 startIcon={isPublic ? <LockedIcon /> : <UnlockedIcon />}
-                onClick={() => setPendingAction(isPublic ? "make-internal" : "make-public")}
+                onClick={() => setPendingAction(isPublic ? "remove-from-site" : "publish-to-site")}
               >
-                {isPublic ? "Make internal" : "Make public"}
+                {isPublic ? "Remove from site" : "Publish to site"}
               </Button>
             )}
           </Box>
@@ -610,35 +619,35 @@ export default function MeetingDetailView({
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={
-          pendingAction === 'publish' ? 'Publish meeting' :
-          pendingAction === 'unpublish' ? 'Unpublish meeting' :
-          pendingAction === 'make-public' ? 'Make public' :
-          pendingAction === 'make-internal' ? 'Make internal' :
+          pendingAction === 'make-active' ? 'Make Active' :
+          pendingAction === 'make-draft' ? 'Make Draft' :
+          pendingAction === 'publish-to-site' ? 'Publish to site?' :
+          pendingAction === 'remove-from-site' ? 'Remove from site?' :
           pendingAction === 'duplicate' ? 'Duplicate meeting' :
           'Delete meeting'
         }
         message={
-          pendingAction === 'publish' ? `Publish "${draft.name}"? It will become visible to members.` :
-          pendingAction === 'unpublish' ? `Unpublish "${draft.name}"? It will be hidden from members.` :
-          pendingAction === 'make-public' ? `Make "${draft.name}" public? It will be visible to all site visitors.` :
-          pendingAction === 'make-internal' ? `Make "${draft.name}" internal? Only members will be able to see it.` :
+          pendingAction === 'make-active' ? `Make "${draft.name}" active? It will be visible to internal users.` :
+          pendingAction === 'make-draft' ? `Move "${draft.name}" back to draft? It will no longer be visible.` :
+          pendingAction === 'publish-to-site' ? 'This meeting, including its agenda and any released minutes, will be visible to anyone on the public site.' :
+          pendingAction === 'remove-from-site' ? 'This meeting, including its agenda and any released minutes, will no longer be visible on the public site. It will only be accessible to internal users.' :
           pendingAction === 'duplicate' ? `Duplicate "${draft.name}"? A copy will be created as a draft.` :
           `Delete "${draft.name}"? This action cannot be undone.`
         }
         confirmLabel={
-          pendingAction === 'publish' ? 'Publish' :
-          pendingAction === 'unpublish' ? 'Unpublish' :
-          pendingAction === 'make-public' ? 'Make public' :
-          pendingAction === 'make-internal' ? 'Make internal' :
+          pendingAction === 'make-active' ? 'Make Active' :
+          pendingAction === 'make-draft' ? 'Make Draft' :
+          pendingAction === 'publish-to-site' ? 'Publish to site' :
+          pendingAction === 'remove-from-site' ? 'Remove from site' :
           pendingAction === 'duplicate' ? 'Duplicate' :
           'Delete'
         }
         destructive={pendingAction === 'delete'}
         onConfirm={() => {
-          if (pendingAction === 'publish') save({ status: 'Published' as const, visibility: 'Internal' as const });
-          else if (pendingAction === 'unpublish') save({ status: 'Draft' as const });
-          else if (pendingAction === 'make-public') save({ visibility: 'Public' as const });
-          else if (pendingAction === 'make-internal') save({ visibility: 'Internal' as const });
+          if (pendingAction === 'make-active') save({ status: 'Active' as const, visibility: 'Internal' as const });
+          else if (pendingAction === 'make-draft') save({ status: 'Draft' as const });
+          else if (pendingAction === 'publish-to-site') save({ visibility: 'Public' as const });
+          else if (pendingAction === 'remove-from-site') save({ visibility: 'Internal' as const });
           else if (pendingAction === 'duplicate') onDuplicate?.();
           else if (pendingAction === 'delete') { setPendingAction(null); onDelete?.(); return; }
           setPendingAction(null);

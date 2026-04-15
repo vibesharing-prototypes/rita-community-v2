@@ -9,16 +9,16 @@ import { useState } from "react";
 import type { MeetingStatus, MeetingVisibility } from "../../types/meetings";
 
 export default function MeetingRowActions({
-  onPublish,
-  onUnpublish,
+  onMakeActive,
+  onMakeDraft,
   onDuplicate,
   onDelete,
   onToggleVisibility,
   status,
   visibility,
 }: {
-  onPublish: () => void;
-  onUnpublish: () => void;
+  onMakeActive: () => void;
+  onMakeDraft: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
   onToggleVisibility: () => void;
@@ -41,10 +41,10 @@ export default function MeetingRowActions({
         size="small"
         onClick={(e) => {
           e.stopPropagation();
-          status === "Draft" ? onPublish() : onUnpublish();
+          status === "Draft" ? onMakeActive() : onMakeDraft();
         }}
       >
-        {status === "Draft" ? "Publish" : "Unpublish"}
+        {status === "Draft" ? "Make Active" : "Make Draft"}
       </Button>
 
       <IconButton size="medium" onClick={handleMenuOpen} aria-label="More options">
@@ -58,7 +58,7 @@ export default function MeetingRowActions({
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        {status === "Published" && (
+        {status === "Active" && (
           <MenuItem
             onClick={(e) => {
               e.stopPropagation();
@@ -70,7 +70,7 @@ export default function MeetingRowActions({
               {visibility === "Internal" ? <UnlockedIcon /> : <LockedIcon />}
             </ListItemIcon>
             <ListItemText>
-              {visibility === "Internal" ? "Make public" : "Make internal"}
+              {visibility === "Internal" ? "Publish to site" : "Remove from site"}
             </ListItemText>
           </MenuItem>
         )}

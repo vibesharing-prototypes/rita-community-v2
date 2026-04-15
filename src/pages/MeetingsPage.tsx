@@ -86,7 +86,7 @@ export default function MeetingsPage() {
   const [endDateFilter, setEndDateFilter] = useState<Date | null>(null);
   const [showArchived, setShowArchived] = useState(false);
   type PendingAction =
-    | { type: "publish" | "unpublish" | "make-public" | "make-internal" | "delete"; meeting: Meeting };
+    | { type: "make-active" | "make-draft" | "publish-to-site" | "remove-from-site" | "delete"; meeting: Meeting };
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newTemplateDialogOpen, setNewTemplateDialogOpen] = useState(false);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
@@ -286,7 +286,7 @@ export default function MeetingsPage() {
                           <StatusChip label="Draft" />
                         ) : (
                           <>
-                            <StatusChip label="Published" />
+                            <StatusChip label="Active" />
                             <StatusChip label={meeting.visibility} />
                           </>
                         )}
@@ -314,9 +314,9 @@ export default function MeetingsPage() {
                   <MeetingRowActions
                     status={meeting.status}
                     visibility={meeting.visibility}
-                    onPublish={() => setPendingAction({ type: "publish", meeting })}
-                    onUnpublish={() => setPendingAction({ type: "unpublish", meeting })}
-                    onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "make-public" : "make-internal", meeting })}
+                    onMakeActive={() => setPendingAction({ type: "make-active", meeting })}
+                    onMakeDraft={() => setPendingAction({ type: "make-draft", meeting })}
+                    onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "publish-to-site" : "remove-from-site", meeting })}
                     onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
                     onDelete={() => setPendingAction({ type: "delete", meeting })}
                   />
@@ -392,10 +392,12 @@ export default function MeetingsPage() {
                           </Stack>
                           <MeetingRowActions
                             status={meeting.status}
-                            onPublish={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Published" } : m)))}
-                            onUnpublish={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Draft" } : m)))}
+                            visibility={meeting.visibility}
+                            onMakeActive={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Active" as const } : m)))}
+                            onMakeDraft={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Draft" as const } : m)))}
+                            onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "publish-to-site" : "remove-from-site", meeting })}
                             onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
-                            onDelete={() => setDeleteTarget(meeting)}
+                            onDelete={() => setPendingAction({ type: "delete", meeting })}
                           />
                         </Box>
                       ))}
@@ -573,7 +575,7 @@ export default function MeetingsPage() {
                       }}
                     >
                       <ToggleButton value="All">All</ToggleButton>
-                      <ToggleButton value="Published">Published</ToggleButton>
+                      <ToggleButton value="Active">Active</ToggleButton>
                       <ToggleButton value="Draft">Draft</ToggleButton>
                     </ToggleButtonGroup>
                   </FormControl>
@@ -715,38 +717,38 @@ export default function MeetingsPage() {
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={
-          pendingAction?.type === 'publish' ? 'Publish meeting' :
-          pendingAction?.type === 'unpublish' ? 'Unpublish meeting' :
-          pendingAction?.type === 'make-public' ? 'Make public' :
-          pendingAction?.type === 'make-internal' ? 'Make internal' :
+          pendingAction?.type === 'make-active' ? 'Make Active' :
+          pendingAction?.type === 'make-draft' ? 'Make Draft' :
+          pendingAction?.type === 'publish-to-site' ? 'Publish to site?' :
+          pendingAction?.type === 'remove-from-site' ? 'Remove from site?' :
           'Delete meeting'
         }
         message={
           !pendingAction ? '' :
-          pendingAction.type === 'publish' ? `Publish "${pendingAction.meeting.name}"? It will become visible to members.` :
-          pendingAction.type === 'unpublish' ? `Unpublish "${pendingAction.meeting.name}"? It will be hidden from members.` :
-          pendingAction.type === 'make-public' ? `Make "${pendingAction.meeting.name}" public? It will be visible to all site visitors.` :
-          pendingAction.type === 'make-internal' ? `Make "${pendingAction.meeting.name}" internal? Only members will be able to see it.` :
+          pendingAction.type === 'make-active' ? `Make "${pendingAction.meeting.name}" active? It will be visible to internal users.` :
+          pendingAction.type === 'make-draft' ? `Move "${pendingAction.meeting.name}" back to draft? It will no longer be visible.` :
+          pendingAction.type === 'publish-to-site' ? 'This meeting, including its agenda and any released minutes, will be visible to anyone on the public site.' :
+          pendingAction.type === 'remove-from-site' ? 'This meeting, including its agenda and any released minutes, will no longer be visible on the public site. It will only be accessible to internal users.' :
           `Delete "${pendingAction.meeting.name}"? This action cannot be undone.`
         }
         confirmLabel={
-          pendingAction?.type === 'publish' ? 'Publish' :
-          pendingAction?.type === 'unpublish' ? 'Unpublish' :
-          pendingAction?.type === 'make-public' ? 'Make public' :
-          pendingAction?.type === 'make-internal' ? 'Make internal' :
+          pendingAction?.type === 'make-active' ? 'Make Active' :
+          pendingAction?.type === 'make-draft' ? 'Make Draft' :
+          pendingAction?.type === 'publish-to-site' ? 'Publish to site' :
+          pendingAction?.type === 'remove-from-site' ? 'Remove from site' :
           'Delete'
         }
         destructive={pendingAction?.type === "delete"}
         onConfirm={() => {
           if (!pendingAction) return;
           const { type, meeting } = pendingAction;
-          if (type === 'publish') {
-            setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, status: 'Published' as const } : m));
-          } else if (type === 'unpublish') {
+          if (type === 'make-active') {
+            setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, status: 'Active' as const, visibility: 'Internal' as const } : m));
+          } else if (type === 'make-draft') {
             setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, status: 'Draft' as const } : m));
-          } else if (type === 'make-public') {
+          } else if (type === 'publish-to-site') {
             setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, visibility: 'Public' as const } : m));
-          } else if (type === 'make-internal') {
+          } else if (type === 'remove-from-site') {
             setMeetings((prev) => prev.map((m) => m.id === meeting.id ? { ...m, visibility: 'Internal' as const } : m));
           } else if (type === 'delete') {
             setMeetings((prev) => prev.filter((m) => m.id !== meeting.id));

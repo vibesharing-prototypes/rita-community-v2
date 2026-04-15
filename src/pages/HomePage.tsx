@@ -61,7 +61,7 @@ export default function HomePage() {
     setMeetings((prev) =>
       prev.map((m) =>
         m.id === menuMeeting.id
-          ? { ...m, status: m.status === "Published" ? "Draft" : "Published" }
+          ? { ...m, status: m.status === "Active" ? "Draft" : "Active" }
           : m,
       ),
     );
@@ -398,10 +398,10 @@ export default function HomePage() {
       >
         <MenuItem onClick={handlePublishToggle}>
           <ListItemIcon>
-            {menuMeeting?.status === "Published" ? <BookUnpublishIcon /> : <BookPublishIcon />}
+            {menuMeeting?.status === "Active" ? <BookUnpublishIcon /> : <BookPublishIcon />}
           </ListItemIcon>
           <ListItemText>
-            {menuMeeting?.status === "Published" ? "Unpublish" : "Publish"}
+            {menuMeeting?.status === "Active" ? "Make Draft" : "Make Active"}
           </ListItemText>
         </MenuItem>
         <MenuItem onClick={handleMenuClose}>

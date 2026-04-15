@@ -11,7 +11,7 @@ export default function StatusChip({ label }: { label: string }) {
   if (!StatusIndicator) return null;
 
   const customColor =
-    label === "Published" ? PUBLISHED :
+    label === "Active" ? PUBLISHED :
     label === "Internal" ? INTERNAL :
     label === "Public" ? PUBLIC :
     MUTED;

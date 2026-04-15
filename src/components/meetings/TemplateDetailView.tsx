@@ -320,36 +320,44 @@ export default function TemplateDetailView({
                 { id: "current", label: draft.name, isCurrent: true },
               ]}
             >
-              {(item) =>
-                item.isCurrent ? (
-                  <span />
-                ) : item.isDisabled ? (
-                  <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377" }}>
-                    {item.label}
-                  </Typography>
-                ) : (
+              {(item) => {
+                const textSx = {
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  lineHeight: "20px",
+                  letterSpacing: "0.14px",
+                  color: "#6f7377",
+                  whiteSpace: "nowrap" as const,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                };
+                if (item.isCurrent) return <span />;
+                if (item.id === "root") return (
+                  <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
+                    <Typography sx={{ ...textSx, letterSpacing: "0.2px" }}>{item.label}</Typography>
+                  </Box>
+                );
+                const label = (
+                  <Box sx={{ display: "flex", alignItems: "center", height: 24, px: "4px" }}>
+                    <Typography sx={textSx}>{item.label}</Typography>
+                  </Box>
+                );
+                if (item.isDisabled) return (
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px" }}>
+                    {label}
+                  </Box>
+                );
+                return (
                   <Box
                     component="button"
                     onClick={onBack}
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      lineHeight: "20px",
-                      letterSpacing: "0.14px",
-                      color: "#6f7377",
-                      cursor: "pointer",
-                      background: "none",
-                      border: "none",
-                      borderRadius: "10px",
-                      px: "12px",
-                      py: "4px",
-                      "&:hover": { bgcolor: "action.hover" },
-                    }}
+                    sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}
                   >
-                    {item.label}
+                    {label}
                   </Box>
-                )
-              }
+                );
+              }}
             </OverflowBreadcrumbs>
           }
           pageTitle={

@@ -409,13 +409,9 @@ export default function MeetingDetailView({
         }
         moreButton={
           <Stack direction="row" spacing={1} alignItems="center">
-            {draft.status === "Draft" ? (
+            {draft.status === "Draft" && (
               <Button variant="contained" onClick={() => setPendingAction("make-active")}>
-                Make Active
-              </Button>
-            ) : (
-              <Button variant="outlined" onClick={() => setPendingAction("make-draft")}>
-                Make Draft
+                Make active
               </Button>
             )}
             <IconButton aria-label="More actions" onClick={(e) => setMoreMenuAnchor(e.currentTarget)}>
@@ -432,6 +428,11 @@ export default function MeetingDetailView({
                 <ListItemIcon><CopyIcon /></ListItemIcon>
                 <ListItemText>Duplicate</ListItemText>
               </MenuItem>
+              {draft.status === "Active" && (
+                <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("make-draft"); }}>
+                  <ListItemText inset>Make draft</ListItemText>
+                </MenuItem>
+              )}
               <Divider />
               <MenuItem
                 onClick={() => { setMoreMenuAnchor(null); setPendingAction("delete"); }}
@@ -619,8 +620,8 @@ export default function MeetingDetailView({
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={
-          pendingAction === 'make-active' ? 'Make Active' :
-          pendingAction === 'make-draft' ? 'Make Draft' :
+          pendingAction === 'make-active' ? 'Make active?' :
+          pendingAction === 'make-draft' ? 'Make draft?' :
           pendingAction === 'publish-to-site' ? 'Publish to site?' :
           pendingAction === 'remove-from-site' ? 'Remove from site?' :
           pendingAction === 'duplicate' ? 'Duplicate meeting' :
@@ -635,8 +636,8 @@ export default function MeetingDetailView({
           `Delete "${draft.name}"? This action cannot be undone.`
         }
         confirmLabel={
-          pendingAction === 'make-active' ? 'Make Active' :
-          pendingAction === 'make-draft' ? 'Make Draft' :
+          pendingAction === 'make-active' ? 'Make active' :
+          pendingAction === 'make-draft' ? 'Make draft' :
           pendingAction === 'publish-to-site' ? 'Publish to site' :
           pendingAction === 'remove-from-site' ? 'Remove from site' :
           pendingAction === 'duplicate' ? 'Duplicate' :

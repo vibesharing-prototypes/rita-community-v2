@@ -36,16 +36,18 @@ export default function MeetingRowActions({
 
   return (
     <Stack direction="row" alignItems="center" gap="8px">
-      <Button
-        variant="outlined"
-        size="small"
-        onClick={(e) => {
-          e.stopPropagation();
-          status === "Draft" ? onMakeActive() : onMakeDraft();
-        }}
-      >
-        {status === "Draft" ? "Make Active" : "Make Draft"}
-      </Button>
+      {status === "Draft" && (
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            onMakeActive();
+          }}
+        >
+          Make active
+        </Button>
+      )}
 
       <IconButton size="medium" onClick={handleMenuOpen} aria-label="More options">
         <MoreOptionsIcon />
@@ -84,6 +86,17 @@ export default function MeetingRowActions({
           <ListItemIcon><CopyIcon /></ListItemIcon>
           <ListItemText>Duplicate</ListItemText>
         </MenuItem>
+        {status === "Active" && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMenuClose();
+              onMakeDraft();
+            }}
+          >
+            <ListItemText inset>Make draft</ListItemText>
+          </MenuItem>
+        )}
         <Divider />
         <MenuItem
           onClick={(e) => {

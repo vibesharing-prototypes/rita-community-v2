@@ -717,8 +717,8 @@ export default function MeetingsPage() {
       <ConfirmDialog
         open={Boolean(pendingAction)}
         title={
-          pendingAction?.type === 'make-active' ? 'Make Active' :
-          pendingAction?.type === 'make-draft' ? 'Make Draft' :
+          pendingAction?.type === 'make-active' ? 'Make active?' :
+          pendingAction?.type === 'make-draft' ? 'Make draft?' :
           pendingAction?.type === 'publish-to-site' ? 'Publish to site?' :
           pendingAction?.type === 'remove-from-site' ? 'Remove from site?' :
           'Delete meeting'
@@ -732,8 +732,8 @@ export default function MeetingsPage() {
           `Delete "${pendingAction.meeting.name}"? This action cannot be undone.`
         }
         confirmLabel={
-          pendingAction?.type === 'make-active' ? 'Make Active' :
-          pendingAction?.type === 'make-draft' ? 'Make Draft' :
+          pendingAction?.type === 'make-active' ? 'Make active' :
+          pendingAction?.type === 'make-draft' ? 'Make draft' :
           pendingAction?.type === 'publish-to-site' ? 'Publish to site' :
           pendingAction?.type === 'remove-from-site' ? 'Remove from site' :
           'Delete'

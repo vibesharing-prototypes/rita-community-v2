@@ -377,7 +377,7 @@ export default function MeetingsPage() {
                                   <StatusChip label="Draft" />
                                 ) : (
                                   <>
-                                    <StatusChip label="Published" />
+                                    <StatusChip label="Active" />
                                     <StatusChip label={meeting.visibility} />
                                   </>
                                 )}

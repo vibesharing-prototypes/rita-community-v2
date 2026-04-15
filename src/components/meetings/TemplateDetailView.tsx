@@ -472,7 +472,7 @@ export default function TemplateDetailView({
         </Box>
 
         {/* Details card */}
-        <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 3, backgroundColor: "white" }}>
+        <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", px: 2, py: 3, backgroundColor: "white" }}>
           <Stack gap={3}>
             <TimeField
               time={draft.time}

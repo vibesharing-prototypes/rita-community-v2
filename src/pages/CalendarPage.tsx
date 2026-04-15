@@ -12,7 +12,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import PageLayout from "../components/PageLayout.js";
@@ -23,7 +23,7 @@ type CalendarView = "year" | "month" | "week" | "day";
 
 const MEETINGS = meetingsData.meetings as Meeting[];
 
-const DAYS_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS_SHORT = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const MONTHS_FULL = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December",
@@ -34,16 +34,6 @@ const HOUR_START = 7;
 const HOUR_END = 21;
 const HOUR_HEIGHT = 64; // px per hour
 
-const COLOR_PALETTE = ["#1565C0", "#2E7D32", "#6A1B9A", "#AD1457", "#E65100", "#00695C"];
-
-function committeeColor(committee: string): string {
-  let hash = 0;
-  for (let i = 0; i < committee.length; i++) {
-    hash = (hash << 5) - hash + committee.charCodeAt(i);
-    hash |= 0;
-  }
-  return COLOR_PALETTE[Math.abs(hash) % COLOR_PALETTE.length];
-}
 
 function toDateStr(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -57,7 +47,8 @@ function addDays(date: Date, days: number): Date {
 
 function startOfWeek(date: Date): Date {
   const d = new Date(date);
-  d.setDate(d.getDate() - d.getDay());
+  const day = d.getDay();
+  d.setDate(d.getDate() - ((day + 6) % 7));
   d.setHours(0, 0, 0, 0);
   return d;
 }
@@ -85,6 +76,18 @@ export default function CalendarPage() {
   const { tokens } = useTheme();
   const [view, setView] = useState<CalendarView>("month");
   const [currentDate, setCurrentDate] = useState(new Date());
+  const timeGridRef = useRef<HTMLDivElement>(null);
+  const scrollTargetRef = useRef(0);
+
+  useEffect(() => {
+    if (view === "week" || view === "day") {
+      requestAnimationFrame(() => {
+        if (timeGridRef.current) {
+          timeGridRef.current.scrollTop = scrollTargetRef.current;
+        }
+      });
+    }
+  }, [view, currentDate]);
 
   const meetingsByDate = useMemo(() => {
     const map = new Map<string, Meeting[]>();
@@ -146,66 +149,83 @@ export default function CalendarPage() {
   // ── YEAR VIEW ─────────────────────────────────────────────────────────────
   function renderYearView() {
     const year = currentDate.getFullYear();
+    const rows = [0, 1, 2]; // 3 rows of 4 months
     return (
-      <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 4 }}>
-        {MONTHS_FULL.map((_, mi) => {
-          const firstDow = new Date(year, mi, 1).getDay();
-          const daysInMonth = new Date(year, mi + 1, 0).getDate();
-          const cells: (number | null)[] = Array(firstDow).fill(null);
-          for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+      <Box sx={{ border: `1px solid ${divider}`, borderRadius: "12px", overflow: "hidden", bgcolor: "#ffffff" }}>
+        {rows.map((row) => (
+          <Box
+            key={row}
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              borderBottom: row < 2 ? `1px solid ${divider}` : "none",
+            }}
+          >
+            {[0, 1, 2, 3].map((col) => {
+              const mi = row * 4 + col;
+              const firstDow = (new Date(year, mi, 1).getDay() + 6) % 7;
+              const daysInMonth = new Date(year, mi + 1, 0).getDate();
+              const cells: (number | null)[] = Array(firstDow).fill(null);
+              for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
-          return (
-            <Box key={mi}>
-              <Typography
-                variant="subtitle2"
-                sx={{ mb: 0.75, cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
-                onClick={() => { setCurrentDate(new Date(year, mi, 1)); setView("month"); }}
-              >
-                {MONTHS_SHORT[mi]}
-              </Typography>
-              <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)" }}>
-                {DAYS_SHORT.map((d) => (
+              return (
+                <Box
+                  key={mi}
+                  sx={{
+                    borderLeft: col > 0 ? `1px solid ${divider}` : "none",
+                    p: "16px",
+                  }}
+                >
                   <Typography
-                    key={d}
-                    sx={{ textAlign: "center", color: "text.disabled", fontWeight: 700, fontSize: 9, lineHeight: "18px" }}
+                    variant="subtitle2"
+                    sx={{ mb: 0.75, cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                    onClick={() => { setCurrentDate(new Date(year, mi, 1)); setView("month"); }}
                   >
-                    {d[0]}
+                    {MONTHS_SHORT[mi]}
                   </Typography>
-                ))}
-                {cells.map((day, i) => {
-                  if (day === null) return <Box key={`e-${i}`} sx={{ height: 20 }} />;
-                  const ds = `${year}-${String(mi + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-                  const hasMeetings = (meetingsByDate.get(ds)?.length ?? 0) > 0;
-                  const isToday = ds === todayStr;
-                  return (
-                    <Box
-                      key={day}
-                      onClick={() => { setCurrentDate(new Date(year, mi, day)); setView("day"); }}
-                      sx={{ display: "flex", flexDirection: "column", alignItems: "center", height: 22, cursor: "pointer", borderRadius: "4px", "&:hover": { bgcolor: "action.hover" } }}
-                    >
+                  <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)" }}>
+                    {DAYS_SHORT.map((d) => (
                       <Typography
-                        sx={{
-                          width: 18, height: 18,
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          borderRadius: "50%",
-                          bgcolor: isToday ? "primary.main" : "transparent",
-                          color: isToday ? "primary.contrastText" : "text.primary",
-                          fontSize: 10,
-                          fontWeight: hasMeetings ? 700 : 400,
-                        }}
+                        key={d}
+                        sx={{ textAlign: "center", color: "text.disabled", fontWeight: 700, fontSize: 9, lineHeight: "18px" }}
                       >
-                        {day}
+                        {d[0]}
                       </Typography>
-                      {hasMeetings && !isToday && (
-                        <Box sx={{ width: 4, height: 4, borderRadius: "50%", bgcolor: "primary.main", mt: "-2px" }} />
-                      )}
-                    </Box>
-                  );
-                })}
-              </Box>
-            </Box>
-          );
-        })}
+                    ))}
+                    {cells.map((day, i) => {
+                      if (day === null) return <Box key={`e-${i}`} sx={{ height: 20 }} />;
+                      const ds = `${year}-${String(mi + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                      const hasMeetings = (meetingsByDate.get(ds)?.length ?? 0) > 0;
+                      const isToday = ds === todayStr;
+                      return (
+                        <Box
+                          key={day}
+                          onClick={() => { setCurrentDate(new Date(year, mi, day)); setView("day"); }}
+                          sx={{
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            height: 22, cursor: "pointer", borderRadius: "4px",
+                            bgcolor: isToday ? "#0040D5" : hasMeetings ? "#E4F3FF" : "transparent",
+                            "&:hover": { bgcolor: isToday ? "#0040D5" : hasMeetings ? "#C8E0F7" : "action.hover" },
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: 10,
+                              fontWeight: hasMeetings || isToday ? 700 : 400,
+                              color: isToday ? "#ffffff" : "text.primary",
+                            }}
+                          >
+                            {day}
+                          </Typography>
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </Box>
+              );
+            })}
+          </Box>
+        ))}
       </Box>
     );
   }
@@ -214,7 +234,7 @@ export default function CalendarPage() {
   function renderMonthView() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
-    const firstDow = new Date(year, month, 1).getDay();
+    const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const prevMonthDays = new Date(year, month, 0).getDate();
     const prevYear = month === 0 ? year - 1 : year;
@@ -242,9 +262,9 @@ export default function CalendarPage() {
     for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
 
     return (
-      <Box sx={{ border: `1px solid ${divider}`, borderRadius: "12px", overflow: "hidden" }}>
+      <Box sx={{ border: `1px solid ${divider}`, borderRadius: "12px", overflow: "hidden", bgcolor: "background.paper" }}>
         {/* Day-of-week header */}
-        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", borderBottom: `1px solid ${divider}` }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", borderBottom: `1px solid ${divider}`, bgcolor: "var(--lens-component-table-header-background-color)" }}>
           {DAYS_SHORT.map((d) => (
             <Box key={d} sx={{ py: 1, px: 1.5 }}>
               <Typography variant="caption" sx={{ fontWeight: 600, color: "text.secondary" }}>{d}</Typography>
@@ -273,11 +293,15 @@ export default function CalendarPage() {
                   key={ci}
                   sx={{
                     borderLeft: ci > 0 ? `1px solid ${divider}` : "none",
-                    p: "6px",
+                    p: "4px",
                     display: "flex",
                     flexDirection: "column",
                     gap: "3px",
-                    bgcolor: cell.other ? "action.hover" : "transparent",
+                    bgcolor: cell.other ? "#FAFAFA" : "#ffffff",
+                    outline: isToday ? "2px solid #0040D5" : "none",
+                    outlineOffset: "-1px",
+                    zIndex: isToday ? 1 : "auto",
+                    position: isToday ? "relative" : "static",
                   }}
                 >
                   <Box
@@ -290,7 +314,7 @@ export default function CalendarPage() {
                         display: "flex", alignItems: "center", justifyContent: "center",
                         borderRadius: "50%",
                         bgcolor: isToday ? "primary.main" : "transparent",
-                        color: isToday ? "primary.contrastText" : cell.other ? "text.disabled" : "text.primary",
+                        color: isToday ? "primary.contrastText" : cell.other ? "#9E9E9E" : "text.primary",
                         fontWeight: isToday ? 700 : 400,
                         fontSize: 13,
                         "&:hover": { bgcolor: isToday ? "primary.dark" : "action.hover" },
@@ -304,19 +328,19 @@ export default function CalendarPage() {
                       <Box
                         onClick={() => openMeeting(m)}
                         sx={{
-                          bgcolor: committeeColor(m.committee),
-                          color: "#fff",
+                          bgcolor: "#E4F3FF",
                           borderRadius: "4px",
                           px: "6px",
                           py: "2px",
                           cursor: "pointer",
-                          "&:hover": { opacity: 0.85 },
+                          "&:hover": { bgcolor: "#C8E0F7" },
                           overflow: "hidden",
                         }}
                       >
                         <Typography
                           sx={{
                             fontSize: 11,
+                            fontWeight: 600,
                             lineHeight: "16px",
                             display: "block",
                             whiteSpace: "nowrap",
@@ -357,95 +381,111 @@ export default function CalendarPage() {
     const timedByCol = dates.map((d) => getMeetings(toDateStr(d)).filter((m) => !!m.time));
     const hasAllDay = allDayByCol.some((ms) => ms.length > 0);
 
-    return (
-      <Box sx={{ border: `1px solid ${divider}`, borderRadius: "12px", overflow: "hidden" }}>
-        {/* Column headers */}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: `${TIME_W}px repeat(${dates.length}, 1fr)`,
-            borderBottom: `1px solid ${divider}`,
-            bgcolor: "background.paper",
-            position: "sticky",
-            top: 0,
-            zIndex: 2,
-          }}
-        >
-          <Box />
-          {dates.map((date, i) => {
-            const ds = toDateStr(date);
-            const isToday = ds === todayStr;
-            const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-            return (
-              <Box
-                key={i}
-                sx={{
-                  borderLeft: `1px solid ${divider}`,
-                  py: 1,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Typography sx={{ fontSize: 11, fontWeight: 600, color: isWeekend ? "text.secondary" : "text.primary" }}>
-                  {DAYS_SHORT[date.getDay()]}
-                </Typography>
-                <Typography
-                  onClick={() => { if (isMultiDay) { setCurrentDate(date); setView("day"); } }}
-                  sx={{
-                    width: 32, height: 32,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    borderRadius: "50%",
-                    bgcolor: isToday ? "primary.main" : "transparent",
-                    color: isToday ? "primary.contrastText" : isWeekend ? "text.secondary" : "text.primary",
-                    fontSize: 16,
-                    fontWeight: isToday ? 700 : 400,
-                    cursor: isMultiDay ? "pointer" : "default",
-                    "&:hover": isMultiDay ? { bgcolor: isToday ? "primary.dark" : "action.hover" } : {},
-                  }}
-                >
-                  {date.getDate()}
-                </Typography>
-              </Box>
-            );
-          })}
-        </Box>
+    // Find the earliest timed meeting to auto-scroll
+    const earliestHour = timedByCol.reduce((earliest, meetings) => {
+      for (const m of meetings) {
+        const h = parseTimeHours(m.time!);
+        if (h < earliest) earliest = h;
+      }
+      return earliest;
+    }, 24);
+    // Scroll to 1 hour before the earliest meeting, or default to 8 AM
+    const scrollToHour = earliestHour < 24 ? Math.max(earliestHour - 1, HOUR_START) : 8;
+    const scrollTarget = (scrollToHour - HOUR_START) * HOUR_HEIGHT;
+    scrollTargetRef.current = scrollTarget;
 
-        {/* All-day row */}
-        {hasAllDay && (
+    return (
+      <Box sx={{ border: `1px solid ${divider}`, borderRadius: "12px", overflow: "hidden", bgcolor: "#ffffff" }}>
+        {/* Scrollable time grid */}
+        <Box
+          ref={timeGridRef}
+          sx={{ overflowY: "auto", maxHeight: "calc(100vh - 420px)" }}
+        >
+          {/* Column headers */}
           <Box
             sx={{
               display: "grid",
               gridTemplateColumns: `${TIME_W}px repeat(${dates.length}, 1fr)`,
               borderBottom: `1px solid ${divider}`,
-              minHeight: 32,
+              bgcolor: "var(--lens-component-table-header-background-color)",
+              position: "sticky",
+              top: 0,
+              zIndex: 2,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", pr: 1 }}>
-              <Typography sx={{ fontSize: 10, color: "text.secondary" }}>All day</Typography>
-            </Box>
-            {allDayByCol.map((meetings, i) => (
-              <Box key={i} sx={{ borderLeft: `1px solid ${divider}`, p: "4px", display: "flex", flexDirection: "column", gap: "2px" }}>
-                {meetings.map((m) => (
-                  <Box
-                    key={m.id}
-                    onClick={() => openMeeting(m)}
+            <Box />
+            {dates.map((date, i) => {
+              const ds = toDateStr(date);
+              const isToday = ds === todayStr;
+              const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+              return (
+                <Box
+                  key={i}
+                  sx={{
+                    borderLeft: `1px solid ${divider}`,
+                    py: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography sx={{ fontSize: 11, fontWeight: 600, color: isWeekend ? "text.secondary" : "text.primary" }}>
+                    {DAYS_SHORT[(date.getDay() + 6) % 7]}
+                  </Typography>
+                  <Typography
+                    onClick={() => { if (isMultiDay) { setCurrentDate(date); setView("day"); } }}
                     sx={{
-                      bgcolor: committeeColor(m.committee), color: "#fff",
-                      borderRadius: "4px", px: "6px", py: "2px",
-                      cursor: "pointer", "&:hover": { opacity: 0.85 },
+                      width: 32, height: 32,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      borderRadius: "50%",
+                      bgcolor: isToday ? "primary.main" : "transparent",
+                      color: isToday ? "primary.contrastText" : isWeekend ? "text.secondary" : "text.primary",
+                      fontSize: 16,
+                      fontWeight: isToday ? 700 : 400,
+                      cursor: isMultiDay ? "pointer" : "default",
+                      "&:hover": isMultiDay ? { bgcolor: isToday ? "primary.dark" : "action.hover" } : {},
                     }}
                   >
-                    <Typography sx={{ fontSize: 11 }}>{m.name}</Typography>
-                  </Box>
-                ))}
-              </Box>
-            ))}
+                    {date.getDate()}
+                  </Typography>
+                </Box>
+              );
+            })}
           </Box>
-        )}
 
-        {/* Scrollable time grid */}
-        <Box sx={{ overflowY: "auto", maxHeight: "calc(100vh - 320px)" }}>
+          {/* All-day row */}
+          {hasAllDay && (
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: `${TIME_W}px repeat(${dates.length}, 1fr)`,
+                borderBottom: `1px solid ${divider}`,
+                minHeight: 32,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", pr: 1 }}>
+                <Typography sx={{ fontSize: 10, color: "text.secondary" }}>All day</Typography>
+              </Box>
+              {allDayByCol.map((meetings, i) => (
+                <Box key={i} sx={{ borderLeft: `1px solid ${divider}`, p: "4px", display: "flex", flexDirection: "column", gap: "2px" }}>
+                  {meetings.map((m) => (
+                    <Box
+                      key={m.id}
+                      onClick={() => openMeeting(m)}
+                      sx={{
+                        bgcolor: "#E4F3FF",
+                        borderRadius: "4px", px: "6px", py: "2px",
+                        cursor: "pointer", "&:hover": { bgcolor: "#C8E0F7" },
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Typography sx={{ fontSize: 11, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.name}</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              ))}
+            </Box>
+          )}
           <Box sx={{ display: "grid", gridTemplateColumns: `${TIME_W}px repeat(${dates.length}, 1fr)`, position: "relative" }}>
             {/* Hour labels */}
             <Box sx={{ position: "relative", height: totalH }}>
@@ -465,6 +505,7 @@ export default function CalendarPage() {
             {dates.map((date, di) => {
               const meetings = timedByCol[di];
               const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+              const isTodayCol = toDateStr(date) === todayStr;
               return (
                 <Box
                   key={di}
@@ -473,6 +514,9 @@ export default function CalendarPage() {
                     position: "relative",
                     height: totalH,
                     bgcolor: isWeekend ? "action.hover" : "transparent",
+                    outline: isTodayCol ? "2px solid #0040D5" : "none",
+                    outlineOffset: "-1px",
+                    zIndex: isTodayCol ? 1 : "auto",
                   }}
                 >
                   {/* Hour lines */}
@@ -493,32 +537,31 @@ export default function CalendarPage() {
                     const startH = parseTimeHours(m.time!);
                     const clampedStart = Math.max(startH, HOUR_START);
                     const top = (clampedStart - HOUR_START) * HOUR_HEIGHT;
-                    const height = Math.max(HOUR_HEIGHT, 40);
+                    const height = Math.max(HOUR_HEIGHT - 8, 40);
                     return (
                       <Tooltip key={m.id} title={`${m.name} · ${m.time} · ${m.committee}`}>
                         <Box
                           onClick={() => openMeeting(m)}
                           sx={{
                             position: "absolute",
-                            top,
-                            left: 3,
-                            right: 3,
+                            top: top + 4,
+                            left: "4px",
+                            right: "4px",
                             height,
-                            bgcolor: committeeColor(m.committee),
-                            color: "#fff",
+                            bgcolor: "#E4F3FF",
                             borderRadius: "6px",
                             px: 1,
                             py: "5px",
                             cursor: "pointer",
                             overflow: "hidden",
-                            "&:hover": { opacity: 0.85 },
+                            "&:hover": { bgcolor: "#C8E0F7" },
                             zIndex: 1,
                           }}
                         >
-                          <Typography sx={{ fontSize: 11, fontWeight: 600, lineHeight: "14px", display: "block" }}>
+                          <Typography sx={{ fontSize: 11, fontWeight: 600, lineHeight: "14px", display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {m.name}
                           </Typography>
-                          <Typography sx={{ fontSize: 10, opacity: 0.9, display: "block" }}>
+                          <Typography sx={{ fontSize: 10, color: "text.secondary", display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {m.time}
                           </Typography>
                         </Box>

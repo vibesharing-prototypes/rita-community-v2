@@ -1,5 +1,7 @@
 import AddIcon from "@diligentcorp/atlas-react-bundle/icons/Add";
+import ArrowLeftIcon from "@diligentcorp/atlas-react-bundle/icons/ArrowLeft";
 import CloseIcon from "@diligentcorp/atlas-react-bundle/icons/Close";
+import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
 import GroupIcon from "@diligentcorp/atlas-react-bundle/icons/Group";
 import PageIcon from "@diligentcorp/atlas-react-bundle/icons/Page";
 import {
@@ -15,9 +17,18 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import type { MeetingTemplate } from "../../types/meetings";
+import type { Meeting, MeetingTemplate } from "../../types/meetings";
 
-function TemplateCard({
+export type NewMeetingResult =
+  | { type: "template"; templateId: string }
+  | { type: "duplicate"; meeting: Meeting }
+  | { type: "blank"; committee: string };
+
+type Step = "choose" | "from-template" | "duplicate" | "blank";
+
+// ── Shared option card ─────────────────────────────────────────────────────
+
+function OptionCard({
   icon,
   iconBg,
   title,
@@ -50,9 +61,8 @@ function TemplateCard({
     >
       <Box
         sx={{
-          width: 48,
-          height: 48,
-          borderRadius: "10px",
+          p: 1,
+          borderRadius: "12px",
           backgroundColor: iconBg,
           display: "flex",
           alignItems: "center",
@@ -63,16 +73,12 @@ function TemplateCard({
       >
         {icon}
       </Box>
-      <Stack flex={1} alignItems="flex-start" spacing={0}>
-        <Typography
-          sx={{ fontSize: "16px", fontWeight: 600, lineHeight: "24px", color: "text.primary" }}
-        >
+      <Stack flex={1} alignItems="flex-start" gap="2px">
+        <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", color: "text.primary" }}>
           {title}
         </Typography>
         {subtitle && (
-          <Typography
-            sx={{ fontSize: "14px", fontWeight: 400, lineHeight: "20px", color: "text.secondary" }}
-          >
+          <Typography sx={{ fontSize: "12px", fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)" }}>
             {subtitle}
           </Typography>
         )}
@@ -84,95 +90,157 @@ function TemplateCard({
   );
 }
 
+// ── Main dialog ────────────────────────────────────────────────────────────
+
 export default function TemplatePickerDialog({
   open,
   templates,
+  meetings,
   committees,
   onClose,
   onSelect,
 }: {
   open: boolean;
   templates: MeetingTemplate[];
+  meetings: Meeting[];
   committees: string[];
   onClose: () => void;
-  onSelect: (templateId: string | null, committee: string | null) => void;
+  onSelect: (result: NewMeetingResult) => void;
 }) {
   const { tokens } = useTheme();
   const dividerColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
   const activeTemplates = templates.filter((t) => t.status === "Active");
-  const [step, setStep] = useState<1 | 2>(1);
+  const activeMeetings = meetings.filter((m) => m.status === "Active");
+
+  const [step, setStep] = useState<Step>("choose");
 
   useEffect(() => {
-    if (!open) setStep(1);
+    if (!open) setStep("choose");
   }, [open]);
 
-  const handleClose = () => {
-    onClose();
+  const stepTitle: Record<Step, string> = {
+    choose: "New meeting",
+    "from-template": "From template",
+    duplicate: "Duplicate existing",
+    blank: "Blank meeting",
+  };
+
+  const stepSubtitle: Record<Step, string> = {
+    choose: "Start with a template, duplicate, or create blank.",
+    "from-template": "Choose a template to start from.",
+    duplicate: "Choose an active meeting to copy.",
+    blank: "Choose a committee for this meeting.",
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      {/* Custom header — bypasses Atlas DialogTitle grid to control alignment */}
-      <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", px: "24px", pt: "24px", pb: "24px" }}>
-        <Stack direction="row" alignItems="center" gap={0.5} flex={1} minWidth={0}>
-          {step === 2 && (
-            <IconButton
-              aria-label="Back"
-              onClick={() => setStep(1)}
-              size="small"
-              sx={{ flexShrink: 0, ml: "-4px" }}
-            >
-              <SvgIcon sx={{ width: 20, height: 20 }}>
-                <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-              </SvgIcon>
-            </IconButton>
-          )}
-          <Box>
-            <Typography sx={{ fontSize: 22, fontWeight: 600, lineHeight: "28px" }}>
-              New meeting
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {step === 1
-                ? "Start with a template or create a blank meeting."
-                : "Choose a committee for this meeting."}
-            </Typography>
-          </Box>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      scroll="paper"
+      PaperProps={{ sx: { maxHeight: 560 } }}
+    >
+      {/* Header */}
+      <Box sx={{ display: "flex", alignItems: "flex-start", gap: "8px", px: "24px", pt: "20px", pb: "24px" }}>
+        {step !== "choose" && (
+          <IconButton
+            aria-label="Back"
+            size="small"
+            onClick={() => setStep("choose")}
+            sx={{ flexShrink: 0 }}
+          >
+            <ArrowLeftIcon />
+          </IconButton>
+        )}
+        <Stack gap="4px" flex={1} minWidth={0}>
+          <Typography sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}>
+            {stepTitle[step]}
+          </Typography>
+          <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: "text.secondary" }}>
+            {stepSubtitle[step]}
+          </Typography>
         </Stack>
-        <IconButton aria-label="Close" onClick={handleClose} sx={{ flexShrink: 0, mt: "-4px", mr: "-8px" }}>
+        <IconButton aria-label="Close" size="small" onClick={onClose} sx={{ flexShrink: 0 }}>
           <CloseIcon />
         </IconButton>
       </Box>
+
       <DialogContent sx={{ pt: "0 !important", pb: "24px", px: "24px" }}>
-        {step === 1 ? (
+        {/* Step 1 — choose method */}
+        {step === "choose" && (
           <Stack gap={1.5}>
-            {activeTemplates.map((template) => (
-              <TemplateCard
-                key={template.id}
-                icon={<PageIcon />}
-                iconBg="#D7F6FF"
-                title={template.name}
-                subtitle={template.committee}
-                onClick={() => onSelect(template.id, null)}
-                borderColor={dividerColor}
-              />
-            ))}
-            <TemplateCard
+            <OptionCard
+              icon={<PageIcon />}
+              iconBg="#E4F3FF"
+              title="From template"
+              subtitle="Start from a saved agenda structure"
+              onClick={() => setStep("from-template")}
+              borderColor={dividerColor}
+            />
+            <OptionCard
+              icon={<CopyIcon />}
+              iconBg="#E4F3FF"
+              title="Duplicate existing"
+              subtitle="Copy a past meeting's structure"
+              onClick={() => setStep("duplicate")}
+              borderColor={dividerColor}
+            />
+            <OptionCard
               icon={<AddIcon />}
               iconBg="#F0F0F0"
-              title="Create blank meeting"
-              onClick={() => setStep(2)}
+              title="Blank meeting"
+              subtitle="Start from scratch"
+              onClick={() => setStep("blank")}
               borderColor={dividerColor}
             />
           </Stack>
-        ) : (
+        )}
+
+        {/* Step 2a — template picker */}
+        {step === "from-template" && (
+          <Stack gap={1.5}>
+            {activeTemplates.map((template) => (
+              <OptionCard
+                key={template.id}
+                icon={<PageIcon />}
+                iconBg="#E4F3FF"
+                title={template.name}
+                subtitle={template.committee}
+                onClick={() => onSelect({ type: "template", templateId: template.id })}
+                borderColor={dividerColor}
+              />
+            ))}
+          </Stack>
+        )}
+
+        {/* Step 2b — duplicate existing meeting */}
+        {step === "duplicate" && (
+          <Stack gap={1.5}>
+            {activeMeetings.map((meeting) => (
+              <OptionCard
+                key={meeting.id}
+                icon={<CopyIcon />}
+                iconBg="#E4F3FF"
+                title={meeting.name}
+                subtitle={meeting.committee}
+                onClick={() => onSelect({ type: "duplicate", meeting })}
+                borderColor={dividerColor}
+              />
+            ))}
+          </Stack>
+        )}
+
+        {/* Step 2c — committee picker for blank */}
+        {step === "blank" && (
           <Stack gap={1.5}>
             {committees.map((committee) => (
-              <TemplateCard
+              <OptionCard
                 key={committee}
                 icon={<GroupIcon />}
                 iconBg="#F0F0F0"
                 title={committee}
-                onClick={() => onSelect(null, committee)}
+                onClick={() => onSelect({ type: "blank", committee })}
                 borderColor={dividerColor}
               />
             ))}

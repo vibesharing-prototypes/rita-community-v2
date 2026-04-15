@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
   FormControl,
   FormLabel,
   IconButton,
@@ -13,8 +14,11 @@ import {
   Select,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 
 import type { Meeting } from "../../types/meetings";
@@ -34,13 +38,13 @@ export default function DuplicateMeetingDialog({
   onDuplicate: (meeting: Meeting) => void;
 }) {
   const [name, setName] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState<Date | null>(null);
   const [committee, setCommittee] = useState("");
 
   useEffect(() => {
     if (open && meeting) {
       setName(meeting.name);
-      setDate("");
+      setDate(null);
       setCommittee(meeting.committee);
     }
   }, [open, meeting]);
@@ -53,7 +57,7 @@ export default function DuplicateMeetingDialog({
       ...meeting,
       id: `m-dup-${Date.now()}`,
       name: name || meeting.name,
-      date,
+      date: format(date, "yyyy-MM-dd"),
       committee,
       status: "Draft",
       visibility: "Internal",
@@ -63,50 +67,85 @@ export default function DuplicateMeetingDialog({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle component="div">
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Typography variant="h6">Duplicate meeting</Typography>
-          <IconButton aria-label="Close" onClick={onClose}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle
+          component="div"
+          sx={{
+            fontSize: "20px",
+            fontWeight: 600,
+            lineHeight: "24px",
+            letterSpacing: 0,
+            color: "var(--lens-semantic-color-type-default)",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 1,
+            pb: "24px",
+          }}
+        >
+          Duplicate meeting
+          <IconButton aria-label="Close" size="small" onClick={onClose} sx={{ flexShrink: 0, mt: "-2px", mr: "-4px" }}>
             <CloseIcon />
           </IconButton>
-        </Stack>
-      </DialogTitle>
-      <DialogContent>
-        <Alert severity="info" sx={{ mb: 2 }}>
-          Source: {formatDate(meeting.date)} — {meeting.name}
-        </Alert>
-        <Stack gap={2}>
-          <FormControl>
-            <FormLabel>New name</FormLabel>
-            <TextField value={name} onChange={(event) => setName(event.target.value)} />
-          </FormControl>
-          <Stack direction="row" spacing={2}>
+        </DialogTitle>
+
+        <DialogContent>
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Source: {formatDate(meeting.date)} — {meeting.name}
+          </Alert>
+          <Stack gap={2}>
             <FormControl fullWidth>
-              <FormLabel>New date</FormLabel>
-              <TextField type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+              <FormLabel>New name</FormLabel>
+              <TextField
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
+              />
             </FormControl>
-            <FormControl fullWidth>
-              <FormLabel>Target committee</FormLabel>
-              <Select value={committee} onChange={(event) => setCommittee(event.target.value)}>
-                {committees.map((value) => (
-                  <MenuItem key={value} value={value}>
-                    {value}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <Stack direction="row" spacing={2}>
+              <FormControl fullWidth>
+                <FormLabel>New date</FormLabel>
+                <DatePicker
+                  value={date}
+                  onChange={(val) => setDate(val)}
+                  slotProps={{
+                    textField: { fullWidth: true, placeholder: "MM/DD/YYYY" },
+                  }}
+                />
+              </FormControl>
+              <FormControl fullWidth>
+                <FormLabel>Target committee</FormLabel>
+                <Select
+                  value={committee}
+                  onChange={(e) => setCommittee(e.target.value)}
+                >
+                  {committees.map((value) => (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Stack>
           </Stack>
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button variant="outlined" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="contained" onClick={handleDuplicate} disabled={!date}>
-          Duplicate
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogContent>
+
+        <Divider />
+        <DialogActions sx={{ px: 3, py: 2, justifyContent: "space-between" }}>
+          <Button variant="outlined" size="medium" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            size="medium"
+            onClick={handleDuplicate}
+            disabled={!date}
+          >
+            Duplicate
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </LocalizationProvider>
   );
 }

@@ -4,12 +4,12 @@ import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
 import ClockIcon from "@diligentcorp/atlas-react-bundle/icons/Clock";
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
 import EditIcon from "@diligentcorp/atlas-react-bundle/icons/Edit";
-import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
+import HideIcon from "@diligentcorp/atlas-react-bundle/icons/Hide";
 import LocationIcon from "@diligentcorp/atlas-react-bundle/icons/Location";
 import MoreIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import NotesIcon from "@diligentcorp/atlas-react-bundle/icons/Notes";
 import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
-import UnlockedIcon from "@diligentcorp/atlas-react-bundle/icons/Unlocked";
+import VisibleIcon from "@diligentcorp/atlas-react-bundle/icons/Visible";
 import VideoIcon from "@diligentcorp/atlas-react-bundle/icons/Video";
 import {
   Box,
@@ -526,7 +526,7 @@ export default function MeetingDetailView({
               <Button
                 variant="outlined"
                 size="small"
-                startIcon={<UnlockedIcon />}
+                startIcon={<VisibleIcon />}
                 disabled
               >
                 Publish to site
@@ -535,7 +535,7 @@ export default function MeetingDetailView({
               <Button
                 variant="outlined"
                 size="small"
-                startIcon={isPublic ? <LockedIcon /> : <UnlockedIcon />}
+                startIcon={isPublic ? <HideIcon /> : <VisibleIcon />}
                 onClick={() => setPendingAction(isPublic ? "remove-from-site" : "publish-to-site")}
               >
                 {isPublic ? "Remove from site" : "Publish to site"}

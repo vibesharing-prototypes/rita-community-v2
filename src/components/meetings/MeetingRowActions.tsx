@@ -1,9 +1,9 @@
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
 import EditIcon from "@diligentcorp/atlas-react-bundle/icons/Edit";
-import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
+import HideIcon from "@diligentcorp/atlas-react-bundle/icons/Hide";
 import MoreOptionsIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
-import UnlockedIcon from "@diligentcorp/atlas-react-bundle/icons/Unlocked";
+import VisibleIcon from "@diligentcorp/atlas-react-bundle/icons/Visible";
 import { Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from "@mui/material";
 import { useState } from "react";
 
@@ -50,6 +50,19 @@ export default function MeetingRowActions({
         </Button>
       )}
 
+      {status === "Active" && visibility === "Internal" && (
+        <Button
+          variant="text"
+          size="small"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleVisibility();
+          }}
+        >
+          Publish to site
+        </Button>
+      )}
+
       <IconButton size="medium" onClick={handleMenuOpen} aria-label="More options">
         <MoreOptionsIcon />
       </IconButton>
@@ -61,7 +74,7 @@ export default function MeetingRowActions({
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        {status === "Active" && (
+        {status === "Active" && visibility === "Public" && (
           <MenuItem
             onClick={(e) => {
               e.stopPropagation();
@@ -69,12 +82,8 @@ export default function MeetingRowActions({
               onToggleVisibility();
             }}
           >
-            <ListItemIcon>
-              {visibility === "Internal" ? <UnlockedIcon /> : <LockedIcon />}
-            </ListItemIcon>
-            <ListItemText>
-              {visibility === "Internal" ? "Publish to site" : "Remove from site"}
-            </ListItemText>
+            <ListItemIcon><HideIcon /></ListItemIcon>
+            <ListItemText>Remove from site</ListItemText>
           </MenuItem>
         )}
         <MenuItem

@@ -3,6 +3,7 @@ import AgendaIcon from "@diligentcorp/atlas-react-bundle/icons/Agenda";
 import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
 import ClockIcon from "@diligentcorp/atlas-react-bundle/icons/Clock";
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
+import EditIcon from "@diligentcorp/atlas-react-bundle/icons/Edit";
 import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
 import LocationIcon from "@diligentcorp/atlas-react-bundle/icons/Location";
 import MoreIcon from "@diligentcorp/atlas-react-bundle/icons/More";
@@ -430,7 +431,8 @@ export default function MeetingDetailView({
               </MenuItem>
               {draft.status === "Active" && (
                 <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("make-draft"); }}>
-                  <ListItemText inset>Make draft</ListItemText>
+                  <ListItemIcon><EditIcon /></ListItemIcon>
+                  <ListItemText>Make draft</ListItemText>
                 </MenuItem>
               )}
               <Divider />

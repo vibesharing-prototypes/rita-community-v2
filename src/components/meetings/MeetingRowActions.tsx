@@ -1,4 +1,5 @@
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
+import EditIcon from "@diligentcorp/atlas-react-bundle/icons/Edit";
 import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
 import MoreOptionsIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
@@ -94,7 +95,8 @@ export default function MeetingRowActions({
               onMakeDraft();
             }}
           >
-            <ListItemText inset>Make draft</ListItemText>
+            <ListItemIcon><EditIcon /></ListItemIcon>
+            <ListItemText>Make draft</ListItemText>
           </MenuItem>
         )}
         <Divider />

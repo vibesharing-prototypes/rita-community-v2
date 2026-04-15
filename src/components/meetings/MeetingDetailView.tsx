@@ -11,6 +11,7 @@ import NotesIcon from "@diligentcorp/atlas-react-bundle/icons/Notes";
 import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
 import VisibleIcon from "@diligentcorp/atlas-react-bundle/icons/Visible";
 import DownloadIcon from "@diligentcorp/atlas-react-bundle/icons/Download";
+import ExternalLinkIcon from "@diligentcorp/atlas-react-bundle/icons/ExternalLink";
 import {
   Box,
   Button,
@@ -547,11 +548,7 @@ export default function MeetingDetailView({
                 <Button
                   variant="outlined"
                   size="small"
-                  endIcon={
-                    <SvgIcon sx={{ width: 16, height: 16 }}>
-                      <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
-                    </SvgIcon>
-                  }
+                  endIcon={<ExternalLinkIcon />}
                   onClick={() => draft.videoUrl && window.open(draft.videoUrl, "_blank", "noopener,noreferrer")}
                 >
                   Live video

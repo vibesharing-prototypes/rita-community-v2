@@ -238,29 +238,31 @@ export default function MeetingsPage() {
             )}
           </Stack>
 
-          {activeTab !== "templates" && (
+          <Stack direction="row" gap={2} alignItems="center">
+            {activeTab !== "templates" && (
+              <Button
+                variant="text"
+                size="medium"
+                startIcon={<CalendarIcon />}
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                Open calendar
+              </Button>
+            )}
             <Button
-              variant="text"
+              variant="contained"
               size="medium"
-              startIcon={<CalendarIcon />}
+              startIcon={<AddIcon />}
+              onClick={() =>
+                activeTab === "templates"
+                  ? setNewTemplateDialogOpen(true)
+                  : setCreateDialogOpen(true)
+              }
               sx={{ whiteSpace: "nowrap" }}
             >
-              Open calendar
+              {activeTab === "templates" ? "New template" : "New meeting"}
             </Button>
-          )}
-          <Button
-            variant="contained"
-            size="medium"
-            startIcon={<AddIcon />}
-            onClick={() =>
-              activeTab === "templates"
-                ? setNewTemplateDialogOpen(true)
-                : setCreateDialogOpen(true)
-            }
-            sx={{ whiteSpace: "nowrap" }}
-          >
-            {activeTab === "templates" ? "New template" : "New meeting"}
-          </Button>
+          </Stack>
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "flex-start" }}>

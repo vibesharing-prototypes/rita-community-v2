@@ -484,7 +484,7 @@ export default function MeetingDetailView({
                   Agenda
                 </Typography>
                 {draft.agendaItems > 0 ? (
-                  <Stack direction="row" alignItems="center" gap={0.5}>
+                  <Stack direction="row" alignItems="center" gap={1.5}>
                     <IconButton size="small" aria-label="Download agenda PDF">
                       <DownloadIcon />
                     </IconButton>

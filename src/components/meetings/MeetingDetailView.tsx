@@ -10,7 +10,7 @@ import MoreIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import NotesIcon from "@diligentcorp/atlas-react-bundle/icons/Notes";
 import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
 import VisibleIcon from "@diligentcorp/atlas-react-bundle/icons/Visible";
-import VideoIcon from "@diligentcorp/atlas-react-bundle/icons/Video";
+import DownloadIcon from "@diligentcorp/atlas-react-bundle/icons/Download";
 import {
   Box,
   Button,
@@ -467,45 +467,103 @@ export default function MeetingDetailView({
       {/* ── Two-column body ── */}
       <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
 
-        {/* Left column — metadata */}
-        <Stack flex={1} gap="24px" minWidth={0}>
+        {/* Left column */}
+        <Stack flex={1} gap={2} minWidth={0}>
 
-          {/* Fields */}
-          <DateTimeField
-            date={draft.date}
-            time={draft.time}
-            onSaveDate={(val) => save({ date: val })}
-            onSaveTime={(val) => save({ time: val })}
-          />
-          <EditableField
-            icon={<LocationIcon />}
-            label="Location"
-            value={draft.location ?? ""}
-            placeholder="Add location…"
-            onSave={(val) => save({ location: val })}
-          />
-          <EditableMultilineField
-            icon={<NotesIcon />}
-            label="Description"
-            value={draft.description ?? ""}
-            placeholder="Add a description…"
-            onSave={(val) => save({ description: val })}
-          />
-          <EditableField
-            icon={<VideoIcon />}
-            label="Live video"
-            value={draft.videoUrl ?? ""}
-            placeholder="Add broadcast link…"
-            onSave={(val) => save({ videoUrl: val })}
-            inputSx={draft.videoUrl ? { fontWeight: 600, textDecoration: "underline" } : {}}
-            href={draft.videoUrl || undefined}
-          />
+          {/* Agenda + Minutes cards */}
+          <Stack direction="row" gap={1.5}>
+
+            {/* Agenda card */}
+            <Box sx={{ flex: 1, border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2, backgroundColor: "white" }}>
+              <Stack direction="row" alignItems="center" gap={1.5}>
+                <Box sx={{ backgroundColor: "#E4F3FF", borderRadius: "12px", p: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <AgendaIcon sx={{ width: 24, height: 24 }} />
+                </Box>
+                <Typography flex={1} minWidth={0} sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
+                  Agenda
+                </Typography>
+                {draft.agendaItems > 0 ? (
+                  <Stack direction="row" alignItems="center" gap={0.5}>
+                    <IconButton size="small" aria-label="Download agenda PDF">
+                      <DownloadIcon />
+                    </IconButton>
+                    <Button variant="outlined" size="small">View</Button>
+                  </Stack>
+                ) : (
+                  <Button variant="outlined" size="small" startIcon={
+                    <SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>
+                  }>Add</Button>
+                )}
+              </Stack>
+            </Box>
+
+            {/* Minutes card */}
+            <Box sx={{ flex: 1, border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2, backgroundColor: "white" }}>
+              <Stack direction="row" alignItems="center" gap={1.5}>
+                <Box sx={{ backgroundColor: "#E4F3FF", borderRadius: "12px", p: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <ClockIcon sx={{ width: 24, height: 24 }} />
+                </Box>
+                <Typography flex={1} minWidth={0} sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
+                  Minutes
+                </Typography>
+                {minutesStatus === "None" ? (
+                  <Button variant="outlined" size="small" startIcon={
+                    <SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>
+                  }>Create</Button>
+                ) : (
+                  <Button variant="outlined" size="small" endIcon={
+                    <SvgIcon sx={{ width: 16, height: 16 }}><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" /></SvgIcon>
+                  }>Edit</Button>
+                )}
+              </Stack>
+            </Box>
+
+          </Stack>
+
+          {/* Meeting details card */}
+          <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 3, backgroundColor: "white" }}>
+            <Stack gap={3}>
+              <DateTimeField
+                date={draft.date}
+                time={draft.time}
+                onSaveDate={(val) => save({ date: val })}
+                onSaveTime={(val) => save({ time: val })}
+              />
+              <EditableField
+                icon={<LocationIcon />}
+                label="Location"
+                value={draft.location ?? ""}
+                placeholder="Add location…"
+                onSave={(val) => save({ location: val })}
+              />
+              <EditableMultilineField
+                icon={<NotesIcon />}
+                label="Description"
+                value={draft.description ?? ""}
+                placeholder="Add a description…"
+                onSave={(val) => save({ description: val })}
+              />
+              <Box sx={{ pl: "28px" }}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  endIcon={
+                    <SvgIcon sx={{ width: 16, height: 16 }}>
+                      <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+                    </SvgIcon>
+                  }
+                  onClick={() => draft.videoUrl && window.open(draft.videoUrl, "_blank", "noopener,noreferrer")}
+                >
+                  Live video
+                </Button>
+              </Box>
+            </Stack>
+          </Box>
+
         </Stack>
 
-        {/* Right column */}
-        <Stack gap={0} sx={{ width: 336, flexShrink: 0 }}>
-
-          {/* ── Visibility section ── */}
+        {/* Right column — visibility only */}
+        <Stack sx={{ width: 336, flexShrink: 0 }}>
           <Box sx={{ pb: 2.5 }}>
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1.5 }}>
               <Typography sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}>
@@ -523,12 +581,7 @@ export default function MeetingDetailView({
                 : "This meeting, including its agenda and minutes, is only visible to internal users."}
             </Typography>
             {draft.status === "Draft" ? (
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<VisibleIcon />}
-                disabled
-              >
+              <Button variant="outlined" size="small" startIcon={<VisibleIcon />} disabled>
                 Publish to site
               </Button>
             ) : (
@@ -542,81 +595,8 @@ export default function MeetingDetailView({
               </Button>
             )}
           </Box>
+        </Stack>
 
-          <Divider sx={{ mb: 2.5 }} />
-
-          {/* ── Meeting content ── */}
-          <Stack gap={1.5}>
-          <Typography variant="h3" sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}>
-            Meeting content
-          </Typography>
-
-          {/* Agenda card */}
-          <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2, backgroundColor: "white" }}>
-            <Stack direction="row" alignItems="center" gap={1.5}>
-              <Box sx={{
-                backgroundColor: "#E4F3FF",
-                borderRadius: "12px",
-                p: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}>
-                <AgendaIcon sx={{ width: 24, height: 24 }} />
-              </Box>
-              <Box flex={1} minWidth={0}>
-                <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
-                  Agenda
-                </Typography>
-              </Box>
-              {draft.agendaItems > 0 ? (
-                <Button variant="outlined" size="small">View</Button>
-              ) : (
-                <Button variant="outlined" size="small" startIcon={
-                  <SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>
-                }>Add</Button>
-              )}
-            </Stack>
-          </Box>
-
-          {/* Minutes card */}
-          <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2, backgroundColor: "white" }}>
-            <Stack direction="row" alignItems="center" gap={1.5}>
-              <Box sx={{
-                backgroundColor: "#E4F3FF",
-                borderRadius: "12px",
-                p: 1,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}>
-                <ClockIcon sx={{ width: 24, height: 24 }} />
-              </Box>
-              <Box flex={1} minWidth={0}>
-                <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
-                  Minutes
-                </Typography>
-              </Box>
-              {minutesStatus === "None" ? (
-                <Button variant="outlined" size="small" startIcon={
-                  <SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>
-                }>
-                  Add
-                </Button>
-              ) : (
-                <Button variant="outlined" size="small" endIcon={
-                  <SvgIcon sx={{ width: 16, height: 16 }}><path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" /></SvgIcon>
-                }>
-                  Edit
-                </Button>
-              )}
-            </Stack>
-          </Box>
-
-          </Stack>{/* end meeting content */}
-        </Stack>{/* end right column */}
       </Box>
 
       <ConfirmDialog

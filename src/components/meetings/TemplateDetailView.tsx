@@ -449,91 +449,53 @@ export default function TemplateDetailView({
         />
       </Box>
 
-      {/* ── Two-column body ── */}
-      <Box sx={{ display: "flex", gap: 3, alignItems: "flex-start" }}>
-        {/* Left column — metadata */}
-        <Stack flex={1} gap="24px" minWidth={0}>
-          <TimeField
-            time={draft.time}
-            onSave={(val) => save({ time: val })}
-          />
-          <EditableField
-            icon={<LocationIcon />}
-            label="Location"
-            value={draft.location ?? ""}
-            placeholder="Add default location…"
-            onSave={(val) => save({ location: val || undefined })}
-          />
-          <EditableMultilineField
-            icon={<NotesIcon />}
-            label="Description"
-            value={draft.description ?? ""}
-            placeholder="Add a description…"
-            onSave={(val) => save({ description: val || undefined })}
-          />
-        </Stack>
+      {/* ── Body ── */}
+      <Stack gap={2} sx={{ maxWidth: 760 }}>
 
-        {/* Right column — template content */}
-        <Stack gap={0} sx={{ width: 336, flexShrink: 0 }}>
-          <Stack gap={1.5}>
-            <Typography
-              variant="h3"
-              sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}
-            >
-              Template content
-            </Typography>
-
-            {/* Agenda card */}
-            <Box
-              sx={{
-                border: `1px solid ${dividerColor}`,
-                borderRadius: "12px",
-                p: 2,
-                backgroundColor: "white",
-              }}
-            >
-              <Stack direction="row" alignItems="center" gap={1.5}>
-                <Box
-                  sx={{
-                    backgroundColor: "#E4F3FF",
-                    borderRadius: "12px",
-                    p: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <AgendaIcon sx={{ width: 24, height: 24 }} />
-                </Box>
-                <Box flex={1} minWidth={0}>
-                  <Typography
-                    sx={{
-                      fontSize: 18,
-                      fontWeight: 600,
-                      lineHeight: "28px",
-                      letterSpacing: "0.2px",
-                    }}
-                  >
-                    Agenda
-                  </Typography>
-                </Box>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  startIcon={
-                    <SvgIcon sx={{ width: 16, height: 16 }}>
-                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
-                    </SvgIcon>
-                  }
-                >
-                  Add
-                </Button>
-              </Stack>
+        {/* Agenda card */}
+        <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 2, backgroundColor: "white" }}>
+          <Stack direction="row" alignItems="center" gap={1.5}>
+            <Box sx={{ backgroundColor: "#E4F3FF", borderRadius: "12px", p: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <AgendaIcon sx={{ width: 24, height: 24 }} />
             </Box>
+            <Typography flex={1} minWidth={0} sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
+              Agenda
+            </Typography>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>}
+            >
+              Add
+            </Button>
           </Stack>
-        </Stack>
-      </Box>
+        </Box>
+
+        {/* Details card */}
+        <Box sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", p: 3, backgroundColor: "white" }}>
+          <Stack gap={3}>
+            <TimeField
+              time={draft.time}
+              onSave={(val) => save({ time: val })}
+            />
+            <EditableField
+              icon={<LocationIcon />}
+              label="Location"
+              value={draft.location ?? ""}
+              placeholder="Add default location…"
+              onSave={(val) => save({ location: val || undefined })}
+            />
+            <EditableMultilineField
+              icon={<NotesIcon />}
+              label="Description"
+              value={draft.description ?? ""}
+              placeholder="Add a description…"
+              onSave={(val) => save({ description: val || undefined })}
+            />
+          </Stack>
+        </Box>
+
+      </Stack>
 
       <ConfirmDialog
         open={Boolean(pendingAction)}

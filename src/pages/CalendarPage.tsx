@@ -546,7 +546,7 @@ export default function CalendarPage() {
 
   return (
     <PageLayout id="page-calendar">
-      <Box sx={{ borderBottom: `1px solid ${divider}`, pb: "12px" }}>
+      <Box sx={{ pb: "12px" }}>
         <PageHeader
           pageTitle="Calendar"
           breadcrumbs={
@@ -575,7 +575,19 @@ export default function CalendarPage() {
         />
       </Box>
 
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2} mt={-1}>
+      <Stack direction="row" alignItems="center" mb={2} mt={-1}>
+        {/* Left: Today button */}
+        <Box sx={{ flex: 1 }}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => { setCurrentDate(new Date()); setView("day"); }}
+          >
+            Today
+          </Button>
+        </Box>
+
+        {/* Center: navigation + title */}
         <Stack direction="row" alignItems="center" gap={1}>
           <IconButton size="small" onClick={goToPrev} aria-label="Previous">
             <ArrowLeftIcon />
@@ -586,22 +598,22 @@ export default function CalendarPage() {
           <IconButton size="small" onClick={goToNext} aria-label="Next">
             <ArrowRightIcon />
           </IconButton>
-          <Button variant="outlined" size="small" onClick={() => setCurrentDate(new Date())}>
-            Today
-          </Button>
         </Stack>
 
-        <ToggleButtonGroup
-          exclusive
-          size="small"
-          value={view}
-          onChange={(_, v) => { if (v) setView(v); }}
-        >
-          <ToggleButton value="year">Year</ToggleButton>
-          <ToggleButton value="month">Month</ToggleButton>
-          <ToggleButton value="week">Week</ToggleButton>
-          <ToggleButton value="day">Day</ToggleButton>
-        </ToggleButtonGroup>
+        {/* Right: view switcher */}
+        <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+          <ToggleButtonGroup
+            exclusive
+            size="small"
+            value={view}
+            onChange={(_, v) => { if (v) setView(v); }}
+          >
+            <ToggleButton value="year">Year</ToggleButton>
+            <ToggleButton value="month">Month</ToggleButton>
+            <ToggleButton value="week">Week</ToggleButton>
+            <ToggleButton value="day">Day</ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
       </Stack>
 
       {view === "year" && renderYearView()}

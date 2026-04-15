@@ -1,10 +1,11 @@
 import ArrowLeftIcon from "@diligentcorp/atlas-react-bundle/icons/ArrowLeft";
 import ArrowRightIcon from "@diligentcorp/atlas-react-bundle/icons/ArrowRight";
-import { PageHeader } from "@diligentcorp/atlas-react-bundle";
+import { OverflowBreadcrumbs, PageHeader } from "@diligentcorp/atlas-react-bundle";
 import {
   Box,
   Button,
   IconButton,
+  Link,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
@@ -545,7 +546,34 @@ export default function CalendarPage() {
 
   return (
     <PageLayout id="page-calendar">
-      <PageHeader pageTitle="Calendar" />
+      <Box sx={{ borderBottom: `1px solid ${divider}`, pb: "12px" }}>
+        <PageHeader
+          pageTitle="Calendar"
+          breadcrumbs={
+            <OverflowBreadcrumbs
+              items={[
+                { id: "meetings", label: "Meetings" },
+                { id: "calendar", label: "Calendar", isCurrent: true },
+              ]}
+            >
+              {(item) =>
+                item.isCurrent ? (
+                  <span />
+                ) : (
+                  <Link
+                    underline="hover"
+                    variant="body1"
+                    sx={{ cursor: "pointer" }}
+                    onClick={() => navigate("/meetings")}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              }
+            </OverflowBreadcrumbs>
+          }
+        />
+      </Box>
 
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2} mt={-1}>
         <Stack direction="row" alignItems="center" gap={1}>

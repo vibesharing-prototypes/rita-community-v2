@@ -238,6 +238,16 @@ export default function MeetingsPage() {
             )}
           </Stack>
 
+          {activeTab !== "templates" && (
+            <Button
+              variant="text"
+              size="medium"
+              startIcon={<CalendarIcon />}
+              sx={{ whiteSpace: "nowrap" }}
+            >
+              Open calendar
+            </Button>
+          )}
           <Button
             variant="contained"
             size="medium"

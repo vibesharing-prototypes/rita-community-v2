@@ -302,6 +302,73 @@ function EditableMultilineField({
   );
 }
 
+// ── Live video field ──────────────────────────────────────────────────────
+
+function LiveVideoField({
+  value,
+  onSave,
+}: {
+  value: string;
+  onSave: (val: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [local, setLocal] = useState(value);
+
+  const commit = () => {
+    const trimmed = local.trim();
+    onSave(trimmed);
+    setEditing(false);
+  };
+
+  return (
+    <Stack direction="row" alignItems="center" gap={1} sx={{ pl: "28px" }}>
+      <Button
+        variant="outlined"
+        size="small"
+        endIcon={<ExternalLinkIcon />}
+        disabled={!value && !editing}
+        onClick={() => value && !editing && window.open(value, "_blank", "noopener,noreferrer")}
+      >
+        Live video
+      </Button>
+      {editing ? (
+        <TextField
+          value={local}
+          onChange={(e) => setLocal(e.target.value)}
+          onBlur={commit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") commit();
+            if (e.key === "Escape") { setLocal(value); setEditing(false); }
+          }}
+          autoFocus
+          variant="standard"
+          placeholder="https://…"
+          sx={{
+            flex: 1,
+            "& .MuiInput-root": {
+              height: 32,
+              borderRadius: "4px",
+              "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
+            },
+            "& .MuiInput-input.MuiInput-input": { pt: 0, pb: 0 },
+            "& .MuiInput-root::before": { borderBottom: "none !important" },
+            "& .MuiInput-root::after": { borderBottom: "none !important" },
+          }}
+        />
+      ) : (
+        <IconButton
+          size="small"
+          aria-label="Edit live video URL"
+          onClick={() => { setLocal(value); setEditing(true); }}
+          sx={{ color: "text.secondary" }}
+        >
+          <EditIcon sx={{ width: 18, height: 18 }} />
+        </IconButton>
+      )}
+    </Stack>
+  );
+}
+
 // ── Right-column card shell ────────────────────────────────────────────────
 
 function StatusCard({
@@ -369,18 +436,19 @@ export default function MeetingDetailView({
         breadcrumbs={
           <OverflowBreadcrumbs
             items={[
-              { id: "meetings", label: "Meetings" },
+              { id: "root", label: "Community v2", isDisabled: true },
+              { id: "meetings", label: "Meetings", isDisabled: true },
               { id: "tab", label: isUpcoming(draft.date) ? "Upcoming" : "Previous" },
               { id: "current", label: draft.name, isCurrent: true },
             ]}
           >
             {(item) =>
               item.isCurrent ? (
-                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377", pl: "4px", pr: "12px", py: "4px" }}>{item.label}</Typography>
-              ) : item.id === "meetings" ? (
-                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377", pl: "4px", pr: "12px", py: "4px" }}>{item.label}</Typography>
+                <span />
+              ) : item.isDisabled ? (
+                <Typography variant="body2">{item.label}</Typography>
               ) : (
-                <Link underline="hover" variant="body1" sx={{ cursor: "pointer" }} onClick={onBack}>
+                <Link underline="hover" variant="body2" sx={{ cursor: "pointer" }} onClick={onBack}>
                   {item.label}
                 </Link>
               )
@@ -544,16 +612,10 @@ export default function MeetingDetailView({
                 placeholder="Add a description…"
                 onSave={(val) => save({ description: val })}
               />
-              <Box sx={{ pl: "28px" }}>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  endIcon={<ExternalLinkIcon />}
-                  onClick={() => draft.videoUrl && window.open(draft.videoUrl, "_blank", "noopener,noreferrer")}
-                >
-                  Live video
-                </Button>
-              </Box>
+              <LiveVideoField
+                value={draft.videoUrl ?? ""}
+                onSave={(val) => save({ videoUrl: val || undefined })}
+              />
             </Stack>
           </Box>
 

@@ -314,46 +314,21 @@ export default function TemplateDetailView({
           breadcrumbs={
             <OverflowBreadcrumbs
               items={[
-                { id: "meetings", label: "Meetings" },
+                { id: "root", label: "Community v2", isDisabled: true },
+                { id: "meetings", label: "Meetings", isDisabled: true },
                 { id: "templates", label: "Templates" },
                 { id: "current", label: draft.name, isCurrent: true },
               ]}
             >
               {(item) =>
                 item.isCurrent ? (
-                  <Typography
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      lineHeight: "20px",
-                      letterSpacing: "0.14px",
-                      color: "#6f7377",
-                      pl: "4px",
-                      pr: "12px",
-                      py: "4px",
-                    }}
-                  >
-                    {item.label}
-                  </Typography>
-                ) : item.id === "meetings" ? (
-                  <Typography
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      lineHeight: "20px",
-                      letterSpacing: "0.14px",
-                      color: "#6f7377",
-                      pl: "4px",
-                      pr: "12px",
-                      py: "4px",
-                    }}
-                  >
-                    {item.label}
-                  </Typography>
+                  <span />
+                ) : item.isDisabled ? (
+                  <Typography variant="body2">{item.label}</Typography>
                 ) : (
                   <Link
                     underline="hover"
-                    variant="body1"
+                    variant="body2"
                     sx={{ cursor: "pointer" }}
                     onClick={onBack}
                   >

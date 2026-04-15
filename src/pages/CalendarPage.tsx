@@ -552,6 +552,7 @@ export default function CalendarPage() {
           breadcrumbs={
             <OverflowBreadcrumbs
               items={[
+                { id: "root", label: "Community v2", isDisabled: true },
                 { id: "meetings", label: "Meetings" },
                 { id: "calendar", label: "Calendar", isCurrent: true },
               ]}
@@ -559,10 +560,12 @@ export default function CalendarPage() {
               {(item) =>
                 item.isCurrent ? (
                   <span />
+                ) : item.isDisabled ? (
+                  <Typography variant="body2">{item.label}</Typography>
                 ) : (
                   <Link
                     underline="hover"
-                    variant="body1"
+                    variant="body2"
                     sx={{ cursor: "pointer" }}
                     onClick={() => navigate("/meetings")}
                   >

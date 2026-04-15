@@ -557,23 +557,16 @@ export default function CalendarPage() {
               ]}
             >
               {(item) => {
-                const textSx = {
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  lineHeight: "20px",
-                  letterSpacing: "0.14px",
-                  color: "#6f7377",
-                  whiteSpace: "nowrap" as const,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                };
+                const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
+                const mutedSx = { ...baseSx, color: "#6f7377" };
+                const activeSx = { ...baseSx, color: "#282e37" };
                 if (item.isCurrent) return <span />;
                 if (item.id === "root") return (
                   <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
-                    <Typography sx={{ ...textSx, letterSpacing: "0.2px" }}>{item.label}</Typography>
+                    <Typography sx={{ ...mutedSx, letterSpacing: "0.2px" }}>{item.label}</Typography>
                   </Box>
                 );
+                const textSx = item.isDisabled ? mutedSx : activeSx;
                 const label = (
                   <Box sx={{ display: "flex", alignItems: "center", height: 24, px: "4px" }}>
                     <Typography sx={textSx}>{item.label}</Typography>
@@ -585,11 +578,7 @@ export default function CalendarPage() {
                   </Box>
                 );
                 return (
-                  <Box
-                    component="button"
-                    onClick={() => navigate("/meetings")}
-                    sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}
-                  >
+                  <Box component="button" onClick={() => navigate("/meetings")} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
                     {label}
                   </Box>
                 );

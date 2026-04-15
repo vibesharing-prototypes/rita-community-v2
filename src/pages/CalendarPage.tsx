@@ -5,7 +5,6 @@ import {
   Box,
   Button,
   IconButton,
-  Link,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
@@ -561,16 +560,30 @@ export default function CalendarPage() {
                 item.isCurrent ? (
                   <span />
                 ) : item.isDisabled ? (
-                  <Typography variant="body2">{item.label}</Typography>
+                  <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377" }}>
+                    {item.label}
+                  </Typography>
                 ) : (
-                  <Link
-                    underline="hover"
-                    variant="body2"
-                    sx={{ cursor: "pointer" }}
+                  <Box
+                    component="button"
                     onClick={() => navigate("/meetings")}
+                    sx={{
+                      fontSize: 14,
+                      fontWeight: 600,
+                      lineHeight: "20px",
+                      letterSpacing: "0.14px",
+                      color: "#6f7377",
+                      cursor: "pointer",
+                      background: "none",
+                      border: "none",
+                      borderRadius: "10px",
+                      px: "12px",
+                      py: "4px",
+                      "&:hover": { bgcolor: "action.hover" },
+                    }}
                   >
                     {item.label}
-                  </Link>
+                  </Box>
                 )
               }
             </OverflowBreadcrumbs>

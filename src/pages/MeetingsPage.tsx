@@ -48,7 +48,7 @@ import PageLayout from "../components/PageLayout.js";
 import MeetingFormPage from "../components/meetings/MeetingFormPage";
 import MeetingDetailView from "../components/meetings/MeetingDetailView";
 import MeetingRowActions from "../components/meetings/MeetingRowActions";
-import TemplatePickerDialog from "../components/meetings/TemplatePickerDialog";
+import TemplatePickerDialog, { type NewMeetingResult } from "../components/meetings/TemplatePickerDialog";
 import CommitteePickerDialog from "../components/meetings/CommitteePickerDialog";
 import DuplicateMeetingDialog from "../components/meetings/DuplicateMeetingDialog";
 import ConfirmDialog from "../components/meetings/ConfirmDialog";
@@ -74,8 +74,7 @@ export default function MeetingsPage() {
   };
   const [meetings, setMeetings] = useState<Meeting[]>(seedMeetings);
   const [templates, setTemplates] = useState<MeetingTemplate[]>(seedTemplates);
-  const initialTab = (searchParams.get("tab") as MeetingTab | null) ?? "upcoming";
-  const [activeTab, setActiveTab] = useState<MeetingTab>(initialTab);
+  const activeTab: MeetingTab = (searchParams.get("tab") as MeetingTab | null) ?? "upcoming";
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("date-asc");
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
@@ -160,7 +159,7 @@ export default function MeetingsPage() {
 
       <Tabs
         value={activeTab}
-        onChange={(_, value) => setActiveTab(value)}
+        onChange={(_, value) => navigate(`/meetings?tab=${value}`, { replace: true })}
         sx={{
           "& .MuiTab-root:not(.Mui-selected)::after": { display: "none" },
           borderBottom: `1px solid ${tokens?.component?.divider?.colors?.default?.borderColor?.value}`,
@@ -245,6 +244,7 @@ export default function MeetingsPage() {
                 size="medium"
                 startIcon={<CalendarIcon />}
                 sx={{ whiteSpace: "nowrap" }}
+                onClick={() => navigate("/meetings/calendar")}
               >
                 Open calendar
               </Button>
@@ -677,14 +677,15 @@ export default function MeetingsPage() {
       <TemplatePickerDialog
         open={createDialogOpen}
         templates={templates}
+        meetings={meetings}
         committees={committees}
         onClose={() => setCreateDialogOpen(false)}
-        onSelect={(templateId, committee) => {
+        onSelect={(result: NewMeetingResult) => {
           setCreateDialogOpen(false);
           const today = new Date().toISOString().slice(0, 10);
           let newMeeting: Meeting;
-          if (templateId) {
-            const tpl = templates.find((t) => t.id === templateId)!;
+          if (result.type === "template") {
+            const tpl = templates.find((t) => t.id === result.templateId)!;
             newMeeting = {
               id: `m-new-${Date.now()}`,
               name: tpl.name,
@@ -700,12 +701,22 @@ export default function MeetingsPage() {
               membersOnly: false,
               publicRTS: false,
             };
+          } else if (result.type === "duplicate") {
+            const src = result.meeting;
+            newMeeting = {
+              ...src,
+              id: `m-new-${Date.now()}`,
+              name: `Copy of ${src.name}`,
+              date: today,
+              status: "Draft",
+              visibility: "Internal",
+            };
           } else {
             newMeeting = {
               id: `m-new-${Date.now()}`,
               name: "New meeting",
               date: today,
-              committee: committee!,
+              committee: result.committee,
               status: "Draft",
               visibility: "Internal",
               agendaStatus: "Not published",

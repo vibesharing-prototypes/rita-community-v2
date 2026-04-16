@@ -302,6 +302,8 @@ export default function CalendarPage() {
                     outlineOffset: "-1px",
                     zIndex: isToday ? 1 : "auto",
                     position: isToday ? "relative" : "static",
+                    minWidth: 0,
+                    overflow: "hidden",
                   }}
                 >
                   <Box

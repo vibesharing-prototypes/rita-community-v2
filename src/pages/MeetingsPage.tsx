@@ -440,11 +440,14 @@ export default function MeetingsPage() {
                   </Box>
                 );
               })}
-              {anyFilterActive && (
-                <Button variant="text" size="small" onClick={clearAllFilters}>
-                  Clear filters
-                </Button>
-              )}
+              <Button
+                variant="text"
+                size="small"
+                onClick={clearAllFilters}
+                sx={{ visibility: anyFilterActive ? "visible" : "hidden" }}
+              >
+                Clear filters
+              </Button>
             </Box>
           )}
 

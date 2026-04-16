@@ -91,7 +91,7 @@ export default function MeetingsPage() {
   type TemplateFilterType = "status" | "committee";
   const allTemplateFilterTypes: TemplateFilterType[] = ["status", "committee"];
   const [templateCommitteeFilter, setTemplateCommitteeFilter] = useState("");
-  const [templateStatusFilter, setTemplateStatusFilter] = useState<"All" | "Active" | "Archived">("All");
+  const [templateStatusFilter, setTemplateStatusFilter] = useState<"All" | "Active" | "Archived">("Active");
   const [templateFilterConfigAnchor, setTemplateFilterConfigAnchor] = useState<{ el: HTMLElement; type: TemplateFilterType } | null>(null);
 
   const filterMeta: Record<FilterType, { label: string; icon: React.ReactNode }> = {

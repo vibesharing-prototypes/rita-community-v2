@@ -395,24 +395,14 @@ export default function MeetingsPage() {
                       display: "flex", alignItems: "center", justifyContent: "center",
                       width: 24, height: 24, flexShrink: 0,
                     }}>
-                      {active ? (
-                        <Box sx={{
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          width: 20, height: 20, bgcolor: "#0040d5", borderRadius: "50%",
-                          "& svg": { width: 14, height: 14, color: "#ffffff", display: "block" },
-                        }}>
-                          {icon}
-                        </Box>
-                      ) : (
-                        <Box sx={{
-                          display: "flex", alignItems: "center", justifyContent: "center",
-                          width: 24, height: 24,
-                          color: "var(--lens-semantic-color-type-muted)",
-                          "& svg": { width: 16, height: 16, display: "block" },
-                        }}>
-                          {icon}
-                        </Box>
-                      )}
+                      <Box sx={{
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        width: 24, height: 24,
+                        color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)",
+                        "& svg": { width: 16, height: 16, display: "block" },
+                      }}>
+                        {icon}
+                      </Box>
                     </Box>
                     {/* Label */}
                     <Typography sx={{

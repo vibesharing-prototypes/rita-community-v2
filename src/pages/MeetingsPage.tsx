@@ -274,7 +274,13 @@ export default function MeetingsPage() {
               size="medium"
               onClick={() => setFilterRowVisible((v) => !v)}
               color="tertiary"
-              sx={anyFilterActive ? { "& svg": { color: "#0040d5" } } : undefined}
+              sx={{
+                ...(filterRowVisible && {
+                  bgcolor: "var(--lens-component-button-tertiary-hover-background)",
+                  "&:hover": { bgcolor: "var(--lens-component-button-tertiary-hover-background)" },
+                }),
+                ...(anyFilterActive && { "& svg": { color: "#0040d5" } }),
+              }}
             >
               <FilterListIcon />
             </IconButton>

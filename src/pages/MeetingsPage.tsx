@@ -380,7 +380,7 @@ export default function MeetingsPage() {
                     key={type}
                     data-filter-chip={type}
                     onClick={(e) => {
-                      if (!active) setFilterConfigAnchor({ el: e.currentTarget, type });
+                      setFilterConfigAnchor({ el: e.currentTarget, type });
                     }}
                     sx={{
                       display: "inline-flex",

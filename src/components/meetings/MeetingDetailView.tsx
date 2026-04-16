@@ -15,7 +15,6 @@ import ExternalLinkIcon from "@diligentcorp/atlas-react-bundle/icons/ExternalLin
 import {
   Box,
   Button,
-  Divider,
   IconButton,
   InputAdornment,
   Link,
@@ -520,7 +519,7 @@ export default function MeetingDetailView({
                   <ListItemText>Make draft</ListItemText>
                 </MenuItem>
               )}
-              <Divider />
+              <Box sx={{ borderBottom: `1px solid ${dividerColor}` }} />
               <MenuItem
                 onClick={() => { setMoreMenuAnchor(null); setPendingAction("delete"); }}
                 sx={{

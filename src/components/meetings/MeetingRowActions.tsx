@@ -4,7 +4,7 @@ import HideIcon from "@diligentcorp/atlas-react-bundle/icons/Hide";
 import MoreOptionsIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import TrashIcon from "@diligentcorp/atlas-react-bundle/icons/Trash";
 import VisibleIcon from "@diligentcorp/atlas-react-bundle/icons/Visible";
-import { Button, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Stack } from "@mui/material";
+import { Box, Button, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Stack, useTheme } from "@mui/material";
 import { useState } from "react";
 
 import type { MeetingStatus, MeetingVisibility } from "../../types/meetings";
@@ -26,6 +26,7 @@ export default function MeetingRowActions({
   status: MeetingStatus;
   visibility: MeetingVisibility;
 }) {
+  const { tokens } = useTheme();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
 
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => {
@@ -36,7 +37,7 @@ export default function MeetingRowActions({
   const handleMenuClose = () => setMenuAnchor(null);
 
   return (
-    <Stack direction="row" alignItems="center" gap="8px">
+    <Stack direction="row" alignItems="center" justifyContent="flex-end" gap="8px">
       {status === "Draft" && (
         <Button
           variant="outlined"
@@ -108,7 +109,7 @@ export default function MeetingRowActions({
             <ListItemText>Make draft</ListItemText>
           </MenuItem>
         )}
-        <Divider />
+        <Box sx={{ borderBottom: `1px solid ${tokens?.component?.divider?.colors?.default?.borderColor?.value}` }} />
         <MenuItem
           onClick={(e) => {
             e.stopPropagation();

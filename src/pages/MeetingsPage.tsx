@@ -410,7 +410,7 @@ export default function MeetingsPage() {
                       lineHeight: "16px", letterSpacing: "0.3px",
                       color: active ? "#0040d5" : "#242628",
                       whiteSpace: "nowrap",
-                      fontFamily: "Inter, sans-serif",
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
                     }}>
                       {label}
                     </Typography>

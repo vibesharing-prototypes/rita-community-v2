@@ -385,21 +385,54 @@ export default function MeetingsPage() {
                       borderRadius: "9999px",
                       pl: "2px",
                       pr: "2px",
+                      overflow: "hidden",
                       cursor: "pointer",
                       "&:hover": { opacity: 0.85 },
                     }}
                   >
-                    {/* Leading icon */}
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", flexShrink: 0, "& svg": { width: 16, height: 16, display: "block" } }}>
-                      {icon}
+                    {/* Leading icon: filled blue circle (active) or plain icon (inactive) */}
+                    <Box sx={{
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      width: 24, height: 24, flexShrink: 0,
+                    }}>
+                      {active ? (
+                        <Box sx={{
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          width: 20, height: 20, bgcolor: "#0040d5", borderRadius: "50%",
+                          "& svg": { width: 14, height: 14, color: "#ffffff", display: "block" },
+                        }}>
+                          {icon}
+                        </Box>
+                      ) : (
+                        <Box sx={{
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          width: 24, height: 24,
+                          color: "var(--lens-semantic-color-type-muted)",
+                          "& svg": { width: 16, height: 16, display: "block" },
+                        }}>
+                          {icon}
+                        </Box>
+                      )}
                     </Box>
                     {/* Label */}
-                    <Typography sx={{ px: 1, fontSize: 12, lineHeight: "16px", letterSpacing: "0.3px", color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap" }}>
+                    <Typography sx={{
+                      px: 1, fontSize: 12, fontWeight: 400,
+                      lineHeight: "16px", letterSpacing: "0.3px",
+                      color: active ? "#0040d5" : "#242628",
+                      whiteSpace: "nowrap",
+                      fontFamily: "Inter, sans-serif",
+                    }}>
                       {label}
                     </Typography>
-                    {/* Trailing: X to clear if active, chevron to open if not */}
+                    {/* Trailing: X to clear (active) or chevron to open (inactive) */}
                     <Box
-                      sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", flexShrink: 0, borderRadius: "50%", "&:hover": { bgcolor: active ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
+                      sx={{
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        width: 20, height: 20, mr: "2px", flexShrink: 0,
+                        color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)",
+                        borderRadius: "50%",
+                        "&:hover": { bgcolor: active ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" },
+                      }}
                       onClick={(e) => {
                         e.stopPropagation();
                         if (active) {
@@ -410,20 +443,15 @@ export default function MeetingsPage() {
                       }}
                     >
                       {active
-                        ? <CloseIcon sx={{ fontSize: 14 }} />
-                        : <ExpandDownIcon sx={{ fontSize: 14 }} />
+                        ? <CloseIcon sx={{ fontSize: 16 }} />
+                        : <ExpandDownIcon sx={{ fontSize: 16 }} />
                       }
                     </Box>
                   </Box>
                 );
               })}
               {anyFilterActive && (
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={clearAllFilters}
-                  sx={{ minWidth: 0, px: "6px", color: "text.secondary", fontSize: 12, fontWeight: 400 }}
-                >
+                <Button variant="text" size="small" onClick={clearAllFilters}>
                   Clear filters
                 </Button>
               )}

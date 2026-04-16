@@ -612,100 +612,74 @@ export default function MeetingsPage() {
           )}
 
         {activeTab === "templates" && (
-          <Box
+          <Table
+            id="meetings-templates-table"
             sx={{
-              width: "100%",
-              border: `1px solid ${tokens?.component?.divider?.colors?.default?.borderColor?.value}`,
-              borderRadius: "12px",
-              overflow: "hidden",
+              "& .MuiTableBody-root .MuiTableRow-root:last-child .MuiTableCell-root": { borderBottom: 0 },
+              "& .MuiTableRow-root": { background: "transparent" },
             }}
           >
-            <Table
-              id="meetings-templates-table"
-              sx={{
-                width: "100%",
-                "& .MuiTableBody-root .MuiTableRow-root:last-child .MuiTableCell-root": { borderBottom: 0 },
-              }}
-            >
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Committee</TableCell>
-                  <TableCell>Time</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell align="right" />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {visibleTemplates.map((template) => (
-                  <TableRow key={template.id} id={`template-row-${template.id}`}>
-                    <TableCell>
-                      <Stack direction="row" spacing={1} alignItems="center">
-                        <Typography
-                          variant="body1"
-                          sx={{ fontWeight: 600, cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
-                          onClick={() => navigate(`/meetings/templates/${template.id}`, { state: { template } })}
-                        >
-                          {template.name}
-                        </Typography>
-                        {template.status === "Archived" && <StatusChip label="Archived" />}
-                      </Stack>
-                    </TableCell>
-                    <TableCell>
-                      <Box
-                        component="span"
-                        sx={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          border: "1px solid #76777A",
-                          borderRadius: "100px",
-                          px: 1.5,
-                          height: 24,
-                          fontSize: 12,
-                          lineHeight: 1,
-                          whiteSpace: "nowrap",
-                        }}
+            <TableBody>
+              {visibleTemplates.map((template) => (
+                <TableRow key={template.id} id={`template-row-${template.id}`}>
+                  <TableCell sx={{ pl: 0, width: 300, minWidth: 300, maxWidth: 300, whiteSpace: "normal", wordBreak: "break-word" }}>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Typography
+                        variant="subtitle2"
+                        onClick={() => navigate(`/meetings/templates/${template.id}`, { state: { template } })}
+                        sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
                       >
-                        {template.committee}
-                      </Box>
-                    </TableCell>
-                    <TableCell>{template.time ?? "—"}</TableCell>
-                    <TableCell>{template.location ?? "—"}</TableCell>
-                    <TableCell align="right">
-                      <Stack direction="row" spacing={0.5} justifyContent="flex-end">
-                        <Tooltip title="Duplicate">
-                          <IconButton size="medium" aria-label="Duplicate template">
-                            <CopyIcon />
+                        {template.name}
+                      </Typography>
+                      {template.status === "Archived" && <StatusChip label="Archived" />}
+                    </Stack>
+                  </TableCell>
+                  <TableCell>
+                    <Stack direction="row" alignItems="center" gap="4px">
+                      <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
+                      <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{template.committee}</Typography>
+                    </Stack>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{template.time ?? "—"}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{template.location ?? "—"}</Typography>
+                  </TableCell>
+                  <TableCell align="right" sx={{ pr: 0 }}>
+                    <Stack direction="row" spacing={0.5} justifyContent="flex-end">
+                      <Tooltip title="Duplicate">
+                        <IconButton size="medium" aria-label="Duplicate template">
+                          <CopyIcon />
+                        </IconButton>
+                      </Tooltip>
+                      {template.status === "Archived" ? (
+                        <Tooltip title="Unarchive">
+                          <IconButton
+                            size="medium"
+                            aria-label="Unarchive template"
+                            onClick={() => setTemplates((prev) => prev.map((t) => t.id === template.id ? { ...t, status: "Active" as const } : t))}
+                          >
+                            <UnarchiveIcon />
                           </IconButton>
                         </Tooltip>
-                        {template.status === "Archived" ? (
-                          <Tooltip title="Unarchive">
-                            <IconButton
-                              size="medium"
-                              aria-label="Unarchive template"
-                              onClick={() => setTemplates((prev) => prev.map((t) => t.id === template.id ? { ...t, status: "Active" as const } : t))}
-                            >
-                              <UnarchiveIcon />
-                            </IconButton>
-                          </Tooltip>
-                        ) : (
-                          <Tooltip title="Archive">
-                            <IconButton
-                              size="medium"
-                              aria-label="Archive template"
-                              onClick={() => setTemplates((prev) => prev.map((t) => t.id === template.id ? { ...t, status: "Archived" as const } : t))}
-                            >
-                              <ArchiveIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Box>
+                      ) : (
+                        <Tooltip title="Archive">
+                          <IconButton
+                            size="medium"
+                            aria-label="Archive template"
+                            onClick={() => setTemplates((prev) => prev.map((t) => t.id === template.id ? { ...t, status: "Archived" as const } : t))}
+                          >
+                            <ArchiveIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
           </Box>
 

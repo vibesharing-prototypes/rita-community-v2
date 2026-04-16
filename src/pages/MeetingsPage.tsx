@@ -18,18 +18,13 @@ import {
   AccordionDetails,
   AccordionSummary,
   Alert,
-  Badge,
   Box,
   Button,
-  Divider,
   ListItemIcon,
   Menu,
-  FormControl,
-  FormLabel,
   IconButton,
   InputAdornment,
   MenuItem,
-  Select,
   Stack,
   Tab,
   Table,
@@ -40,8 +35,6 @@ import {
   Tabs,
   TextField,
   Tooltip,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -84,7 +77,6 @@ export default function MeetingsPage() {
   const activeTab: MeetingTab = (searchParams.get("tab") as MeetingTab | null) ?? "upcoming";
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("date-asc");
-  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
   const [committeeFilter, setCommitteeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState<MeetingStatus | "All">("All");
   const [visibilityFilter, setVisibilityFilter] = useState<MeetingVisibility | "All">("All");
@@ -94,10 +86,9 @@ export default function MeetingsPage() {
   type PendingAction =
     | { type: "make-active" | "make-draft" | "publish-to-site" | "remove-from-site" | "delete"; meeting: Meeting };
   type FilterType = "date" | "status" | "visibility" | "committee";
-  const [activeFilters, setActiveFilters] = useState<FilterType[]>([]);
-  const [filterRowVisible, setFilterRowVisible] = useState(true);
+  const allFilterTypes: FilterType[] = ["date", "status", "visibility", "committee"];
+  const [filterRowVisible, setFilterRowVisible] = useState(false);
   const [filterConfigAnchor, setFilterConfigAnchor] = useState<{ el: HTMLElement; type: FilterType } | null>(null);
-  const [pendingConfig, setPendingConfig] = useState<FilterType | null>(null);
 
   const filterMeta: Record<FilterType, { label: string; icon: React.ReactNode }> = {
     date: { label: "Meeting date", icon: <CalendarIcon /> },
@@ -114,25 +105,24 @@ export default function MeetingsPage() {
       case "date": return !!startDateFilter || !!endDateFilter;
     }
   };
-  const anyFilterActive = activeFilters.some(isFilterActive);
+  const anyFilterActive = allFilterTypes.some(isFilterActive);
 
-  const addFilter = (type: FilterType) => {
-    setFilterMenuAnchor(null);
-    setFilterRowVisible(true);
-    setActiveFilters((prev) => prev.includes(type) ? prev : [...prev, type]);
-    setPendingConfig(type);
-  };
-
-  const removeFilter = (type: FilterType) => {
-    setActiveFilters((prev) => prev.filter((f) => f !== type));
+  const clearFilter = (type: FilterType) => {
     if (type === "status") setStatusFilter("All");
     if (type === "visibility") setVisibilityFilter("All");
     if (type === "committee") setCommitteeFilter("");
     if (type === "date") { setStartDateFilter(null); setEndDateFilter(null); }
   };
 
+  const clearAllFilters = () => {
+    setStatusFilter("All");
+    setVisibilityFilter("All");
+    setCommitteeFilter("");
+    setStartDateFilter(null);
+    setEndDateFilter(null);
+  };
+
   const [newMenuAnchor, setNewMenuAnchor] = useState<null | HTMLElement>(null);
-  const [filterMenuAnchor, setFilterMenuAnchor] = useState<null | HTMLElement>(null);
   const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -150,17 +140,6 @@ export default function MeetingsPage() {
       return () => clearTimeout(timer);
     }
   }, [searchOpen]);
-
-  useEffect(() => {
-    if (pendingConfig) {
-      const timer = setTimeout(() => {
-        const chip = document.querySelector(`[data-filter-chip="${pendingConfig}"]`);
-        if (chip) setFilterConfigAnchor({ el: chip as HTMLElement, type: pendingConfig });
-        setPendingConfig(null);
-      }, 60);
-      return () => clearTimeout(timer);
-    }
-  }, [pendingConfig]);
 
   const filteredMeetings = useMemo(() => {
     return meetings
@@ -191,14 +170,6 @@ export default function MeetingsPage() {
   );
 
   const visibleTemplates = showArchived ? templates : templates.filter((t) => t.status === "Active");
-  const activeFilterCount = [
-    committeeFilter,
-    statusFilter !== "All" ? statusFilter : "",
-    visibilityFilter !== "All" ? visibilityFilter : "",
-    startDateFilter,
-    endDateFilter,
-  ].filter((v) => v !== null && v !== "").length;
-
   if (detailView) {
     return (
       <MeetingDetailView
@@ -301,40 +272,12 @@ export default function MeetingsPage() {
           <Stack direction="row" alignItems="center" sx={{ pb: "4px", gap: "8px" }}>
             <IconButton
               size="medium"
-              onClick={(e) => activeFilters.length > 0 ? setFilterRowVisible((v) => !v) : setFilterMenuAnchor(e.currentTarget)}
+              onClick={() => setFilterRowVisible((v) => !v)}
               color="tertiary"
               sx={anyFilterActive ? { "& svg": { color: "#0040d5" } } : undefined}
             >
               <FilterListIcon />
             </IconButton>
-            <Menu
-              anchorEl={filterMenuAnchor}
-              open={Boolean(filterMenuAnchor)}
-              onClose={() => setFilterMenuAnchor(null)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-              transformOrigin={{ vertical: "top", horizontal: "left" }}
-              slotProps={{ paper: { sx: { minWidth: 220 } } }}
-            >
-              <Box sx={{ px: 1.5, py: 1, borderBottom: `1px solid ${tokens?.component?.divider?.colors?.default?.borderColor?.value}` }}>
-                <Typography variant="body2" sx={{ fontWeight: 600, fontSize: 12, letterSpacing: "0.3px" }}>Filter by</Typography>
-              </Box>
-              <MenuItem onClick={() => addFilter("date")}>
-                <ListItemIcon><CalendarIcon /></ListItemIcon>
-                Meeting date
-              </MenuItem>
-              <MenuItem onClick={() => addFilter("status")}>
-                <ListItemIcon><CheckCircleLiteIcon /></ListItemIcon>
-                Status
-              </MenuItem>
-              <MenuItem onClick={() => addFilter("visibility")}>
-                <ListItemIcon><VisibleIcon /></ListItemIcon>
-                Visibility
-              </MenuItem>
-              <MenuItem onClick={() => addFilter("committee")}>
-                <ListItemIcon><GroupIcon /></ListItemIcon>
-                Committee
-              </MenuItem>
-            </Menu>
             <IconButton
               size="medium"
               onClick={(e) => setSortMenuAnchor(e.currentTarget)}
@@ -420,17 +363,19 @@ export default function MeetingsPage() {
       <Box sx={{ display: "flex", alignItems: "flex-start", mt: "-12px" }} id="meetings-content">
         <Box sx={{ flex: 1, minWidth: 0 }}>
 
-          {/* Active filter chips */}
-          {activeFilters.length > 0 && filterRowVisible && (
+          {/* Filter chips row */}
+          {filterRowVisible && (
             <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, mb: 1 }}>
-              {activeFilters.map((type) => {
+              {allFilterTypes.map((type) => {
                 const { label, icon } = filterMeta[type];
                 const active = isFilterActive(type);
                 return (
                   <Box
                     key={type}
                     data-filter-chip={type}
-                    onClick={(e) => setFilterConfigAnchor({ el: e.currentTarget, type })}
+                    onClick={(e) => {
+                      if (!active) setFilterConfigAnchor({ el: e.currentTarget, type });
+                    }}
                     sx={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -452,25 +397,34 @@ export default function MeetingsPage() {
                     <Typography sx={{ px: 1, fontSize: 12, lineHeight: "16px", letterSpacing: "0.3px", color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap" }}>
                       {label}
                     </Typography>
-                    {/* Trailing close */}
+                    {/* Trailing: X to clear if active, chevron to open if not */}
                     <Box
-                      sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", flexShrink: 0, borderRadius: "50%", "&:hover": { bgcolor: active ? "rgba(0,64,213,0.12)" : "action.hover" } }}
-                      onClick={(e) => { e.stopPropagation(); removeFilter(type); }}
+                      sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", flexShrink: 0, borderRadius: "50%", "&:hover": { bgcolor: active ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (active) {
+                          clearFilter(type);
+                        } else {
+                          setFilterConfigAnchor({ el: (e.currentTarget.closest("[data-filter-chip]") as HTMLElement) ?? e.currentTarget, type });
+                        }
+                      }}
                     >
-                      <CloseIcon sx={{ fontSize: 14 }} />
+                      {active
+                        ? <CloseIcon sx={{ fontSize: 14 }} />
+                        : <ExpandDownIcon sx={{ fontSize: 14 }} />
+                      }
                     </Box>
                   </Box>
                 );
               })}
-              {activeFilters.length < 4 && (
+              {anyFilterActive && (
                 <Button
                   variant="text"
                   size="small"
-                  startIcon={<AddIcon />}
-                  onClick={(e) => setFilterMenuAnchor(e.currentTarget)}
-                  sx={{ minWidth: 0, px: "6px", color: "text.primary", "& .MuiButton-startIcon": { mr: "4px" } }}
+                  onClick={clearAllFilters}
+                  sx={{ minWidth: 0, px: "6px", color: "text.secondary", fontSize: 12, fontWeight: 400 }}
                 >
-                  Filter
+                  Clear filters
                 </Button>
               )}
             </Box>
@@ -728,142 +682,6 @@ export default function MeetingsPage() {
         )}
           </Box>
 
-          {/* Inline filter panel */}
-          <Box
-            sx={{
-              width: filterPanelOpen ? 300 : 0,
-              ml: filterPanelOpen ? 3 : 0,
-              overflow: "hidden",
-              flexShrink: 0,
-              transition: "width 225ms cubic-bezier(0.4, 0, 0.2, 1), margin-left 225ms cubic-bezier(0.4, 0, 0.2, 1)",
-              position: "sticky",
-              top: 16,
-              alignSelf: "flex-start",
-            }}
-          >
-            <Box
-              id="meetings-filter-content"
-              sx={{
-                width: 300,
-                border: `1px solid ${tokens?.component?.divider?.colors?.default?.borderColor?.value}`,
-                borderRadius: "12px",
-                bgcolor: "#ffffff",
-                display: "flex",
-                flexDirection: "column",
-                maxHeight: "calc(100vh - 120px)",
-                overflow: "hidden",
-              }}
-            >
-              {/* Header */}
-              <Box sx={{ px: 2, pt: 2, pb: 3, flexShrink: 0 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h4" sx={{ fontSize: 18, fontWeight: 600 }}>Filters</Typography>
-                  <IconButton size="small" aria-label="Close filters" onClick={() => setFilterPanelOpen(false)}>
-                    <CloseIcon />
-                  </IconButton>
-                </Stack>
-              </Box>
-
-              {/* Scrollable content */}
-              <Box sx={{ flex: 1, overflowY: "auto", px: 2, pb: 3 }}>
-                <Stack gap={2}>
-                  <FormControl>
-                    <FormLabel>
-                      Committee{" "}
-                      <Box component="span" sx={{ fontWeight: 400 }}>(Required)</Box>
-                    </FormLabel>
-                    <Select
-                      value={committeeFilter}
-                      onChange={(event) => setCommitteeFilter(event.target.value)}
-                      displayEmpty
-                    >
-                      <MenuItem value="">All committees</MenuItem>
-                      {committees.map((value) => (
-                        <MenuItem key={value} value={value}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>State</FormLabel>
-                    <ToggleButtonGroup
-                      exclusive
-                      size="small"
-                      value={statusFilter}
-                      onChange={(_, value) => {
-                        if (value) setStatusFilter(value as MeetingStatus | "All");
-                      }}
-                    >
-                      <ToggleButton value="All">All</ToggleButton>
-                      <ToggleButton value="Active">Active</ToggleButton>
-                      <ToggleButton value="Draft">Draft</ToggleButton>
-                    </ToggleButtonGroup>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Visibility</FormLabel>
-                    <ToggleButtonGroup
-                      exclusive
-                      size="small"
-                      value={visibilityFilter}
-                      onChange={(_, value) => {
-                        if (value) setVisibilityFilter(value as MeetingVisibility | "All");
-                      }}
-                    >
-                      <ToggleButton value="All">All</ToggleButton>
-                      <ToggleButton value="Public">Public</ToggleButton>
-                      <ToggleButton value="Internal">Internal</ToggleButton>
-                    </ToggleButtonGroup>
-                  </FormControl>
-                  <FormControl>
-                    <Typography variant="body1" sx={{ mb: 1, color: "#6F7377", fontSize: "12px", lineHeight: "16px" }}>
-                      Show meetings within the time frame you select below:
-                    </Typography>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <Stack spacing={1}>
-                        <Stack spacing={0.5}>
-                          <FormLabel>Start date</FormLabel>
-                          <DatePicker
-                            value={startDateFilter}
-                            onChange={(value) => setStartDateFilter(value)}
-                            slotProps={{ textField: { size: "small" } }}
-                          />
-                        </Stack>
-                        <Stack spacing={0.5}>
-                          <FormLabel>End date</FormLabel>
-                          <DatePicker
-                            value={endDateFilter}
-                            onChange={(value) => setEndDateFilter(value)}
-                            slotProps={{ textField: { size: "small" } }}
-                          />
-                        </Stack>
-                      </Stack>
-                    </LocalizationProvider>
-                  </FormControl>
-                </Stack>
-              </Box>
-
-              {/* Sticky footer */}
-              <Box sx={{ flexShrink: 0 }}>
-                <Divider />
-                <Box sx={{ px: 2, py: 1.5, display: "flex", justifyContent: "flex-end" }}>
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={() => {
-                      setCommitteeFilter("");
-                      setStatusFilter("All");
-                      setVisibilityFilter("All");
-                      setStartDateFilter(null);
-                      setEndDateFilter(null);
-                    }}
-                  >
-                    Clear all
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          </Box>
         </Box>
 
       <CommitteePickerDialog

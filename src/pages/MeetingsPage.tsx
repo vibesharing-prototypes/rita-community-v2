@@ -82,13 +82,17 @@ export default function MeetingsPage() {
   const [visibilityFilter, setVisibilityFilter] = useState<MeetingVisibility | "All">("All");
   const [startDateFilter, setStartDateFilter] = useState<Date | null>(null);
   const [endDateFilter, setEndDateFilter] = useState<Date | null>(null);
-  const [showArchived, setShowArchived] = useState(false);
   type PendingAction =
     | { type: "make-active" | "make-draft" | "publish-to-site" | "remove-from-site" | "delete"; meeting: Meeting };
   type FilterType = "date" | "status" | "visibility" | "committee";
   const allFilterTypes: FilterType[] = ["date", "status", "visibility", "committee"];
   const [filterRowVisible, setFilterRowVisible] = useState(false);
   const [filterConfigAnchor, setFilterConfigAnchor] = useState<{ el: HTMLElement; type: FilterType } | null>(null);
+  type TemplateFilterType = "status" | "committee";
+  const allTemplateFilterTypes: TemplateFilterType[] = ["status", "committee"];
+  const [templateCommitteeFilter, setTemplateCommitteeFilter] = useState("");
+  const [templateStatusFilter, setTemplateStatusFilter] = useState<"All" | "Active" | "Archived">("All");
+  const [templateFilterConfigAnchor, setTemplateFilterConfigAnchor] = useState<{ el: HTMLElement; type: TemplateFilterType } | null>(null);
 
   const filterMeta: Record<FilterType, { label: string; icon: React.ReactNode }> = {
     date: { label: "Meeting date", icon: <CalendarIcon /> },
@@ -122,6 +126,29 @@ export default function MeetingsPage() {
     setEndDateFilter(null);
   };
 
+  const templateFilterMeta: Record<TemplateFilterType, { label: string; icon: React.ReactNode }> = {
+    status: { label: "Status", icon: <CheckCircleLiteIcon /> },
+    committee: { label: "Committee", icon: <GroupIcon /> },
+  };
+
+  const isTemplateFilterActive = (type: TemplateFilterType) => {
+    switch (type) {
+      case "status": return templateStatusFilter !== "All";
+      case "committee": return !!templateCommitteeFilter;
+    }
+  };
+  const anyTemplateFilterActive = allTemplateFilterTypes.some(isTemplateFilterActive);
+
+  const clearTemplateFilter = (type: TemplateFilterType) => {
+    if (type === "status") setTemplateStatusFilter("All");
+    if (type === "committee") setTemplateCommitteeFilter("");
+  };
+
+  const clearAllTemplateFilters = () => {
+    setTemplateStatusFilter("All");
+    setTemplateCommitteeFilter("");
+  };
+
   const [newMenuAnchor, setNewMenuAnchor] = useState<null | HTMLElement>(null);
   const [sortMenuAnchor, setSortMenuAnchor] = useState<null | HTMLElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -140,6 +167,11 @@ export default function MeetingsPage() {
       return () => clearTimeout(timer);
     }
   }, [searchOpen]);
+
+  useEffect(() => {
+    setSearch("");
+    setSearchOpen(false);
+  }, [activeTab]);
 
   const filteredMeetings = useMemo(() => {
     return meetings
@@ -169,7 +201,11 @@ export default function MeetingsPage() {
     (a, b) => b - a,
   );
 
-  const visibleTemplates = showArchived ? templates : templates.filter((t) => t.status === "Active");
+  const visibleTemplates = useMemo(() => templates
+    .filter((t) => !search ? true : t.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((t) => templateStatusFilter === "All" ? true : t.status === templateStatusFilter)
+    .filter((t) => !templateCommitteeFilter ? true : t.committee === templateCommitteeFilter),
+  [templates, search, templateStatusFilter, templateCommitteeFilter]);
   if (detailView) {
     return (
       <MeetingDetailView
@@ -268,22 +304,22 @@ export default function MeetingsPage() {
           <Tab label="Templates" value="templates" />
         </Tabs>
 
-        {activeTab !== "templates" && (
-          <Stack direction="row" alignItems="center" sx={{ pb: "4px", gap: "8px" }}>
-            <IconButton
-              size="medium"
-              onClick={() => setFilterRowVisible((v) => !v)}
-              color="tertiary"
-              sx={{
-                ...(filterRowVisible && {
-                  bgcolor: "var(--lens-component-button-tertiary-hover-background)",
-                  "&:hover": { bgcolor: "var(--lens-component-button-tertiary-hover-background)" },
-                }),
-                ...(anyFilterActive && { "& svg": { color: "#0040d5" } }),
-              }}
-            >
-              <FilterListIcon />
-            </IconButton>
+        <Stack direction="row" alignItems="center" sx={{ pb: "4px", gap: "8px" }}>
+          <IconButton
+            size="medium"
+            onClick={() => setFilterRowVisible((v) => !v)}
+            color="tertiary"
+            sx={{
+              ...(filterRowVisible && {
+                bgcolor: "var(--lens-component-button-tertiary-hover-background)",
+                "&:hover": { bgcolor: "var(--lens-component-button-tertiary-hover-background)" },
+              }),
+              ...((activeTab === "templates" ? anyTemplateFilterActive : anyFilterActive) && { "& svg": { color: "#0040d5" } }),
+            }}
+          >
+            <FilterListIcon />
+          </IconButton>
+          {activeTab !== "templates" && (
             <IconButton
               size="medium"
               onClick={(e) => setSortMenuAnchor(e.currentTarget)}
@@ -291,86 +327,126 @@ export default function MeetingsPage() {
             >
               <SortIcon />
             </IconButton>
-            <Box sx={{
-              width: searchOpen ? 0 : 40,
-              overflow: "hidden",
-              opacity: searchOpen ? 0 : 1,
-              flexShrink: 0,
-              transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease",
-            }}>
-              <IconButton
-                size="medium"
-                onClick={() => setSearchOpen(true)}
-                color="tertiary"
-                tabIndex={searchOpen ? -1 : 0}
-              >
-                <SearchIcon />
-              </IconButton>
-            </Box>
-            <Box sx={{
-              width: searchOpen ? 220 : 0,
-              overflow: "hidden",
-              opacity: searchOpen ? 1 : 0,
-              flexShrink: 0,
-              transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease 50ms",
-            }}>
-              <TextField
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search meetings"
-                size="small"
-                sx={{
-                  width: 220,
-                  "& .MuiOutlinedInput-root": {
-                    background: "transparent",
-                    boxShadow: "none !important",
-                    "& .MuiOutlinedInput-notchedOutline": { border: "none !important" },
-                    "&:hover .MuiOutlinedInput-notchedOutline": { border: "none !important" },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": { border: "none !important", boxShadow: "none !important" },
-                    "&:hover": { boxShadow: "none !important" },
-                    "&.Mui-focused": { boxShadow: "none !important" },
-                    "& .MuiInputBase-input": { background: "transparent" },
-                  },
-                }}
-                inputRef={searchInputRef}
-                slotProps={{
-                  input: {
-                    startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton size="small" color="tertiary" onClick={() => { setSearch(""); setSearchOpen(false); }}>
-                          <CloseIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                    sx: { pointerEvents: searchOpen ? "auto" : "none" },
-                  },
-                }}
-              />
-            </Box>
-            <Menu
-              anchorEl={sortMenuAnchor}
-              open={Boolean(sortMenuAnchor)}
-              onClose={() => setSortMenuAnchor(null)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
+          )}
+          <Box sx={{
+            width: searchOpen ? 0 : 40,
+            overflow: "hidden",
+            opacity: searchOpen ? 0 : 1,
+            flexShrink: 0,
+            transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease",
+          }}>
+            <IconButton
+              size="medium"
+              onClick={() => setSearchOpen(true)}
+              color="tertiary"
+              tabIndex={searchOpen ? -1 : 0}
             >
-              <MenuItem selected={sortBy === "date-asc"} onClick={() => { setSortBy("date-asc"); setSortMenuAnchor(null); }}>
-                Sort by date ascending
-              </MenuItem>
-              <MenuItem selected={sortBy === "date-desc"} onClick={() => { setSortBy("date-desc"); setSortMenuAnchor(null); }}>
-                Sort by date descending
-              </MenuItem>
-            </Menu>
-          </Stack>
-        )}
+              <SearchIcon />
+            </IconButton>
+          </Box>
+          <Box sx={{
+            width: searchOpen ? 220 : 0,
+            overflow: "hidden",
+            opacity: searchOpen ? 1 : 0,
+            flexShrink: 0,
+            transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease 50ms",
+          }}>
+            <TextField
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={activeTab === "templates" ? "Search templates" : "Search meetings"}
+              size="small"
+              sx={{
+                width: 220,
+                "& .MuiOutlinedInput-root": {
+                  background: "transparent",
+                  boxShadow: "none !important",
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none !important" },
+                  "&:hover .MuiOutlinedInput-notchedOutline": { border: "none !important" },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": { border: "none !important", boxShadow: "none !important" },
+                  "&:hover": { boxShadow: "none !important" },
+                  "&.Mui-focused": { boxShadow: "none !important" },
+                  "& .MuiInputBase-input": { background: "transparent" },
+                },
+              }}
+              inputRef={searchInputRef}
+              slotProps={{
+                input: {
+                  startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton size="small" color="tertiary" onClick={() => { setSearch(""); setSearchOpen(false); }}>
+                        <CloseIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                  sx: { pointerEvents: searchOpen ? "auto" : "none" },
+                },
+              }}
+            />
+          </Box>
+          <Menu
+            anchorEl={sortMenuAnchor}
+            open={Boolean(sortMenuAnchor)}
+            onClose={() => setSortMenuAnchor(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <MenuItem selected={sortBy === "date-asc"} onClick={() => { setSortBy("date-asc"); setSortMenuAnchor(null); }}>
+              Sort by date ascending
+            </MenuItem>
+            <MenuItem selected={sortBy === "date-desc"} onClick={() => { setSortBy("date-desc"); setSortMenuAnchor(null); }}>
+              Sort by date descending
+            </MenuItem>
+          </Menu>
+        </Stack>
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "flex-start", mt: "-12px" }} id="meetings-content">
         <Box sx={{ flex: 1, minWidth: 0 }}>
 
           {/* Filter chips row */}
-          {filterRowVisible && (
+          {filterRowVisible && activeTab === "templates" && (
+            <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, mb: 1 }}>
+              {allTemplateFilterTypes.map((type) => {
+                const { label, icon } = templateFilterMeta[type];
+                const active = isTemplateFilterActive(type);
+                return (
+                  <Box
+                    key={type}
+                    data-filter-chip={`tpl-${type}`}
+                    onClick={(e) => { setTemplateFilterConfigAnchor({ el: e.currentTarget, type }); }}
+                    sx={{
+                      display: "inline-flex", alignItems: "center", height: 24,
+                      border: active ? "none" : "1px solid #e2e2e5",
+                      bgcolor: active ? "#ecf0ff" : "transparent",
+                      borderRadius: "9999px", pl: "2px", pr: "2px",
+                      overflow: "hidden", cursor: "pointer", "&:hover": { opacity: 0.85 },
+                    }}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, flexShrink: 0 }}>
+                      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", "& svg": { width: 16, height: 16, display: "block" } }}>
+                        {icon}
+                      </Box>
+                    </Box>
+                    <Typography sx={{ px: 1, fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                      {label}
+                    </Typography>
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", flexShrink: 0, color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", borderRadius: "50%", "&:hover": { bgcolor: active ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
+                      onClick={(e) => { e.stopPropagation(); if (active) { clearTemplateFilter(type); } else { setTemplateFilterConfigAnchor({ el: (e.currentTarget.closest("[data-filter-chip]") as HTMLElement) ?? e.currentTarget, type }); } }}
+                    >
+                      {active ? <CloseIcon sx={{ fontSize: 16 }} /> : <ExpandDownIcon sx={{ fontSize: 16 }} />}
+                    </Box>
+                  </Box>
+                );
+              })}
+              <Button variant="text" size="small" onClick={clearAllTemplateFilters} sx={{ visibility: anyTemplateFilterActive ? "visible" : "hidden" }}>
+                Clear filters
+              </Button>
+            </Box>
+          )}
+          {filterRowVisible && activeTab !== "templates" && (
             <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1, mb: 1 }}>
               {allFilterTypes.map((type) => {
                 const { label, icon } = filterMeta[type];
@@ -494,6 +570,25 @@ export default function MeetingsPage() {
                 </LocalizationProvider>
               </Box>
             )}
+          </Menu>
+
+          {/* Template filter config popover */}
+          <Menu
+            anchorEl={templateFilterConfigAnchor?.el}
+            open={Boolean(templateFilterConfigAnchor)}
+            onClose={() => setTemplateFilterConfigAnchor(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+            transformOrigin={{ vertical: "top", horizontal: "left" }}
+            slotProps={{ paper: { sx: { minWidth: 200 } } }}
+          >
+            {templateFilterConfigAnchor?.type === "status" && [
+              <MenuItem key="all" selected={templateStatusFilter === "All"} onClick={() => { setTemplateStatusFilter("All"); setTemplateFilterConfigAnchor(null); }}>All</MenuItem>,
+              <MenuItem key="active" selected={templateStatusFilter === "Active"} onClick={() => { setTemplateStatusFilter("Active"); setTemplateFilterConfigAnchor(null); }}>Active</MenuItem>,
+              <MenuItem key="archived" selected={templateStatusFilter === "Archived"} onClick={() => { setTemplateStatusFilter("Archived"); setTemplateFilterConfigAnchor(null); }}>Archived</MenuItem>,
+            ]}
+            {templateFilterConfigAnchor?.type === "committee" && committees.map((c) => (
+              <MenuItem key={c} selected={templateCommitteeFilter === c} onClick={() => { setTemplateCommitteeFilter(c); setTemplateFilterConfigAnchor(null); }}>{c}</MenuItem>
+            ))}
           </Menu>
 
           {/* Upcoming tab */}

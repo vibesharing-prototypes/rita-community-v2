@@ -40,7 +40,7 @@ export default function MeetingRowActions({
     <Stack direction="row" alignItems="center" justifyContent="flex-end" gap="8px">
       {status === "Draft" && (
         <Button
-          variant="outlined"
+          variant="text"
           size="small"
           onClick={(e) => {
             e.stopPropagation();
@@ -48,19 +48,6 @@ export default function MeetingRowActions({
           }}
         >
           Make active
-        </Button>
-      )}
-
-      {status === "Active" && visibility === "Internal" && (
-        <Button
-          variant="text"
-          size="small"
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleVisibility();
-          }}
-        >
-          Publish to site
         </Button>
       )}
 
@@ -75,6 +62,18 @@ export default function MeetingRowActions({
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
+        {status === "Active" && visibility === "Internal" && (
+          <MenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMenuClose();
+              onToggleVisibility();
+            }}
+          >
+            <ListItemIcon><VisibleIcon /></ListItemIcon>
+            <ListItemText>Publish to site</ListItemText>
+          </MenuItem>
+        )}
         {status === "Active" && visibility === "Public" && (
           <MenuItem
             onClick={(e) => {

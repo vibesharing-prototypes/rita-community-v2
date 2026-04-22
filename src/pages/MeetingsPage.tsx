@@ -45,7 +45,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import PageLayout from "../components/PageLayout.js";
-import MeetingFormPage from "../components/meetings/MeetingFormPage";
 import MeetingDetailView from "../components/meetings/MeetingDetailView";
 import MeetingRowActions from "../components/meetings/MeetingRowActions";
 import TemplatePickerDialog, { type NewMeetingResult } from "../components/meetings/TemplatePickerDialog";
@@ -60,7 +59,7 @@ import type {
   MeetingTemplate,
   MeetingVisibility,
 } from "../types/meetings";
-import { formatDateLong, getYear, isUpcoming } from "../utils/meetings";
+import { formatDateLong, getDayOfMonth, getMonthAbbrev, getYear, isUpcoming } from "../utils/meetings";
 import meetingsData from "../data/meetings.json";
 
 export default function MeetingsPage() {
@@ -158,7 +157,6 @@ export default function MeetingsPage() {
   const [duplicateSource, setDuplicateSource] = useState<Meeting | null>(null);
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
   const [detailView, setDetailView] = useState<Meeting | null>(null);
-  const [editView, setEditView] = useState<Meeting | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -219,21 +217,6 @@ export default function MeetingsPage() {
     );
   }
 
-  if (editView) {
-    return (
-      <MeetingFormPage
-        mode="edit"
-        meeting={editView}
-        committees={committees}
-        onBack={() => setEditView(null)}
-        onSubmit={(meeting) => {
-          setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? meeting : m)));
-          setEditView(null);
-          setDetailView(meeting);
-        }}
-      />
-    );
-  }
 
   return (
     <PageLayout id="page-meetings">
@@ -600,29 +583,33 @@ export default function MeetingsPage() {
                 <TableBody>
                   {upcomingMeetings.map((meeting) => (
                     <TableRow key={meeting.id} id={`meeting-row-${meeting.id}`}>
-                      <TableCell sx={{ pl: 0, width: 300, minWidth: 300, maxWidth: 300, whiteSpace: "normal", wordBreak: "break-word" }}>
-                        <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}>
-                          {meeting.name}
-                        </Typography>
+                      <TableCell sx={{ pl: 0, width: 368, minWidth: 280 }}>
+                        <Stack direction="row" alignItems="center" gap="12px">
+                          <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                            <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
+                            <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
+                          </Box>
+                          <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}>
+                            {meeting.name}
+                          </Typography>
+                        </Stack>
                       </TableCell>
                       <TableCell>
                         <Stack direction="row" alignItems="center" gap="4px">
                           <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                          <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
+                          <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
                             {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
                           </Typography>
                         </Stack>
                       </TableCell>
                       <TableCell>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                          {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <><StatusChip label="Active" /><StatusChip label={meeting.visibility} /></>}
+                        <Stack direction="row" alignItems="center" gap="4px">
+                          <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
+                          <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
                         </Stack>
                       </TableCell>
                       <TableCell>
-                        <Stack direction="row" alignItems="center" gap="4px">
-                          <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                          <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
-                        </Stack>
+                        {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
                       </TableCell>
                       <TableCell align="right" sx={{ pr: 0 }}>
                         <MeetingRowActions
@@ -660,29 +647,33 @@ export default function MeetingsPage() {
                         <TableBody>
                           {yearMeetings.map((meeting) => (
                             <TableRow key={meeting.id} id={`meeting-row-${meeting.id}`}>
-                              <TableCell sx={{ pl: 2, width: 300, minWidth: 300, maxWidth: 300, whiteSpace: "normal", wordBreak: "break-word" }}>
-                                <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}>
-                                  {meeting.name}
-                                </Typography>
+                              <TableCell sx={{ pl: 2, width: 368, minWidth: 280 }}>
+                                <Stack direction="row" alignItems="center" gap="12px">
+                                  <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                                    <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
+                                    <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
+                                  </Box>
+                                  <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}>
+                                    {meeting.name}
+                                  </Typography>
+                                </Stack>
                               </TableCell>
                               <TableCell>
                                 <Stack direction="row" alignItems="center" gap="4px">
                                   <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                                  <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
+                                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
                                     {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
                                   </Typography>
                                 </Stack>
                               </TableCell>
                               <TableCell>
-                                <Stack direction="row" spacing={1} alignItems="center">
-                                  {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <><StatusChip label="Active" /><StatusChip label={meeting.visibility} /></>}
+                                <Stack direction="row" alignItems="center" gap="4px">
+                                  <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
+                                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
                                 </Stack>
                               </TableCell>
                               <TableCell>
-                                <Stack direction="row" alignItems="center" gap="4px">
-                                  <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                                  <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
-                                </Stack>
+                                {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
                               </TableCell>
                               <TableCell align="right" sx={{ pr: 2 }}>
                                 <MeetingRowActions

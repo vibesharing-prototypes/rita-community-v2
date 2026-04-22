@@ -141,6 +141,7 @@ function EditableTitleField({
       }}
       variant="standard"
       fullWidth
+      multiline
       sx={{
         "& .MuiInput-root": {
           borderRadius: "4px",

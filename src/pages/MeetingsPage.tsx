@@ -580,7 +580,7 @@ export default function MeetingsPage() {
                             <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                             <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                           </Box>
-                          <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", wordBreak: "break-word", "&:hover": { textDecoration: "underline" } }}>
+                          <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
                             {meeting.name}
                           </Typography>
                         </Stack>
@@ -644,7 +644,7 @@ export default function MeetingsPage() {
                                     <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                                     <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                                   </Box>
-                                  <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", wordBreak: "break-word", "&:hover": { textDecoration: "underline" } }}>
+                                  <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
                                     {meeting.name}
                                   </Typography>
                                 </Stack>
@@ -704,7 +704,7 @@ export default function MeetingsPage() {
                       <Typography
                         variant="subtitle2"
                         onClick={() => navigate(`/meetings/templates/${template.id}`, { state: { template } })}
-                        sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", wordBreak: "break-word", "&:hover": { textDecoration: "underline" } }}
+                        sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}
                       >
                         {template.name}
                       </Typography>

@@ -6,6 +6,12 @@ main[data-atlas-gn-app] {
   min-height: 100dvh;
 }
 
+/* Override Atlas PageHeader title size */
+h1.MuiTypography-root {
+  font-size: 24px !important;
+  line-height: 32px !important;
+}
+
 mock-hb-global-navigator {
   z-index: 100 !important;
   background-color: var(--lens-semantic-color-surface-default, #ffffff) !important;

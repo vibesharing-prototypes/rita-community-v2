@@ -407,10 +407,10 @@ export default function MeetingsPage() {
                       overflow: "hidden", cursor: "pointer", "&:hover": { opacity: 0.85 },
                     }}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", flexShrink: 0, color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", "& svg": { width: 16, height: 16, display: "block" } }}>
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, flexShrink: 0, color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", "& svg": { width: 16, height: 16, display: "block" } }}>
                       {icon}
                     </Box>
-                    <Typography sx={{ pl: "4px", pr: 1, fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    <Typography sx={{ px: "4px", fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                       {label}
                     </Typography>
                     <Box
@@ -454,14 +454,15 @@ export default function MeetingsPage() {
                     }}
                   >
                     <Box sx={{
-                      display: "flex", alignItems: "center", flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      width: 24, height: 24, flexShrink: 0,
                       color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)",
                       "& svg": { width: 16, height: 16, display: "block" },
                     }}>
                       {icon}
                     </Box>
                     <Typography sx={{
-                      pl: "4px", pr: 1, fontSize: 12, fontWeight: 400,
+                      px: "4px", fontSize: 12, fontWeight: 400,
                       lineHeight: "16px", letterSpacing: "0.3px",
                       color: active ? "#0040d5" : "#242628",
                       whiteSpace: "nowrap",

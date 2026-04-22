@@ -151,7 +151,7 @@ function EditableTitleField({
           "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
         },
         "& .MuiInput-input.MuiInput-input": {
-          p: "0 4px",
+          pl: 0, pr: "4px",
           fontFamily: "inherit",
           fontSize: "24px",
           fontWeight: 600,

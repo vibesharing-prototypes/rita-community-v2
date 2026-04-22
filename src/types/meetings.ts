@@ -19,6 +19,7 @@ export type Meeting = {
   publicRTS: boolean;
   description?: string;
   videoUrl?: string;
+  lastEdited?: string;
 };
 
 export type MeetingTemplate = {
@@ -30,6 +31,7 @@ export type MeetingTemplate = {
   description?: string;
   status: TemplateStatus;
   meetingsCreated: number;
+  lastEdited?: string;
 };
 
 export type MeetingTab = "upcoming" | "previous" | "templates";

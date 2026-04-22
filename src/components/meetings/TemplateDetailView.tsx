@@ -20,13 +20,14 @@ import {
   Stack,
   SvgIcon,
   TextField,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { format, parse } from "date-fns";
+import { differenceInHours, differenceInMinutes, format, isSameDay, parse } from "date-fns";
 import { useRef, useState } from "react";
 
 import ConfirmDialog from "./ConfirmDialog";
@@ -275,6 +276,16 @@ function EditableMultilineField({
   );
 }
 
+function formatEditedLabel(date: Date): string {
+  const now = new Date();
+  const mins = differenceInMinutes(now, date);
+  if (mins < 1) return "Edited just now";
+  if (mins < 60) return `Edited ${mins}m ago`;
+  const hours = differenceInHours(now, date);
+  if (isSameDay(now, date)) return `Edited ${hours}h ago`;
+  return `Edited on ${format(date, "MMMM d")}`;
+}
+
 // ── Main component ─────────────────────────────────────────────────────────
 
 export default function TemplateDetailView({
@@ -296,12 +307,15 @@ export default function TemplateDetailView({
 
   const [draft, setDraft] = useState<MeetingTemplate>({ ...template });
   const [moreMenuAnchor, setMoreMenuAnchor] = useState<HTMLElement | null>(null);
+  const [lastEdited, setLastEdited] = useState<Date | null>(template.lastEdited ? new Date(template.lastEdited) : null);
   type PendingAction = "archive" | "unarchive";
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const save = (partial: Partial<MeetingTemplate>) => {
-    const updated = { ...draft, ...partial };
+    const now = new Date();
+    const updated = { ...draft, ...partial, lastEdited: now.toISOString() };
     setDraft(updated);
+    setLastEdited(now);
     onUpdate(updated);
   };
 
@@ -359,54 +373,68 @@ export default function TemplateDetailView({
             </Typography>
           }
           moreButton={
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Button variant="outlined" onClick={onUseTemplate}>
-                Use template
-              </Button>
-              <IconButton
-                aria-label="More actions"
-                onClick={(e) => setMoreMenuAnchor(e.currentTarget)}
-              >
-                <MoreIcon />
-              </IconButton>
-              <Menu
-                anchorEl={moreMenuAnchor}
-                open={Boolean(moreMenuAnchor)}
-                onClose={() => setMoreMenuAnchor(null)}
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                transformOrigin={{ vertical: "top", horizontal: "right" }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    setMoreMenuAnchor(null);
-                    const copy: MeetingTemplate = {
-                      ...draft,
-                      id: `t-dup-${Date.now()}`,
-                      name: `Copy of ${draft.name}`,
-                      meetingsCreated: 0,
-                    };
-                    onDuplicate?.(copy);
-                  }}
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", alignSelf: "stretch" }}>
+              <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+              <Stack direction="row" spacing={1} alignItems="center">
+                <Button variant="outlined" onClick={onUseTemplate}>
+                  Use template
+                </Button>
+                <IconButton
+                  aria-label="More actions"
+                  onClick={(e) => setMoreMenuAnchor(e.currentTarget)}
                 >
-                  <ListItemIcon>
-                    <CopyIcon />
-                  </ListItemIcon>
-                  <ListItemText>Duplicate</ListItemText>
-                </MenuItem>
-                <Divider />
-                <MenuItem
-                  onClick={() => {
-                    setMoreMenuAnchor(null);
-                    setPendingAction(isArchived ? "unarchive" : "archive");
-                  }}
+                  <MoreIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={moreMenuAnchor}
+                  open={Boolean(moreMenuAnchor)}
+                  onClose={() => setMoreMenuAnchor(null)}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
                 >
-                  <ListItemIcon>
-                    {isArchived ? <UnarchiveIcon /> : <ArchiveIcon />}
-                  </ListItemIcon>
-                  <ListItemText>{isArchived ? "Unarchive" : "Archive"}</ListItemText>
-                </MenuItem>
-              </Menu>
-            </Stack>
+                  <MenuItem
+                    onClick={() => {
+                      setMoreMenuAnchor(null);
+                      const copy: MeetingTemplate = {
+                        ...draft,
+                        id: `t-dup-${Date.now()}`,
+                        name: `Copy of ${draft.name}`,
+                        meetingsCreated: 0,
+                      };
+                      onDuplicate?.(copy);
+                    }}
+                  >
+                    <ListItemIcon>
+                      <CopyIcon />
+                    </ListItemIcon>
+                    <ListItemText>Duplicate</ListItemText>
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem
+                    onClick={() => {
+                      setMoreMenuAnchor(null);
+                      setPendingAction(isArchived ? "unarchive" : "archive");
+                    }}
+                  >
+                    <ListItemIcon>
+                      {isArchived ? <UnarchiveIcon /> : <ArchiveIcon />}
+                    </ListItemIcon>
+                    <ListItemText>{isArchived ? "Unarchive" : "Archive"}</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </Stack>
+              </Box>
+              {lastEdited && (
+                <Tooltip
+                  title={`Edited by you on ${format(lastEdited, "MMMM d")} at ${format(lastEdited, "h:mm a")}`}
+                  placement="bottom-end"
+                >
+                  <Typography sx={{ fontSize: 12, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)", cursor: "default" }}>
+                    {formatEditedLabel(lastEdited)}
+                  </Typography>
+                </Tooltip>
+              )}
+            </Box>
           }
           containerProps={{
             sx: {

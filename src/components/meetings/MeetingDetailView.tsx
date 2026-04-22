@@ -25,6 +25,7 @@ import {
   Stack,
   SvgIcon,
   TextField,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -32,7 +33,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { format, parse } from "date-fns";
+import { differenceInHours, differenceInMinutes, format, isSameDay, parse } from "date-fns";
 import { useRef, useState } from "react";
 
 import ConfirmDialog from "./ConfirmDialog";
@@ -396,6 +397,16 @@ function StatusCard({
   );
 }
 
+function formatEditedLabel(date: Date): string {
+  const now = new Date();
+  const mins = differenceInMinutes(now, date);
+  if (mins < 1) return "Edited just now";
+  if (mins < 60) return `Edited ${mins}m ago`;
+  const hours = differenceInHours(now, date);
+  if (isSameDay(now, date)) return `Edited ${hours}h ago`;
+  return `Edited on ${format(date, "MMMM d")}`;
+}
+
 // ── Main component ─────────────────────────────────────────────────────────
 
 export default function MeetingDetailView({
@@ -417,12 +428,15 @@ export default function MeetingDetailView({
   const [draft, setDraft] = useState<Meeting>({ ...meeting });
   const [minutesStatus] = useState<MinutesStatus>("None");
   const [moreMenuAnchor, setMoreMenuAnchor] = useState<HTMLElement | null>(null);
+  const [lastEdited, setLastEdited] = useState<Date | null>(meeting.lastEdited ? new Date(meeting.lastEdited) : null);
   type PendingAction = 'make-active' | 'make-draft' | 'publish-to-site' | 'remove-from-site' | 'duplicate' | 'delete';
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
 
   const save = (partial: Partial<Meeting>) => {
-    const updated = { ...draft, ...partial };
+    const now = new Date();
+    const updated = { ...draft, ...partial, lastEdited: now.toISOString() };
     setDraft(updated);
+    setLastEdited(now);
     onUpdate(updated);
   };
 
@@ -478,48 +492,62 @@ export default function MeetingDetailView({
           </Typography>
         }
         moreButton={
-          <Stack direction="row" spacing={1} alignItems="center">
-            {draft.status === "Draft" && (
-              <Button variant="contained" onClick={() => setPendingAction("make-active")}>
-                Make active
-              </Button>
-            )}
-            <IconButton aria-label="More actions" onClick={(e) => setMoreMenuAnchor(e.currentTarget)}>
-              <MoreIcon />
-            </IconButton>
-            <Menu
-              anchorEl={moreMenuAnchor}
-              open={Boolean(moreMenuAnchor)}
-              onClose={() => setMoreMenuAnchor(null)}
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              transformOrigin={{ vertical: "top", horizontal: "right" }}
-            >
-              <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("duplicate"); }}>
-                <ListItemIcon><CopyIcon /></ListItemIcon>
-                <ListItemText>Duplicate</ListItemText>
-              </MenuItem>
-              {draft.status === "Active" && (
-                <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("make-draft"); }}>
-                  <ListItemIcon><EditIcon /></ListItemIcon>
-                  <ListItemText>Make draft</ListItemText>
-                </MenuItem>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", alignSelf: "stretch" }}>
+            <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              {draft.status === "Draft" && (
+                <Button variant="contained" onClick={() => setPendingAction("make-active")}>
+                  Make active
+                </Button>
               )}
-              <Box sx={{ borderBottom: `1px solid ${dividerColor}` }} />
-              <MenuItem
-                onClick={() => { setMoreMenuAnchor(null); setPendingAction("delete"); }}
-                sx={{
-                  color: "var(--lens-semantic-color-status-error-text)",
-                  "& .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
-                  "& .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
-                  "&:hover .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
-                  "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
-                }}
+              <IconButton aria-label="More actions" onClick={(e) => setMoreMenuAnchor(e.currentTarget)}>
+                <MoreIcon />
+              </IconButton>
+              <Menu
+                anchorEl={moreMenuAnchor}
+                open={Boolean(moreMenuAnchor)}
+                onClose={() => setMoreMenuAnchor(null)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
-                <ListItemIcon><TrashIcon /></ListItemIcon>
-                <ListItemText>Delete</ListItemText>
-              </MenuItem>
-            </Menu>
-          </Stack>
+                <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("duplicate"); }}>
+                  <ListItemIcon><CopyIcon /></ListItemIcon>
+                  <ListItemText>Duplicate</ListItemText>
+                </MenuItem>
+                {draft.status === "Active" && (
+                  <MenuItem onClick={() => { setMoreMenuAnchor(null); setPendingAction("make-draft"); }}>
+                    <ListItemIcon><EditIcon /></ListItemIcon>
+                    <ListItemText>Make draft</ListItemText>
+                  </MenuItem>
+                )}
+                <Box sx={{ borderBottom: `1px solid ${dividerColor}` }} />
+                <MenuItem
+                  onClick={() => { setMoreMenuAnchor(null); setPendingAction("delete"); }}
+                  sx={{
+                    color: "var(--lens-semantic-color-status-error-text)",
+                    "& .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+                    "& .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+                    "&:hover .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+                    "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+                  }}
+                >
+                  <ListItemIcon><TrashIcon /></ListItemIcon>
+                  <ListItemText>Delete</ListItemText>
+                </MenuItem>
+              </Menu>
+            </Stack>
+            </Box>
+            {lastEdited && (
+              <Tooltip
+                title={`Edited by you on ${format(lastEdited, "MMMM d")} at ${format(lastEdited, "h:mm a")}`}
+                placement="bottom-end"
+              >
+                <Typography sx={{ fontSize: 12, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)", cursor: "default" }}>
+                  {formatEditedLabel(lastEdited)}
+                </Typography>
+              </Tooltip>
+            )}
+          </Box>
         }
         containerProps={{ sx: {
           "--lens-component-page-header-desktop-middle-container-padding-bottom": "0px",

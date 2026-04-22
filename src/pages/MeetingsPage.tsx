@@ -1,7 +1,10 @@
 import { PageHeader } from "@diligentcorp/atlas-react-bundle";
 import AddIcon from "@diligentcorp/atlas-react-bundle/icons/Add";
 import AgendaIcon from "@diligentcorp/atlas-react-bundle/icons/Agenda";
+import ClockIcon from "@diligentcorp/atlas-react-bundle/icons/Clock";
 import ExpandDownIcon from "@diligentcorp/atlas-react-bundle/icons/ExpandDown";
+import LocationIcon from "@diligentcorp/atlas-react-bundle/icons/Location";
+import PageIcon from "@diligentcorp/atlas-react-bundle/icons/Page";
 import SortIcon from "@diligentcorp/atlas-react-bundle/icons/Sort";
 import CalendarIcon from "@diligentcorp/atlas-react-bundle/icons/Calendar";
 import GroupIcon from "@diligentcorp/atlas-react-bundle/icons/Group";
@@ -699,29 +702,40 @@ export default function MeetingsPage() {
             <TableBody>
               {visibleTemplates.map((template) => (
                 <TableRow key={template.id} id={`template-row-${template.id}`}>
-                  <TableCell sx={{ pl: 0, width: 300, minWidth: 300, maxWidth: 300, whiteSpace: "normal", wordBreak: "break-word" }}>
-                    <Stack direction="row" spacing={1} alignItems="center">
-                      <Typography
-                        variant="subtitle2"
-                        onClick={() => navigate(`/meetings/templates/${template.id}`, { state: { template } })}
-                        sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}
-                      >
-                        {template.name}
-                      </Typography>
-                      {template.status === "Archived" && <StatusChip label="Archived" />}
+                  <TableCell sx={{ pl: 0, width: 368, minWidth: 280, maxWidth: 368 }}>
+                    <Stack direction="row" alignItems="center" gap="12px">
+                      <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                        <PageIcon sx={{ width: 24, height: 24 }} />
+                      </Box>
+                      <Stack direction="row" alignItems="center" gap={1} minWidth={0}>
+                        <Typography
+                          variant="subtitle2"
+                          onClick={() => navigate(`/meetings/templates/${template.id}`, { state: { template } })}
+                          sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}
+                        >
+                          {template.name}
+                        </Typography>
+                        {template.status === "Archived" && <StatusChip label="Archived" />}
+                      </Stack>
                     </Stack>
                   </TableCell>
                   <TableCell>
                     <Stack direction="row" alignItems="center" gap="4px">
                       <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                      <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{template.committee}</Typography>
+                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{template.committee}</Typography>
                     </Stack>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{template.time ?? "—"}</Typography>
+                    <Stack direction="row" alignItems="center" gap="4px">
+                      <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><ClockIcon /></Box>
+                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{template.time ?? "—"}</Typography>
+                    </Stack>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2" sx={{ color: "var(--lens-semantic-color-type-muted)" }}>{template.location ?? "—"}</Typography>
+                    <Stack direction="row" alignItems="center" gap="4px">
+                      <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><LocationIcon /></Box>
+                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{template.location ?? "—"}</Typography>
+                    </Stack>
                   </TableCell>
                   <TableCell align="right" sx={{ pr: 0 }}>
                     <Stack direction="row" spacing={0.5} justifyContent="flex-end">

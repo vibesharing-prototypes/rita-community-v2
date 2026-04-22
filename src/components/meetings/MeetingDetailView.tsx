@@ -35,6 +35,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { differenceInHours, differenceInMinutes, format, isSameDay, parse } from "date-fns";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 import ConfirmDialog from "./ConfirmDialog";
 
@@ -424,6 +425,7 @@ export default function MeetingDetailView({
 }) {
   const { tokens } = useTheme();
   const dividerColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
+  const navigate = useNavigate();
 
   const [draft, setDraft] = useState<Meeting>({ ...meeting });
   const [minutesStatus] = useState<MinutesStatus>("None");
@@ -579,18 +581,13 @@ export default function MeetingDetailView({
                 <Typography flex={1} minWidth={0} sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
                   Agenda
                 </Typography>
-                {draft.agendaItems > 0 ? (
-                  <Stack direction="row" alignItems="center" gap={1.5}>
-                    <IconButton size="small" aria-label="Download agenda PDF">
-                      <DownloadIcon />
-                    </IconButton>
-                    <Button variant="outlined" size="small">View</Button>
-                  </Stack>
-                ) : (
-                  <Button variant="outlined" size="small" startIcon={
-                    <SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>
-                  }>Add</Button>
-                )}
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => navigate(`/meetings/${draft.id}/agenda`)}
+                >
+                  Edit
+                </Button>
               </Stack>
             </Box>
 

@@ -1,0 +1,618 @@
+{
+  "agendas": {
+    "m1": {
+      "categories": [
+        {
+          "id": "m1-cat-1",
+          "name": "Call to Order",
+          "order": 0,
+          "items": [
+            {
+              "id": "m1-i-1",
+              "subject": "Pledge of Allegiance",
+              "categoryId": "m1-cat-1",
+              "type": ["Procedural"],
+              "status": "Draft",
+              "publicContent": "Board members, staff, and guests will recite the Pledge of Allegiance to open the meeting.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            },
+            {
+              "id": "m1-i-2",
+              "subject": "Roll Call",
+              "categoryId": "m1-cat-1",
+              "type": ["Procedural"],
+              "status": "Draft",
+              "publicContent": "Board secretary will call the roll to establish a quorum.",
+              "staffContent": "Quorum requires 4 of 7 members present. As of this notice, all 7 members have confirmed attendance.",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] },
+              "lastModifiedBy": "Jordan Smith",
+              "lastModifiedAt": "2026-04-14T09:00:00Z"
+            },
+            {
+              "id": "m1-i-3",
+              "subject": "Approval of Agenda",
+              "categoryId": "m1-cat-1",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Motion to approve the agenda as presented, or with amendments.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            }
+          ]
+        },
+        {
+          "id": "m1-cat-2",
+          "name": "Consent Agenda",
+          "order": 1,
+          "items": [
+            {
+              "id": "m1-i-4",
+              "subject": "Approval of Minutes — March 18 Regular Board Meeting",
+              "categoryId": "m1-cat-2",
+              "type": ["Minutes"],
+              "status": "Draft",
+              "publicContent": "Approve the minutes from the March 18, 2026 Regular Board Meeting as presented.",
+              "staffContent": "Minutes attached. No corrections noted by staff.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "att-1", "filename": "minutes_march18_2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              },
+              "lastModifiedBy": "Alex Rivera",
+              "lastModifiedAt": "2026-04-12T14:30:00Z"
+            },
+            {
+              "id": "m1-i-5",
+              "subject": "Accounts Payable — March 2026",
+              "categoryId": "m1-cat-2",
+              "type": ["Action (Consent)"],
+              "status": "Draft",
+              "publicContent": "Approve accounts payable for March 2026 totaling $1,247,832.",
+              "staffContent": "AP register attached. Finance reviewed and approved all invoices. Three invoices over $50K flagged and reviewed separately.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "att-2", "filename": "ap_register_march2026.xlsx", "tier": "public" }],
+                "staff": [{ "id": "att-3", "filename": "ap_detail_internal.xlsx", "tier": "staff" }],
+                "executive": []
+              },
+              "lastModifiedBy": "Jordan Smith",
+              "lastModifiedAt": "2026-04-13T10:00:00Z"
+            },
+            {
+              "id": "m1-i-6",
+              "subject": "Personnel Report — March 2026",
+              "categoryId": "m1-cat-2",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Accept the personnel report for March 2026 as submitted by the Superintendent.",
+              "staffContent": "Includes 3 new hires, 1 resignation, and 2 retirements. Full detail in attached report.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "att-4", "filename": "personnel_report_march2026.pdf", "tier": "staff" }],
+                "executive": []
+              }
+            },
+            {
+              "id": "m1-i-7",
+              "subject": "Approval of Vendor Contracts under $25,000",
+              "categoryId": "m1-cat-2",
+              "type": ["Action (Consent)"],
+              "status": "Draft",
+              "publicContent": "Approve routine vendor contracts under the $25,000 board approval threshold.",
+              "staffContent": "List of 8 contracts attached. All reviewed by Purchasing and Legal.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "att-5", "filename": "vendor_contracts_march2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            },
+            {
+              "id": "m1-i-8",
+              "subject": "Acceptance of Donations",
+              "categoryId": "m1-cat-2",
+              "type": ["Action (Consent)"],
+              "status": "Draft",
+              "publicContent": "Accept donations received in March 2026 totaling $14,500 from community partners.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            }
+          ]
+        },
+        {
+          "id": "m1-cat-3",
+          "name": "Action Items",
+          "order": 2,
+          "items": [
+            {
+              "id": "m1-i-9",
+              "subject": "Approve 2026-27 Preliminary Budget",
+              "categoryId": "m1-cat-3",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Approve the 2026-27 Preliminary Budget as presented by the Superintendent and Director of Finance.",
+              "staffContent": "Budget reflects a 3.2% increase in operational expenditures driven by salary step increases and rising utilities costs. Reserve fund remains above the 10% statutory minimum.",
+              "executiveContent": "Confidential: projected budget shortfall of $420K in FY27 if enrollment decline continues. Contingency plan attached.",
+              "attachments": {
+                "public": [{ "id": "att-6", "filename": "preliminary_budget_2026-27.pdf", "tier": "public" }],
+                "staff": [{ "id": "att-7", "filename": "budget_detail_by_department.xlsx", "tier": "staff" }],
+                "executive": [{ "id": "att-8", "filename": "budget_contingency_plan_confidential.pdf", "tier": "executive" }]
+              },
+              "lastModifiedBy": "Jordan Smith",
+              "lastModifiedAt": "2026-04-14T08:45:00Z"
+            },
+            {
+              "id": "m1-i-10",
+              "subject": "First Reading — Policy 4.3 Travel and Expense Reimbursement",
+              "categoryId": "m1-cat-3",
+              "type": ["Information"],
+              "status": "Draft",
+              "publicContent": "First reading of proposed revisions to Policy 4.3 Travel and Expense Reimbursement. Second reading and action scheduled for May.",
+              "staffContent": "Key changes: increased per diem rate to align with federal GSA rates, added requirement for receipts over $25, added language on ride-share services.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "att-9", "filename": "policy_4-3_redline_draft.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            },
+            {
+              "id": "m1-i-11",
+              "subject": "Award Contract — HVAC Replacement, Building C",
+              "categoryId": "m1-cat-3",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Award contract for HVAC system replacement at Building C to the lowest responsive bidder.",
+              "staffContent": "Bid opened April 8. Lowest responsive bid: Meridian Mechanical, $387,400. Second bid: Pacific Climate Systems, $412,200. Facilities reviewed both bids; recommends award to Meridian.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "att-10", "filename": "hvac_bid_summary.pdf", "tier": "public" }],
+                "staff": [{ "id": "att-11", "filename": "hvac_bid_analysis_internal.pdf", "tier": "staff" }],
+                "executive": []
+              },
+              "lastModifiedBy": "Alex Rivera",
+              "lastModifiedAt": "2026-04-11T16:00:00Z"
+            },
+            {
+              "id": "m1-i-12",
+              "subject": "Approve 2026-27 Substitute List",
+              "categoryId": "m1-cat-3",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Approve the 2026-27 classified and certificated substitute employee lists as presented by Human Resources.",
+              "staffContent": "All candidates on the list have completed background checks, fingerprinting, and required onboarding paperwork.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "att-12", "filename": "substitute_list_2026-27.pdf", "tier": "staff" }],
+                "executive": []
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "m2": {
+      "categories": [
+        {
+          "id": "m2-cat-1",
+          "name": "Opening",
+          "order": 0,
+          "items": [
+            {
+              "id": "m2-i-1",
+              "subject": "Roll Call",
+              "categoryId": "m2-cat-1",
+              "type": ["Procedural"],
+              "status": "Draft",
+              "publicContent": "Committee chair will call the roll.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            },
+            {
+              "id": "m2-i-2",
+              "subject": "Review and Approval of Agenda",
+              "categoryId": "m2-cat-1",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Motion to approve the committee meeting agenda as presented.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            }
+          ]
+        },
+        {
+          "id": "m2-cat-2",
+          "name": "Budget Review",
+          "order": 1,
+          "items": [
+            {
+              "id": "m2-i-3",
+              "subject": "Q3 FY2026 Financial Report",
+              "categoryId": "m2-cat-2",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Review of third-quarter financial results compared to adopted budget. Year-to-date expenditures and revenues presented by the Director of Finance.",
+              "staffContent": "YTD expenditures at 74.2% of budget — on track. Revenue at 71.8% — slightly behind due to delayed state apportionment. No major variances to flag.",
+              "executiveContent": "Board-only note: enrollment tracking 1.8% below projection; if trend continues, we may need a mid-year budget revision in Q4.",
+              "attachments": {
+                "public": [{ "id": "m2-att-1", "filename": "q3_financial_report_fy2026.pdf", "tier": "public" }],
+                "staff": [{ "id": "m2-att-2", "filename": "q3_variance_analysis.xlsx", "tier": "staff" }],
+                "executive": [{ "id": "m2-att-3", "filename": "enrollment_projection_confidential.pdf", "tier": "executive" }]
+              },
+              "lastModifiedBy": "Jordan Smith",
+              "lastModifiedAt": "2026-04-21T16:05:00Z"
+            },
+            {
+              "id": "m2-i-4",
+              "subject": "Capital Planning — 5-Year Infrastructure Outlook",
+              "categoryId": "m2-cat-2",
+              "type": ["Discussion"],
+              "status": "Draft",
+              "publicContent": "Discussion of the district's 5-year capital infrastructure plan, including deferred maintenance priorities, funding sources, and potential bond measures.",
+              "staffContent": "Facilities assessment completed in February identified $8.2M in deferred maintenance across 6 sites. Presentation includes three funding scenarios.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m2-att-4", "filename": "capital_plan_5yr_overview.pdf", "tier": "public" }],
+                "staff": [{ "id": "m2-att-5", "filename": "facilities_assessment_full.pdf", "tier": "staff" }],
+                "executive": []
+              }
+            },
+            {
+              "id": "m2-i-5",
+              "subject": "Revenue Projections — State Funding Update",
+              "categoryId": "m2-cat-2",
+              "type": ["Information"],
+              "status": "Draft",
+              "publicContent": "Update on state LCFF funding projections based on the Governor's revised budget proposal released April 10.",
+              "staffContent": "Revised projection shows $340K less in LCFF than our adopted budget assumed. Finance recommends reducing discretionary reserves by $200K and identifying $140K in expenditure reductions.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "m2-att-6", "filename": "lcff_projection_revised_april2026.pdf", "tier": "staff" }],
+                "executive": []
+              }
+            },
+            {
+              "id": "m2-i-6",
+              "subject": "Expenditure Review — Major Object Codes YTD",
+              "categoryId": "m2-cat-2",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Review of year-to-date expenditures by major object code: salaries, benefits, books and supplies, services, capital outlay.",
+              "staffContent": "Salaries tracking 1.4% over budget YTD due to more long-term substitute days than planned. Benefits on target. All other objects within budget.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m2-att-7", "filename": "expenditure_by_object_ytd.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            },
+            {
+              "id": "m2-i-7",
+              "subject": "Proposed Budget Amendments — April 2026",
+              "categoryId": "m2-cat-2",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Recommend to the full board approval of April 2026 budget amendments as presented.",
+              "staffContent": "Two amendments: (1) $78K transfer from contingency to Special Education support staff. (2) $24K additional from CTE grant for equipment purchase.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m2-att-8", "filename": "budget_amendments_april2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              },
+              "lastModifiedBy": "Alex Rivera",
+              "lastModifiedAt": "2026-04-20T11:30:00Z"
+            },
+            {
+              "id": "m2-i-8",
+              "subject": "Next Steps and Committee Recommendations",
+              "categoryId": "m2-cat-2",
+              "type": ["Discussion"],
+              "status": "Draft",
+              "publicContent": "Committee discussion of key takeaways and items to bring forward to the full board.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            }
+          ]
+        }
+      ]
+    },
+    "m3": {
+      "categories": []
+    },
+    "m4": {
+      "categories": [
+        {
+          "id": "m4-cat-1",
+          "name": "Opening",
+          "order": 0,
+          "items": [
+            {
+              "id": "m4-i-1",
+              "subject": "Roll Call and Quorum",
+              "categoryId": "m4-cat-1",
+              "type": ["Procedural"],
+              "status": "Draft",
+              "publicContent": "Committee chair will call the roll and establish quorum.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            },
+            {
+              "id": "m4-i-2",
+              "subject": "Approval of Previous Meeting Minutes",
+              "categoryId": "m4-cat-1",
+              "type": ["Minutes"],
+              "status": "Draft",
+              "publicContent": "Approve the minutes from the February 12, 2026 Audit & Risk Committee meeting.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m4-att-1", "filename": "minutes_audit_feb12_2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "m4-cat-2",
+          "name": "Internal Audit Update",
+          "order": 1,
+          "items": [
+            {
+              "id": "m4-i-3",
+              "subject": "Internal Audit Charter Annual Review",
+              "categoryId": "m4-cat-2",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Annual review and reaffirmation of the Internal Audit Charter as required by professional standards.",
+              "staffContent": "No substantive changes proposed. Minor wording update to Section 3 (scope) to clarify technology audit coverage.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m4-att-2", "filename": "internal_audit_charter_2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            },
+            {
+              "id": "m4-i-4",
+              "subject": "FY2026 Audit Plan Progress Report",
+              "categoryId": "m4-cat-2",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Status update on completion of the FY2026 internal audit plan.",
+              "staffContent": "4 of 7 planned audits complete. Payroll audit and IT General Controls audit in progress. Benefits audit deferred to FY27 due to resource constraints.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "m4-att-3", "filename": "audit_plan_progress_fy2026.pdf", "tier": "staff" }],
+                "executive": []
+              },
+              "lastModifiedBy": "Jordan Smith",
+              "lastModifiedAt": "2026-04-18T14:00:00Z"
+            },
+            {
+              "id": "m4-i-5",
+              "subject": "Payroll Audit — Preliminary Findings",
+              "categoryId": "m4-cat-2",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Presentation of preliminary findings from the FY2026 payroll process audit.",
+              "staffContent": "Three findings identified: (1) Time card approval delays in 12% of sampled records. (2) Two instances of pay rate changes without documented HR sign-off. (3) Overtime calculation error in legacy timesheet system — estimated $3,200 impact, now corrected.",
+              "executiveContent": "Executive summary: no findings indicate systemic fraud risk. All findings have corrective actions assigned. Full report will be public at next meeting.",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "m4-att-4", "filename": "payroll_audit_preliminary.pdf", "tier": "staff" }],
+                "executive": [{ "id": "m4-att-5", "filename": "payroll_audit_exec_summary.pdf", "tier": "executive" }]
+              }
+            },
+            {
+              "id": "m4-i-6",
+              "subject": "Follow-up on Prior Audit Recommendations",
+              "categoryId": "m4-cat-2",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Status report on implementation of recommendations from prior internal audit reports.",
+              "staffContent": "Of 18 open recommendations: 12 fully implemented, 4 in progress (on schedule), 2 overdue. Overdue items: Purchasing controls (assigned to Director of Finance, new target date June 30) and IT access review (assigned to IT Director, new target date May 15).",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m4-att-6", "filename": "audit_recommendation_tracker.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "m4-cat-3",
+          "name": "Risk Register Review",
+          "order": 2,
+          "items": [
+            {
+              "id": "m4-i-7",
+              "subject": "Q1 FY2026 Risk Register Update",
+              "categoryId": "m4-cat-3",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Quarterly update to the district's enterprise risk register.",
+              "staffContent": "Two new risks added: (1) Cybersecurity — phishing incident in March affected 3 staff accounts (contained, no data breach). (2) Enrollment decline — trending 2.1% below projection. Three risks downgraded following mitigation. Full register attached.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "m4-att-7", "filename": "risk_register_q1_fy2026.pdf", "tier": "staff" }],
+                "executive": []
+              },
+              "lastModifiedBy": "Alex Rivera",
+              "lastModifiedAt": "2026-04-17T10:00:00Z"
+            },
+            {
+              "id": "m4-i-8",
+              "subject": "Cybersecurity Incident Report — March 2026",
+              "categoryId": "m4-cat-3",
+              "type": ["Reports"],
+              "status": "Draft",
+              "publicContent": "Briefing on the March 2026 phishing incident: scope, containment actions, and remediation steps.",
+              "staffContent": "Phishing email targeted payroll staff. 3 accounts compromised; MFA prevented unauthorized transactions. IT reset credentials within 4 hours. No student or financial data accessed. Remediation: mandatory phishing training for all staff by May 1.",
+              "executiveContent": "Full incident report and forensic summary provided to executive committee only. Insurance carrier notified per policy requirements.",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "m4-att-8", "filename": "cybersecurity_incident_report_march2026.pdf", "tier": "staff" }],
+                "executive": [{ "id": "m4-att-9", "filename": "cybersecurity_forensic_summary_confidential.pdf", "tier": "executive" }]
+              }
+            },
+            {
+              "id": "m4-i-9",
+              "subject": "Insurance Coverage Review — Annual Update",
+              "categoryId": "m4-cat-3",
+              "type": ["Information"],
+              "status": "Draft",
+              "publicContent": "Annual review of district insurance coverage: property, liability, cyber, and workers' compensation.",
+              "staffContent": "Cyber liability limit increased from $1M to $2M at renewal. All other lines renewed with no material changes. Total premium increase: 6.2%.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m4-att-10", "filename": "insurance_summary_2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            },
+            {
+              "id": "m4-i-10",
+              "subject": "Compliance Calendar — Upcoming Deadlines",
+              "categoryId": "m4-cat-3",
+              "type": ["Information"],
+              "status": "Draft",
+              "publicContent": "Review of upcoming statutory and regulatory compliance deadlines through Q2 FY2026.",
+              "staffContent": "Key upcoming deadlines: LCAP annual update due June 30, external audit fieldwork scheduled July 14-25, annual Williams compliance report due September 1.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m4-att-11", "filename": "compliance_calendar_q2_fy2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            },
+            {
+              "id": "m4-i-11",
+              "subject": "External Audit Planning — Engagement Letter",
+              "categoryId": "m4-cat-3",
+              "type": ["Action"],
+              "status": "Draft",
+              "publicContent": "Authorize the Superintendent to execute the engagement letter with Eide Bailly LLP for the FY2026 external audit.",
+              "staffContent": "Audit fee: $62,500, unchanged from FY2025. Fieldwork begins July 14. Preliminary results to committee in October.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m4-att-12", "filename": "audit_engagement_letter_fy2026.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            }
+          ]
+        },
+        {
+          "id": "m4-cat-4",
+          "name": "Closing",
+          "order": 3,
+          "items": [
+            {
+              "id": "m4-i-12",
+              "subject": "Committee Comments and Questions",
+              "categoryId": "m4-cat-4",
+              "type": ["Discussion"],
+              "status": "Draft",
+              "publicContent": "Open floor for committee member comments, questions, and items for future agendas.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            },
+            {
+              "id": "m4-i-13",
+              "subject": "Next Meeting Date",
+              "categoryId": "m4-cat-4",
+              "type": ["Procedural"],
+              "status": "Draft",
+              "publicContent": "Confirm the date of the next Audit & Risk Committee meeting.",
+              "staffContent": "Proposed: August 20, 2026, 3:00 PM.",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            },
+            {
+              "id": "m4-i-14",
+              "subject": "Adjournment",
+              "categoryId": "m4-cat-4",
+              "type": ["Procedural"],
+              "status": "Draft",
+              "publicContent": "Motion to adjourn the meeting.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            }
+          ]
+        }
+      ]
+    },
+    "m5": {
+      "categories": [
+        {
+          "id": "m5-cat-1",
+          "name": "Workshop Items",
+          "order": 0,
+          "items": [
+            {
+              "id": "m5-i-1",
+              "subject": "FY2027 Budget Development Timeline",
+              "categoryId": "m5-cat-1",
+              "type": ["Information"],
+              "status": "Draft",
+              "publicContent": "Overview of the FY2027 budget development schedule, key milestones, and board action dates.",
+              "staffContent": "First interim due December 15. Budget adoption deadline June 15. Public hearing required by June 1.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [{ "id": "m5-att-1", "filename": "budget_development_calendar_fy2027.pdf", "tier": "public" }],
+                "staff": [],
+                "executive": []
+              }
+            },
+            {
+              "id": "m5-i-2",
+              "subject": "Enrollment Projections and Revenue Assumptions",
+              "categoryId": "m5-cat-1",
+              "type": ["Discussion"],
+              "status": "Draft",
+              "publicContent": "Workshop discussion on enrollment trends and their impact on LCFF revenue projections for FY2027.",
+              "staffContent": "Demographer report attached. Three scenarios modeled: flat, -2%, -4% enrollment. Each has materially different revenue and staffing implications.",
+              "executiveContent": "",
+              "attachments": {
+                "public": [],
+                "staff": [{ "id": "m5-att-2", "filename": "enrollment_projections_fy2027.pdf", "tier": "staff" }],
+                "executive": []
+              }
+            },
+            {
+              "id": "m5-i-3",
+              "subject": "Preliminary Budget Priorities",
+              "categoryId": "m5-cat-1",
+              "type": ["Discussion"],
+              "status": "Draft",
+              "publicContent": "Board and staff discussion of strategic budget priorities for FY2027 to inform preliminary budget development.",
+              "staffContent": "",
+              "executiveContent": "",
+              "attachments": { "public": [], "staff": [], "executive": [] }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

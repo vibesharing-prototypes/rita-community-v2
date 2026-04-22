@@ -9,6 +9,7 @@ import MeetingDetailPage from "./pages/MeetingDetailPage.js";
 import TemplateDetailPage from "./pages/TemplateDetailPage.js";
 import CalendarPage from "./pages/CalendarPage.js";
 import PlaceholderPage from "./pages/PlaceholderPage.js";
+import AgendaEditorPage from "./pages/AgendaEditorPage.js";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="meetings/calendar" element={<CalendarPage />} />
         <Route path="meetings/templates/:id" element={<TemplateDetailPage />} />
         <Route path="meetings/:id" element={<MeetingDetailPage />} />
+        <Route path="meetings/:id/agenda" element={<AgendaEditorPage />} />
         <Route path="agenda" element={<PlaceholderPage title="Agenda items" />} />
         <Route path="policies" element={<PlaceholderPage title="Policies" />} />
         <Route path="library/files" element={<PlaceholderPage title="Files" />} />

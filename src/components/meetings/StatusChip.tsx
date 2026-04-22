@@ -35,7 +35,7 @@ export default function StatusChip({ label }: { label: string }) {
       whiteSpace: "nowrap",
     }}>
       {icon && (
-        <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, "& svg": { width: 16, height: 16, display: "block" } }}>
+        <Box sx={{ display: "flex", alignItems: "center", flexShrink: 0, "& svg": { width: 16, height: 16, display: "block" } }}>
           {icon}
         </Box>
       )}

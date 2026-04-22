@@ -354,24 +354,9 @@ export default function TemplateDetailView({
             (<EditableTitleField value={draft.name} onSave={(val) => save({ name: val })} />) as unknown as string
           }
           pageSubtitle={
-            <Stack direction="row" alignItems="center">
-              <Box
-                component="span"
-                sx={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  border: "1px solid #76777A",
-                  borderRadius: "100px",
-                  px: 1.5,
-                  height: 24,
-                  fontSize: 12,
-                  lineHeight: 1,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {draft.committee}
-              </Box>
-            </Stack>
+            <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
+              {draft.committee}
+            </Typography>
           }
           moreButton={
             <Stack direction="row" spacing={1} alignItems="center">

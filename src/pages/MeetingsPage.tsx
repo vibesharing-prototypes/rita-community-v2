@@ -604,7 +604,7 @@ export default function MeetingsPage() {
                     sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 3 }}
                   >
                     <Stack direction="row" alignItems="center" gap="12px" sx={{ width: 400, flexShrink: 0 }}>
-                      <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                      <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
                         <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                         <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                       </Box>
@@ -662,7 +662,7 @@ export default function MeetingsPage() {
                             sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 3 }}
                           >
                             <Stack direction="row" alignItems="center" gap="12px" sx={{ width: 400, flexShrink: 0 }}>
-                              <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                              <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
                                 <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                                 <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                               </Box>
@@ -711,7 +711,7 @@ export default function MeetingsPage() {
                 sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 3 }}
               >
                 <Stack direction="row" alignItems="center" gap="12px" sx={{ width: 400, flexShrink: 0 }}>
-                  <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                  <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lens-semantic-color-type-default)" }}>
                     <PageIcon sx={{ width: 24, height: 24 }} />
                   </Box>
                   <Stack direction="row" alignItems="center" gap={1} minWidth={0}>

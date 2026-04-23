@@ -18,7 +18,7 @@ export default function DateBadge({ month, day }: { month: string; day: string }
         flexShrink: 0,
         alignSelf: "stretch",
         textAlign: "center",
-        borderRadius: tokens.semantic?.radius?.lg?.value ?? "12px",
+        borderRadius: tokens.semantic?.radius?.md?.value ?? "8px",
         backgroundColor: background,
         color: textColor,
         px: "20px",

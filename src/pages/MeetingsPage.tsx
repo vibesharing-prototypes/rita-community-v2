@@ -44,6 +44,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { format } from "date-fns";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
@@ -149,6 +150,27 @@ export default function MeetingsPage() {
   const clearAllTemplateFilters = () => {
     setTemplateStatusFilter("All");
     setTemplateCommitteeFilter("");
+  };
+
+  const getActiveFilterLabel = (type: FilterType): string => {
+    switch (type) {
+      case "status": return statusFilter;
+      case "visibility": return visibilityFilter;
+      case "committee": return committeeFilter;
+      case "date": {
+        if (startDateFilter && endDateFilter)
+          return `${format(startDateFilter, "MMM d, yyyy")} – ${format(endDateFilter, "MMM d, yyyy")}`;
+        if (startDateFilter) return `After ${format(startDateFilter, "MMM d, yyyy")}`;
+        return `Before ${format(endDateFilter!, "MMM d, yyyy")}`;
+      }
+    }
+  };
+
+  const getActiveTemplateFilterLabel = (type: TemplateFilterType): string => {
+    switch (type) {
+      case "status": return templateStatusFilter;
+      case "committee": return templateCommitteeFilter;
+    }
   };
 
   const [newMenuAnchor, setNewMenuAnchor] = useState<null | HTMLElement>(null);
@@ -414,7 +436,7 @@ export default function MeetingsPage() {
                       {icon}
                     </Box>
                     <Typography sx={{ px: "4px", fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                      {label}
+                      {active ? getActiveTemplateFilterLabel(type) : label}
                     </Typography>
                     <Box
                       sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", flexShrink: 0, color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", borderRadius: "50%", "&:hover": { bgcolor: active ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
@@ -471,7 +493,7 @@ export default function MeetingsPage() {
                       whiteSpace: "nowrap",
                       fontFamily: "'Plus Jakarta Sans', sans-serif",
                     }}>
-                      {label}
+                      {active ? getActiveFilterLabel(type) : label}
                     </Typography>
                     {/* Trailing: X to clear (active) or chevron to open (inactive) */}
                     <Box

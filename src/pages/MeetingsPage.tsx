@@ -68,6 +68,7 @@ import meetingsData from "../data/meetings.json";
 
 export default function MeetingsPage() {
   const { presets, tokens } = useTheme();
+  const dividerColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { meetings: seedMeetings, templates: seedTemplates, committees } = meetingsData as {
@@ -595,53 +596,47 @@ export default function MeetingsPage() {
             upcomingMeetings.length === 0 ? (
               <Alert severity="info" sx={{ mt: 2 }}>No upcoming meetings</Alert>
             ) : (
-              <Table id="meetings-upcoming-list" sx={{ "& .MuiTableBody-root .MuiTableRow-root:last-child .MuiTableCell-root": { borderBottom: 0 }, "& .MuiTableRow-root": { background: "transparent" } }}>
-                <TableBody>
-                  {upcomingMeetings.map((meeting) => (
-                    <TableRow key={meeting.id} id={`meeting-row-${meeting.id}`}>
-                      <TableCell sx={{ pl: 0, width: 368, minWidth: 280, maxWidth: 368 }}>
-                        <Stack direction="row" alignItems="center" gap="12px">
-                          <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
-                            <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
-                            <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
-                          </Box>
-                          <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
-                            {meeting.name}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack direction="row" alignItems="center" gap="4px">
-                          <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                          <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
-                            {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
-                          </Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        <Stack direction="row" alignItems="center" gap="4px">
-                          <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                          <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
-                        </Stack>
-                      </TableCell>
-                      <TableCell>
-                        {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
-                      </TableCell>
-                      <TableCell align="right" sx={{ pr: 0 }}>
-                        <MeetingRowActions
-                          status={meeting.status}
-                          visibility={meeting.visibility}
-                          onMakeActive={() => setPendingAction({ type: "make-active", meeting })}
-                          onMakeDraft={() => setPendingAction({ type: "make-draft", meeting })}
-                          onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "publish-to-site" : "remove-from-site", meeting })}
-                          onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
-                          onDelete={() => setPendingAction({ type: "delete", meeting })}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <Stack id="meetings-upcoming-list" gap="12px" sx={{ mt: 1.5 }}>
+                {upcomingMeetings.map((meeting) => (
+                  <Box
+                    key={meeting.id}
+                    id={`meeting-row-${meeting.id}`}
+                    sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", px: 2, py: 1.5, display: "flex", alignItems: "center", gap: 2 }}
+                  >
+                    <Stack direction="row" alignItems="center" gap="12px" sx={{ flex: 1, minWidth: 0 }}>
+                      <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                        <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
+                        <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
+                      </Box>
+                      <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
+                        {meeting.name}
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" alignItems="center" gap="4px" sx={{ flexShrink: 0, minWidth: 200 }}>
+                      <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
+                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
+                        {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
+                      </Typography>
+                    </Stack>
+                    <Stack direction="row" alignItems="center" gap="4px" sx={{ flexShrink: 0, minWidth: 150 }}>
+                      <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
+                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
+                    </Stack>
+                    <Box sx={{ flexShrink: 0, minWidth: 80 }}>
+                      {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
+                    </Box>
+                    <MeetingRowActions
+                      status={meeting.status}
+                      visibility={meeting.visibility}
+                      onMakeActive={() => setPendingAction({ type: "make-active", meeting })}
+                      onMakeDraft={() => setPendingAction({ type: "make-draft", meeting })}
+                      onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "publish-to-site" : "remove-from-site", meeting })}
+                      onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
+                      onDelete={() => setPendingAction({ type: "delete", meeting })}
+                    />
+                  </Box>
+                ))}
+              </Stack>
             )
           )}
 
@@ -658,54 +653,48 @@ export default function MeetingsPage() {
                         <Box component="span" sx={{ fontWeight: 400 }}>({yearMeetings.length})</Box>
                       </Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{ p: 0 }}>
-                      <Table id={`meetings-year-${year}-list`} sx={{ "& .MuiTableBody-root .MuiTableRow-root:last-child .MuiTableCell-root": { borderBottom: 0 }, "& .MuiTableRow-root": { background: "transparent" } }}>
-                        <TableBody>
-                          {yearMeetings.map((meeting) => (
-                            <TableRow key={meeting.id} id={`meeting-row-${meeting.id}`}>
-                              <TableCell sx={{ pl: 2, width: 368, minWidth: 280, maxWidth: 368 }}>
-                                <Stack direction="row" alignItems="center" gap="12px">
-                                  <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
-                                    <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
-                                    <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
-                                  </Box>
-                                  <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
-                                    {meeting.name}
-                                  </Typography>
-                                </Stack>
-                              </TableCell>
-                              <TableCell>
-                                <Stack direction="row" alignItems="center" gap="4px">
-                                  <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
-                                    {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
-                                  </Typography>
-                                </Stack>
-                              </TableCell>
-                              <TableCell>
-                                <Stack direction="row" alignItems="center" gap="4px">
-                                  <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
-                                </Stack>
-                              </TableCell>
-                              <TableCell>
-                                {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
-                              </TableCell>
-                              <TableCell align="right" sx={{ pr: 2 }}>
-                                <MeetingRowActions
-                                  status={meeting.status}
-                                  visibility={meeting.visibility}
-                                  onMakeActive={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Active" as const } : m)))}
-                                  onMakeDraft={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Draft" as const } : m)))}
-                                  onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "publish-to-site" : "remove-from-site", meeting })}
-                                  onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
-                                  onDelete={() => setPendingAction({ type: "delete", meeting })}
-                                />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                    <AccordionDetails sx={{ px: 2, pb: 2, pt: 0 }}>
+                      <Stack id={`meetings-year-${year}-list`} gap="12px">
+                        {yearMeetings.map((meeting) => (
+                          <Box
+                            key={meeting.id}
+                            id={`meeting-row-${meeting.id}`}
+                            sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", px: 2, py: 1.5, display: "flex", alignItems: "center", gap: 2 }}
+                          >
+                            <Stack direction="row" alignItems="center" gap="12px" sx={{ flex: 1, minWidth: 0 }}>
+                              <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "12px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
+                                <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
+                                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
+                              </Box>
+                              <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
+                                {meeting.name}
+                              </Typography>
+                            </Stack>
+                            <Stack direction="row" alignItems="center" gap="4px" sx={{ flexShrink: 0, minWidth: 200 }}>
+                              <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
+                              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
+                                {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
+                              </Typography>
+                            </Stack>
+                            <Stack direction="row" alignItems="center" gap="4px" sx={{ flexShrink: 0, minWidth: 150 }}>
+                              <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
+                              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)" }}>{meeting.committee}</Typography>
+                            </Stack>
+                            <Box sx={{ flexShrink: 0, minWidth: 80 }}>
+                              {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
+                            </Box>
+                            <MeetingRowActions
+                              status={meeting.status}
+                              visibility={meeting.visibility}
+                              onMakeActive={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Active" as const } : m)))}
+                              onMakeDraft={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Draft" as const } : m)))}
+                              onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "publish-to-site" : "remove-from-site", meeting })}
+                              onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
+                              onDelete={() => setPendingAction({ type: "delete", meeting })}
+                            />
+                          </Box>
+                        ))}
+                      </Stack>
                     </AccordionDetails>
                   </Accordion>
                 );

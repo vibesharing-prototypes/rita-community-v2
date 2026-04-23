@@ -62,7 +62,7 @@ function OptionCard({
       <Box
         sx={{
           p: 1,
-          borderRadius: "12px",
+          borderRadius: "8px",
           backgroundColor: iconBg,
           display: "flex",
           alignItems: "center",

@@ -453,7 +453,7 @@ export default function MeetingDetailView({
           <OverflowBreadcrumbs
             items={[
               { id: "root", label: "Community v2", isDisabled: true },
-              { id: "meetings", label: "Meetings", isDisabled: true },
+              { id: "meetings", label: "Meetings" },
               { id: "tab", label: isUpcoming(draft.date) ? "Upcoming" : "Previous" },
               { id: "current", label: draft.name, isCurrent: true },
             ]}
@@ -480,7 +480,7 @@ export default function MeetingDetailView({
                 </Box>
               );
               return (
-                <Box component="button" onClick={onBack} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
+                <Box component="button" onClick={item.id === "meetings" ? () => navigate("/meetings?tab=upcoming") : onBack} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
                   {label}
                 </Box>
               );

@@ -489,9 +489,21 @@ export default function MeetingDetailView({
         }
         pageTitle={(<EditableTitleField value={draft.name} onSave={(val) => save({ name: val })} />) as unknown as string}
         pageSubtitle={
-          <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
-            {draft.committee}
-          </Typography>
+          <Stack direction="row" alignItems="center" gap="6px">
+            <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
+              {draft.committee}
+            </Typography>
+            {lastEdited && (
+              <>
+                <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px" }}>·</Typography>
+                <Tooltip title={`Edited by you on ${format(lastEdited, "MMMM d")} at ${format(lastEdited, "h:mm a")}`} placement="bottom-start">
+                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px", cursor: "default" }}>
+                    {formatEditedLabel(lastEdited)}
+                  </Typography>
+                </Tooltip>
+              </>
+            )}
+          </Stack>
         }
         moreButton={
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", alignSelf: "stretch" }}>
@@ -539,16 +551,6 @@ export default function MeetingDetailView({
               </Menu>
             </Stack>
             </Box>
-            {lastEdited && (
-              <Tooltip
-                title={`Edited by you on ${format(lastEdited, "MMMM d")} at ${format(lastEdited, "h:mm a")}`}
-                placement="bottom-end"
-              >
-                <Typography sx={{ fontSize: 12, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)", cursor: "default" }}>
-                  {formatEditedLabel(lastEdited)}
-                </Typography>
-              </Tooltip>
-            )}
           </Box>
         }
         containerProps={{ sx: {

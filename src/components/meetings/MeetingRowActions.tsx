@@ -37,7 +37,7 @@ export default function MeetingRowActions({
   const handleMenuClose = () => setMenuAnchor(null);
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="flex-end" gap="8px">
+    <Stack direction="row" alignItems="center" justifyContent="flex-end" gap="8px" sx={{ ml: "auto" }}>
       {status === "Draft" && (
         <Button
           variant="text"

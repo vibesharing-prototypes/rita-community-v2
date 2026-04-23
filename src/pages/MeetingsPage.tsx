@@ -612,7 +612,7 @@ export default function MeetingsPage() {
                         {meeting.name}
                       </Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center" gap="4px" sx={{ flex: 1, minWidth: 180 }}>
+                    <Stack direction="row" alignItems="center" gap="4px" sx={{ flexShrink: 0, minWidth: 180 }}>
                       <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
                       <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
                         {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
@@ -670,7 +670,7 @@ export default function MeetingsPage() {
                                 {meeting.name}
                               </Typography>
                             </Stack>
-                            <Stack direction="row" alignItems="center" gap="4px" sx={{ flex: 1, minWidth: 180 }}>
+                            <Stack direction="row" alignItems="center" gap="4px" sx={{ flexShrink: 0, minWidth: 180 }}>
                               <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
                               <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
                                 {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}

@@ -70,6 +70,22 @@
       "description": "The audit and risk committee meets to oversee the district's internal audit program, review findings from internal and external auditors, and monitor the status of the risk register. The committee ensures that controls are operating effectively and that significant risks are being actively managed.\n\nThis meeting includes updates from the internal audit team, discussion of any emerging compliance issues, and follow-up on outstanding audit recommendations from prior periods."
     },
     {
+      "id": "m5b",
+      "name": "Finance committee meeting",
+      "date": "2026-05-17",
+      "time": "2:00 PM",
+      "location": "District office · Room 204",
+      "committee": "Finance committee",
+      "status": "Active",
+      "visibility": "Internal",
+      "agendaStatus": "Published",
+      "agendaCategories": 3,
+      "agendaItems": 8,
+      "membersOnly": false,
+      "publicRTS": false,
+      "lastEdited": "2026-04-20T09:00:00.000Z"
+    },
+    {
       "id": "m5",
       "name": "Budget workshop",
       "date": "2026-05-20",

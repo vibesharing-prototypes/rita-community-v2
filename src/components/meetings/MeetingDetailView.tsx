@@ -480,7 +480,7 @@ export default function MeetingDetailView({
                 </Box>
               );
               return (
-                <Box component="button" onClick={item.id === "meetings" ? () => navigate("/meetings?tab=upcoming") : onBack} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
+                <Box component="button" onClick={item.id === "meetings" ? () => { onBack(); navigate("/meetings?tab=upcoming"); } : onBack} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
                   {label}
                 </Box>
               );

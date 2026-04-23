@@ -506,9 +506,7 @@ export default function MeetingDetailView({
           </Stack>
         }
         moreButton={
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", alignSelf: "stretch" }}>
-            <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
-            <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} alignItems="center">
               {draft.status === "Draft" && (
                 <Button variant="contained" onClick={() => setPendingAction("make-active")}>
                   Make active
@@ -550,8 +548,6 @@ export default function MeetingDetailView({
                 </MenuItem>
               </Menu>
             </Stack>
-            </Box>
-          </Box>
         }
         containerProps={{ sx: {
           "--lens-component-page-header-desktop-middle-container-padding-bottom": "0px",

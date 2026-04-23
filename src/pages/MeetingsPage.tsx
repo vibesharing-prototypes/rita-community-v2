@@ -412,7 +412,7 @@ export default function MeetingsPage() {
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "flex-start", mt: "-12px" }} id="meetings-content">
-        <Box sx={{ width: 300, flexShrink: 0 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
 
           {/* Filter chips row */}
           {filterRowVisible && activeTab === "templates" && (

@@ -601,9 +601,9 @@ export default function MeetingsPage() {
                   <Box
                     key={meeting.id}
                     id={`meeting-row-${meeting.id}`}
-                    sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 3 }}
+                    sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 2, overflow: "hidden", "@media (min-width: 960px)": { gap: 3 } }}
                   >
-                    <Stack direction="row" alignItems="center" gap="12px" sx={{ width: 400, flexShrink: 0 }}>
+                    <Stack direction="row" alignItems="center" gap="12px" sx={{ flex: 1, minWidth: 0 }}>
                       <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
                         <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                         <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
@@ -612,17 +612,17 @@ export default function MeetingsPage() {
                         {meeting.name}
                       </Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 240, flexShrink: 0 }}>
+                    <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 200, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                       <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
+                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                         {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
                       </Typography>
                     </Stack>
-                    <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0 }}>
+                    <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                       <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
                       <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{meeting.committee}</Typography>
                     </Stack>
-                    <Box sx={{ width: 90, flexShrink: 0 }}>
+                    <Box sx={{ width: 90, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                       {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
                     </Box>
                     <MeetingRowActions
@@ -659,9 +659,9 @@ export default function MeetingsPage() {
                           <Box
                             key={meeting.id}
                             id={`meeting-row-${meeting.id}`}
-                            sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 3 }}
+                            sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 2, overflow: "hidden", "@media (min-width: 960px)": { gap: 3 } }}
                           >
-                            <Stack direction="row" alignItems="center" gap="12px" sx={{ width: 400, flexShrink: 0 }}>
+                            <Stack direction="row" alignItems="center" gap="12px" sx={{ flex: 1, minWidth: 0 }}>
                               <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
                                 <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                                 <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
@@ -670,17 +670,17 @@ export default function MeetingsPage() {
                                 {meeting.name}
                               </Typography>
                             </Stack>
-                            <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 240, flexShrink: 0 }}>
+                            <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 200, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                               <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap" }}>
+                              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                 {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
                               </Typography>
                             </Stack>
-                            <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0 }}>
+                            <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                               <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
                               <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{meeting.committee}</Typography>
                             </Stack>
-                            <Box sx={{ width: 90, flexShrink: 0 }}>
+                            <Box sx={{ width: 90, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                               {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
                             </Box>
                             <MeetingRowActions
@@ -708,9 +708,9 @@ export default function MeetingsPage() {
               <Box
                 key={template.id}
                 id={`template-row-${template.id}`}
-                sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 3 }}
+                sx={{ border: `1px solid ${dividerColor}`, borderRadius: "12px", backgroundColor: "white", p: 1.5, display: "flex", alignItems: "center", gap: 2, overflow: "hidden", "@media (min-width: 960px)": { gap: 3 } }}
               >
-                <Stack direction="row" alignItems="center" gap="12px" sx={{ width: 400, flexShrink: 0 }}>
+                <Stack direction="row" alignItems="center" gap="12px" sx={{ flex: 1, minWidth: 0 }}>
                   <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--lens-semantic-color-type-default)" }}>
                     <PageIcon sx={{ width: 24, height: 24 }} />
                   </Box>
@@ -725,15 +725,15 @@ export default function MeetingsPage() {
                     {template.status === "Archived" && <StatusChip label="Archived" />}
                   </Stack>
                 </Stack>
-                <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0 }}>
+                <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                   <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
                   <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.committee}</Typography>
                 </Stack>
-                <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 120, flexShrink: 0 }}>
+                <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 120, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                   <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><ClockIcon /></Box>
                   <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.time ?? "—"}</Typography>
                 </Stack>
-                <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 180, flexShrink: 0 }}>
+                <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 180, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                   <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><LocationIcon /></Box>
                   <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.location ?? "—"}</Typography>
                 </Stack>

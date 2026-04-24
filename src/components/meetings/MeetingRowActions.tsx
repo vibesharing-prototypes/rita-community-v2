@@ -37,7 +37,7 @@ export default function MeetingRowActions({
   const handleMenuClose = () => setMenuAnchor(null);
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="flex-end" gap="8px" sx={{ ml: "auto" }}>
+    <Stack direction="row" alignItems="center" justifyContent="flex-end" gap="8px" sx={{ ml: "auto", flexShrink: 0, width: 140 }}>
       {status === "Draft" && (
         <Button
           variant="text"
@@ -46,6 +46,7 @@ export default function MeetingRowActions({
             e.stopPropagation();
             onMakeActive();
           }}
+          sx={{ whiteSpace: "nowrap" }}
         >
           Make active
         </Button>

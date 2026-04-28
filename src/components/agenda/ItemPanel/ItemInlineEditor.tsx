@@ -1,8 +1,13 @@
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
+import GroupIcon from "@diligentcorp/atlas-react-bundle/icons/Group";
+import HideIcon from "@diligentcorp/atlas-react-bundle/icons/Hide";
+import PaperClipIcon from "@diligentcorp/atlas-react-bundle/icons/PaperClip";
+import VisibleIcon from "@diligentcorp/atlas-react-bundle/icons/Visible";
 import {
-  Box, Button, IconButton, ListItemIcon, ListItemText,
-  Menu, MenuItem, Select, Stack, SvgIcon, TextField, Typography, useTheme,
+  Box, Divider, IconButton, ListItemIcon, ListItemText,
+  Menu, MenuItem, Stack, SvgIcon, TextField, Tooltip, Typography, useTheme,
 } from "@mui/material";
+import { differenceInHours, differenceInMinutes, format, isSameDay } from "date-fns";
 import { useEffect, useState } from "react";
 import type { AgendaAttachment, AgendaCategory, AgendaItem, AgendaItemType } from "../../../types/agenda";
 
@@ -11,61 +16,39 @@ const ALL_TYPES: AgendaItemType[] = [
   "Discussion", "Reports", "Procedural", "Presentation", "Good News",
 ];
 
-const PATH_EYE_OPEN = "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z";
-const PATH_EYE_OFF = "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z";
-const PATH_PEOPLE = "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z";
-const PATH_PAPERCLIP = "M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z";
 const PATH_MORE = "M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z";
 const PATH_TRASH = "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z";
 
 // ── Inline title ───────────────────────────────────────────────────────────
 
 function InlineTitle({ value, onSave }: { value: string; onSave: (v: string) => void }) {
-  const [editing, setEditing] = useState(false);
   const [val, setVal] = useState(value);
 
   useEffect(() => { setVal(value); }, [value]);
 
-  const commit = () => {
-    setEditing(false);
-    const trimmed = val.trim();
-    if (trimmed && trimmed !== value) onSave(trimmed);
-    else setVal(value);
-  };
-
-  if (editing) {
-    return (
-      <TextField
-        value={val}
-        onChange={(e) => setVal(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") { e.preventDefault(); commit(); }
-          if (e.key === "Escape") { setVal(value); setEditing(false); }
-        }}
-        autoFocus
-        fullWidth
-        variant="standard"
-        inputProps={{ style: { fontSize: 20, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.15px" } }}
-        sx={{
-          "& .MuiInput-underline:before": { borderBottomColor: "transparent" },
-          "& .MuiInput-underline:hover:before": { borderBottomColor: "transparent !important" },
-        }}
-      />
-    );
-  }
-
   return (
-    <Typography
-      onClick={() => setEditing(true)}
-      sx={{
-        fontSize: 20, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.15px",
-        cursor: "text", borderRadius: "4px", px: "4px", mx: "-4px",
-        "&:hover": { bgcolor: "action.hover" },
+    <TextField
+      value={val}
+      onChange={(e) => setVal(e.target.value)}
+      onBlur={() => {
+        const trimmed = val.trim();
+        if (trimmed && trimmed !== value) onSave(trimmed);
+        else setVal(value);
       }}
-    >
-      {value}
-    </Typography>
+      onKeyDown={(e) => {
+        if (e.key === "Enter") { e.preventDefault(); (e.target as HTMLElement).blur(); }
+        if (e.key === "Escape") { setVal(value); (e.target as HTMLElement).blur(); }
+      }}
+      fullWidth
+      variant="standard"
+      inputProps={{ style: { fontSize: 20, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.15px", fontFamily: "inherit", padding: 0 } }}
+      sx={{
+        mx: "-4px",
+        "& .MuiInput-root": { borderRadius: "4px", px: "4px", "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" } },
+        "& .MuiInput-root::before": { borderBottom: "none !important" },
+        "& .MuiInput-root::after": { borderBottom: "none" },
+      }}
+    />
   );
 }
 
@@ -74,52 +57,71 @@ function InlineTitle({ value, onSave }: { value: string; onSave: (v: string) => 
 function InlineDescription({
   value, onSave, placeholder,
 }: { value: string; onSave: (v: string) => void; placeholder: string }) {
-  const [editing, setEditing] = useState(false);
   const [val, setVal] = useState(value);
 
   useEffect(() => { setVal(value); }, [value]);
 
-  const commit = () => {
-    setEditing(false);
-    if (val !== value) onSave(val);
-  };
-
-  if (editing) {
-    return (
-      <TextField
-        value={val}
-        onChange={(e) => setVal(e.target.value)}
-        onBlur={commit}
-        autoFocus
-        multiline
-        minRows={3}
-        fullWidth
-        variant="standard"
-        placeholder={placeholder}
-        inputProps={{ style: { fontSize: 14, lineHeight: "22px" } }}
-        sx={{
-          "& .MuiInput-underline:before": { borderBottomColor: "transparent" },
-          "& .MuiInput-underline:hover:before": { borderBottomColor: "transparent !important" },
-        }}
-      />
-    );
-  }
-
   return (
-    <Box
-      onClick={() => setEditing(true)}
+    <TextField
+      value={val}
+      onChange={(e) => setVal(e.target.value)}
+      onBlur={() => { if (val !== value) onSave(val); }}
+      onKeyDown={(e) => { if (e.key === "Escape") { setVal(value); (e.target as HTMLElement).blur(); } }}
+      multiline
+      minRows={3}
+      fullWidth
+      variant="standard"
+      placeholder={placeholder}
+      inputProps={{ style: { fontSize: 14, lineHeight: "22px", fontFamily: "inherit", padding: 0 } }}
       sx={{
-        minHeight: 66, cursor: "text", borderRadius: "4px",
-        px: "4px", mx: "-4px",
-        "&:hover": { bgcolor: "action.hover" },
+        mx: "-4px",
+        "& .MuiInput-root": { borderRadius: "4px", px: "4px", py: "4px", alignItems: "flex-start", "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" } },
+        "& .MuiInput-root::before": { borderBottom: "none !important" },
+        "& .MuiInput-root::after": { borderBottom: "none" },
       }}
-    >
-      {value ? (
-        <Typography sx={{ fontSize: 14, lineHeight: "22px", whiteSpace: "pre-wrap" }}>{value}</Typography>
-      ) : (
-        <Typography sx={{ fontSize: 14, lineHeight: "22px", color: "text.disabled" }}>{placeholder}</Typography>
-      )}
-    </Box>
+    />
+  );
+}
+
+// ── Type selector ─────────────────────────────────────────────────────────
+
+const PATH_CHEVRON_DOWN = "M7 10l5 5 5-5z";
+
+function TypeSelect({ value, onChange }: { value: AgendaItemType | ""; onChange: (v: AgendaItemType | "") => void }) {
+  const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+  return (
+    <>
+      <Box
+        component="button"
+        onClick={(e) => setAnchor(e.currentTarget)}
+        sx={{
+          background: "none", border: "none", cursor: "pointer", p: 0,
+          fontSize: 13, color: "text.secondary", fontFamily: "inherit", lineHeight: "20px",
+          display: "inline-flex", alignItems: "center", gap: "2px",
+          borderRadius: "4px", px: "4px", mx: "-4px",
+          "&:hover": { bgcolor: "action.hover" },
+        }}
+      >
+        <span>{value || "No type"}</span>
+        <SvgIcon sx={{ width: 16, height: 16, flexShrink: 0 }}>
+          <path d={PATH_CHEVRON_DOWN} />
+        </SvgIcon>
+      </Box>
+      <Menu
+        anchorEl={anchor}
+        open={Boolean(anchor)}
+        onClose={() => setAnchor(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <MenuItem onClick={() => { onChange(""); setAnchor(null); }} sx={{ fontSize: 13 }}>
+          <em>No type</em>
+        </MenuItem>
+        {ALL_TYPES.map((t) => (
+          <MenuItem key={t} onClick={() => { onChange(t); setAnchor(null); }} sx={{ fontSize: 13 }}>{t}</MenuItem>
+        ))}
+      </Menu>
+    </>
   );
 }
 
@@ -128,9 +130,7 @@ function InlineDescription({
 function AttachmentRow({ att }: { att: AgendaAttachment }) {
   return (
     <Stack direction="row" alignItems="center" gap={1}>
-      <SvgIcon sx={{ width: 16, height: 16, color: "text.secondary", flexShrink: 0 }}>
-        <path d={PATH_PAPERCLIP} />
-      </SvgIcon>
+      <PaperClipIcon sx={{ width: 16, height: 16, color: "text.secondary", flexShrink: 0 }} />
       <Typography
         sx={{
           fontSize: 13, color: "primary.main", flex: 1, minWidth: 0,
@@ -143,46 +143,33 @@ function AttachmentRow({ att }: { att: AgendaAttachment }) {
   );
 }
 
-// ── Content card ───────────────────────────────────────────────────────────
+// ── Content section ────────────────────────────────────────────────────────
 
-function ContentCard({
-  iconPath, label, content, attachments, onSave, placeholder,
+function ContentSection({
+  icon, label, content, attachments, onSave, placeholder,
 }: {
-  iconPath: string;
+  icon: React.ReactNode;
   label: string;
   content: string;
   attachments: AgendaAttachment[];
   onSave: (v: string) => void;
   placeholder: string;
 }) {
-  const { tokens } = useTheme();
-  const borderColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
-
   return (
-    <Box sx={{ border: `1px solid ${borderColor}`, borderRadius: "8px", overflow: "hidden" }}>
+    <Box sx={{ px: 2.5, py: 2 }}>
       <Stack
         direction="row"
         alignItems="center"
         gap={1}
-        sx={{ px: 2, py: 1.25, borderBottom: `1px solid ${borderColor}` }}
+        sx={{ mb: 1, "& > svg:first-of-type": { width: 20, height: 20, color: "text.secondary", flexShrink: 0 } }}
       >
-        <SvgIcon sx={{ width: 20, height: 20, color: "text.secondary", flexShrink: 0 }}>
-          <path d={iconPath} />
-        </SvgIcon>
+        {icon}
         <Typography sx={{ fontSize: 14, fontWeight: 600, flex: 1 }}>{label}</Typography>
-        <Button
-          size="small"
-          startIcon={
-            <SvgIcon sx={{ width: 15, height: 15 }}><path d={PATH_PAPERCLIP} /></SvgIcon>
-          }
-          sx={{ fontSize: 13, color: "text.secondary", textTransform: "none", flexShrink: 0 }}
-          disabled
-        >
-          Attach file
-        </Button>
+        <IconButton size="small" disabled sx={{ color: "text.secondary", flexShrink: 0 }}>
+          <PaperClipIcon sx={{ width: 18, height: 18 }} />
+        </IconButton>
       </Stack>
-
-      <Box sx={{ px: 2, py: 1.5 }}>
+      <Box sx={{ pl: "28px" }}>
         <InlineDescription value={content} onSave={onSave} placeholder={placeholder} />
         {attachments.length > 0 && (
           <Stack gap={0.75} sx={{ mt: 1.5 }}>
@@ -192,6 +179,18 @@ function ContentCard({
       </Box>
     </Box>
   );
+}
+
+// ── Edited label ──────────────────────────────────────────────────────────
+
+function formatEditedLabel(date: Date): string {
+  const now = new Date();
+  const mins = differenceInMinutes(now, date);
+  if (mins < 1) return "Edited just now";
+  if (mins < 60) return `Edited ${mins}m ago`;
+  const hours = differenceInHours(now, date);
+  if (isSameDay(now, date)) return `Edited ${hours}h ago`;
+  return `Edited on ${format(date, "MMMM d")}`;
 }
 
 // ── Main component ─────────────────────────────────────────────────────────
@@ -209,6 +208,8 @@ export default function ItemInlineEditor({
   onDelete: (id: string) => void;
   onDuplicate: (item: AgendaItem) => void;
 }) {
+  const { tokens } = useTheme();
+  const borderColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
   const category = categories.find((c) => c.id === item.categoryId);
 
   const [subject, setSubject] = useState(item.subject);
@@ -216,6 +217,9 @@ export default function ItemInlineEditor({
   const [publicContent, setPublicContent] = useState(item.publicContent);
   const [staffContent, setStaffContent] = useState(item.staffContent);
   const [executiveContent, setExecutiveContent] = useState(item.executiveContent);
+  const [lastModifiedAt, setLastModifiedAt] = useState<Date | null>(
+    item.lastModifiedAt ? new Date(item.lastModifiedAt) : null
+  );
   const [moreAnchor, setMoreAnchor] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
@@ -224,130 +228,130 @@ export default function ItemInlineEditor({
     setPublicContent(item.publicContent);
     setStaffContent(item.staffContent);
     setExecutiveContent(item.executiveContent);
+    setLastModifiedAt(item.lastModifiedAt ? new Date(item.lastModifiedAt) : null);
   }, [item.id]);
 
-  const saved = (overrides: Partial<AgendaItem> = {}) => ({
-    ...item,
-    subject,
-    type: type ? [type] : [],
-    publicContent,
-    staffContent,
-    executiveContent,
-    lastModifiedAt: new Date().toISOString(),
-    ...overrides,
-  });
+  const saved = (overrides: Partial<AgendaItem> = {}) => {
+    const now = new Date();
+    setLastModifiedAt(now);
+    return {
+      ...item,
+      subject,
+      type: type ? [type] : [],
+      publicContent,
+      staffContent,
+      executiveContent,
+      lastModifiedAt: now.toISOString(),
+      ...overrides,
+    };
+  };
 
   return (
-    <Stack gap={2} sx={{ p: 2.5, height: "100%", overflowY: "auto" }}>
+    <Box sx={{ p: 2, height: "100%", overflowY: "auto", boxSizing: "border-box" }}>
+      <Box sx={{ border: `1px solid ${borderColor}`, borderRadius: "12px", bgcolor: "#fff", overflow: "hidden" }}>
 
-      {/* Header: title + more menu */}
-      <Stack direction="row" alignItems="flex-start" gap={1}>
-        <Box flex={1} minWidth={0}>
-          <InlineTitle
-            value={subject}
-            onSave={(v) => { setSubject(v); onSave(saved({ subject: v })); }}
-          />
+        {/* Header: title + more menu */}
+        <Stack direction="row" alignItems="flex-start" gap={1} sx={{ px: 2.5, pt: 2.5, pb: 2 }}>
+          <Box flex={1} minWidth={0}>
+            <InlineTitle
+              value={subject}
+              onSave={(v) => { setSubject(v); onSave(saved({ subject: v })); }}
+            />
 
-          {/* Category · Type */}
-          <Stack direction="row" alignItems="baseline" sx={{ mt: 0.5 }}>
-            {category && (
-              <Typography sx={{ fontSize: 13, color: "text.secondary", whiteSpace: "nowrap" }}>
-                {category.name}
-              </Typography>
+            {/* Category · Type */}
+            <Stack direction="row" alignItems="center" sx={{ mt: 0.5 }}>
+              {category && (
+                <Typography sx={{ fontSize: 13, color: "text.secondary", whiteSpace: "nowrap" }}>
+                  {category.name}
+                </Typography>
+              )}
+              {category && (
+                <Typography sx={{ fontSize: 13, color: "text.secondary", mx: "4px" }}>·</Typography>
+              )}
+              <TypeSelect
+                value={type}
+                onChange={(v) => { setType(v); onSave(saved({ type: v ? [v as AgendaItemType] : [] })); }}
+              />
+            </Stack>
+
+            {/* Edited label */}
+            {lastModifiedAt && (
+              <Tooltip title={`Edited by you on ${format(lastModifiedAt, "MMMM d")} at ${format(lastModifiedAt, "h:mm a")}`} placement="bottom-start">
+                <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px", cursor: "default", mt: 0.25 }}>
+                  {formatEditedLabel(lastModifiedAt)}
+                </Typography>
+              </Tooltip>
             )}
-            {category && (
-              <Typography sx={{ fontSize: 13, color: "text.secondary", mx: "4px" }}>·</Typography>
-            )}
-            <Select
-              value={type}
-              onChange={(e) => {
-                const v = e.target.value as AgendaItemType | "";
-                setType(v);
-                onSave(saved({ type: v ? [v as AgendaItemType] : [] }));
-              }}
-              variant="standard"
-              displayEmpty
+          </Box>
+
+          {/* More button */}
+          <IconButton
+            size="small"
+            onClick={(e) => setMoreAnchor(e.currentTarget)}
+            sx={{ flexShrink: 0, mt: "2px" }}
+          >
+            <SvgIcon sx={{ width: 20, height: 20 }}><path d={PATH_MORE} /></SvgIcon>
+          </IconButton>
+          <Menu
+            anchorEl={moreAnchor}
+            open={Boolean(moreAnchor)}
+            onClose={() => setMoreAnchor(null)}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <MenuItem onClick={() => { setMoreAnchor(null); onDuplicate(item); }}>
+              <ListItemIcon><CopyIcon /></ListItemIcon>
+              <ListItemText>Duplicate</ListItemText>
+            </MenuItem>
+            <Box sx={{ borderBottom: "1px solid", borderColor: "divider" }} />
+            <MenuItem
+              onClick={() => { setMoreAnchor(null); onDelete(item.id); }}
               sx={{
-                fontSize: 13, color: "text.secondary", fontFamily: "inherit", lineHeight: "20px",
-                "& .MuiSelect-select": { py: 0, pr: "18px !important", lineHeight: "20px", fontSize: 13, color: "text.secondary" },
-                "& .MuiInput-underline:before": { borderBottom: "none" },
-                "& .MuiInput-underline:after": { borderBottom: "none" },
-                "&:hover .MuiInput-underline:before": { borderBottom: "none !important" },
-                "& .MuiSvgIcon-root": { fontSize: 16, color: "text.secondary", right: 0 },
+                color: "var(--lens-semantic-color-status-error-text)",
+                "& .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+                "& .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+                "&:hover .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+                "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
               }}
             >
-              <MenuItem value="" sx={{ fontSize: 13 }}><em>No type</em></MenuItem>
-              {ALL_TYPES.map((t) => (
-                <MenuItem key={t} value={t} sx={{ fontSize: 13 }}>{t}</MenuItem>
-              ))}
-            </Select>
-          </Stack>
-        </Box>
+              <ListItemIcon>
+                <SvgIcon sx={{ width: 18, height: 18 }}><path d={PATH_TRASH} /></SvgIcon>
+              </ListItemIcon>
+              <ListItemText>Delete</ListItemText>
+            </MenuItem>
+          </Menu>
+        </Stack>
 
-        {/* More button */}
-        <IconButton
-          size="small"
-          onClick={(e) => setMoreAnchor(e.currentTarget)}
-          sx={{ flexShrink: 0, mt: "2px" }}
-        >
-          <SvgIcon sx={{ width: 20, height: 20 }}><path d={PATH_MORE} /></SvgIcon>
-        </IconButton>
-        <Menu
-          anchorEl={moreAnchor}
-          open={Boolean(moreAnchor)}
-          onClose={() => setMoreAnchor(null)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
-        >
-          <MenuItem onClick={() => { setMoreAnchor(null); onDuplicate(item); }}>
-            <ListItemIcon><CopyIcon /></ListItemIcon>
-            <ListItemText>Duplicate</ListItemText>
-          </MenuItem>
-          <Box sx={{ borderBottom: "1px solid", borderColor: "divider" }} />
-          <MenuItem
-            onClick={() => { setMoreAnchor(null); onDelete(item.id); }}
-            sx={{
-              color: "var(--lens-semantic-color-status-error-text)",
-              "& .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
-              "& .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
-              "&:hover .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
-              "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
-            }}
-          >
-            <ListItemIcon>
-              <SvgIcon sx={{ width: 18, height: 18 }}><path d={PATH_TRASH} /></SvgIcon>
-            </ListItemIcon>
-            <ListItemText>Delete</ListItemText>
-          </MenuItem>
-        </Menu>
-      </Stack>
+        {/* Content sections */}
+        <Divider />
+        <ContentSection
+          icon={<VisibleIcon />}
+          label="Public content"
+          content={publicContent}
+          attachments={item.attachments.public}
+          placeholder="Add public content…"
+          onSave={(v) => { setPublicContent(v); onSave(saved({ publicContent: v })); }}
+        />
+        <Divider />
+        <ContentSection
+          icon={<HideIcon />}
+          label="Staff content"
+          content={staffContent}
+          attachments={item.attachments.staff}
+          placeholder="Add staff content…"
+          onSave={(v) => { setStaffContent(v); onSave(saved({ staffContent: v })); }}
+        />
+        <Divider />
+        <ContentSection
+          icon={<GroupIcon />}
+          label="Executive content"
+          content={executiveContent}
+          attachments={item.attachments.executive}
+          placeholder="Add executive content…"
+          onSave={(v) => { setExecutiveContent(v); onSave(saved({ executiveContent: v })); }}
+        />
 
-      {/* Content cards */}
-      <ContentCard
-        iconPath={PATH_EYE_OPEN}
-        label="Public content"
-        content={publicContent}
-        attachments={item.attachments.public}
-        placeholder="Add public content…"
-        onSave={(v) => { setPublicContent(v); onSave(saved({ publicContent: v })); }}
-      />
-      <ContentCard
-        iconPath={PATH_EYE_OFF}
-        label="Staff content"
-        content={staffContent}
-        attachments={item.attachments.staff}
-        placeholder="Add staff content…"
-        onSave={(v) => { setStaffContent(v); onSave(saved({ staffContent: v })); }}
-      />
-      <ContentCard
-        iconPath={PATH_PEOPLE}
-        label="Executive content"
-        content={executiveContent}
-        attachments={item.attachments.executive}
-        placeholder="Add executive content…"
-        onSave={(v) => { setExecutiveContent(v); onSave(saved({ executiveContent: v })); }}
-      />
-
-    </Stack>
+      </Box>
+    </Box>
   );
 }

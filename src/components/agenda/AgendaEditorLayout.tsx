@@ -186,7 +186,7 @@ export default function AgendaEditorLayout({
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
 
       {/* ── Header ── */}
-      <Box sx={{ borderBottom: `1px solid ${dividerColor}`, pb: "12px", flexShrink: 0 }}>
+      <Box sx={{ borderBottom: `1px solid ${dividerColor}`, pt: 3, px: { xs: 2, sm: 3 }, pb: "12px", flexShrink: 0 }}>
         <PageHeader
           breadcrumbs={
             <OverflowBreadcrumbs
@@ -195,12 +195,14 @@ export default function AgendaEditorLayout({
                 { id: "meetings", label: "Meetings" },
                 { id: "tab", label: tab },
                 { id: "meeting", label: meeting.name },
+                { id: "current", label: "Agenda", isCurrent: true },
               ]}
             >
               {(item) => {
                 const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
                 const mutedSx = { ...baseSx, color: "#6f7377" };
                 const activeSx = { ...baseSx, color: "#282e37" };
+                if (item.isCurrent) return <span />;
                 if (item.id === "root") return (
                   <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
                     <Typography sx={{ ...mutedSx, letterSpacing: "0.2px" }}>{item.label}</Typography>

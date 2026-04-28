@@ -5,19 +5,6 @@ import type { AgendaItem } from "../../../types/agenda";
 
 const LETTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-function DraftBadge() {
-  return (
-    <Box sx={{
-      display: "inline-flex", alignItems: "center", height: 20,
-      bgcolor: "#F3F3F3", color: "#515255", borderRadius: "9999px",
-      px: "8px", flexShrink: 0,
-    }}>
-      <Typography sx={{ fontSize: 11, fontWeight: 600, lineHeight: "16px", letterSpacing: "0.3px" }}>
-        Draft
-      </Typography>
-    </Box>
-  );
-}
 
 export default function ItemRow({
   item,
@@ -126,7 +113,6 @@ export default function ItemRow({
           {hasAttachments && (
             <Typography sx={{ fontSize: 12 }} title="Has attachments">📎</Typography>
           )}
-          <DraftBadge />
         </Stack>
       )}
     </Stack>

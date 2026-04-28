@@ -249,7 +249,7 @@ export default function ItemInlineEditor({
           />
 
           {/* Category · Type */}
-          <Stack direction="row" alignItems="center" sx={{ mt: 0.5 }}>
+          <Stack direction="row" alignItems="baseline" sx={{ mt: 0.5 }}>
             {category && (
               <Typography sx={{ fontSize: 13, color: "text.secondary", whiteSpace: "nowrap" }}>
                 {category.name}

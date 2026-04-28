@@ -191,26 +191,29 @@ export default function AgendaEditorLayout({
           breadcrumbs={
             <OverflowBreadcrumbs
               items={[
-                { id: "root", label: "Community v2", isDisabled: true },
                 { id: "meetings", label: "Meetings" },
                 { id: "tab", label: tab },
                 { id: "meeting", label: meeting.name },
                 { id: "current", label: "Agenda", isCurrent: true },
               ]}
+              leadingElement={
+                <Box sx={{ height: 32, display: "flex", alignItems: "center" }}>
+                  <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", color: "#6f7377", letterSpacing: "0.2px", whiteSpace: "nowrap", px: "12px" }}>
+                    Community v2
+                  </Typography>
+                </Box>
+              }
             >
               {(item) => {
-                const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
-                const mutedSx = { ...baseSx, color: "#6f7377" };
+                const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const };
                 const activeSx = { ...baseSx, color: "#282e37" };
                 if (item.isCurrent) return <span />;
-                if (item.id === "root") return (
-                  <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
-                    <Typography sx={{ ...mutedSx, letterSpacing: "0.2px" }}>{item.label}</Typography>
-                  </Box>
-                );
+                const isMeeting = item.id === "meeting";
                 const label = (
                   <Box sx={{ display: "flex", alignItems: "center", height: 24, px: "4px" }}>
-                    <Typography sx={activeSx}>{item.label}</Typography>
+                    <Typography sx={{ ...activeSx, ...(isMeeting ? { maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis" } : {}) }}>
+                      {item.label}
+                    </Typography>
                   </Box>
                 );
                 const destinations: Record<string, string> = {

@@ -8,7 +8,6 @@ import { useNavigate } from "react-router";
 import type { AgendaCategory, AgendaItem } from "../../types/agenda";
 import type { Meeting } from "../../types/meetings";
 import { isUpcoming } from "../../utils/meetings";
-import StatusChip from "../meetings/StatusChip";
 import AgendaToolbar from "./AgendaToolbar";
 import AgendaTree from "./AgendaTree/AgendaTree";
 import ItemDetailView from "./ItemPanel/ItemDetailView";
@@ -229,12 +228,7 @@ export default function AgendaEditorLayout({
               }}
             </OverflowBreadcrumbs>
           }
-          pageTitle={
-            (<Stack direction="row" alignItems="center" gap={1.5}>
-              <Typography sx={{ fontSize: 24, fontWeight: 700, lineHeight: "32px" }}>Agenda</Typography>
-              <StatusChip label={meeting.status} />
-            </Stack>) as unknown as string
-          }
+          pageTitle={"Agenda"}
           pageSubtitle={
             <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
               {meeting.committee}

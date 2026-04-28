@@ -97,6 +97,21 @@ export default function AgendaEditorLayout({
     setSelectedItemId(null);
   };
 
+  const handleDuplicateItem = (item: AgendaItem) => {
+    const newId = generateId();
+    const copy = { ...item, id: newId, subject: `${item.subject} (copy)` };
+    setCategories((prev) =>
+      prev.map((c) => {
+        if (c.id !== item.categoryId) return c;
+        const idx = c.items.findIndex((i) => i.id === item.id);
+        const items = [...c.items];
+        items.splice(idx + 1, 0, copy);
+        return { ...c, items };
+      })
+    );
+    setSelectedItemId(newId);
+  };
+
   // ── Add Item dialog ────────────────────────────────────────────────────────
 
   const openAddItem = (prefillCategoryId?: string) => {
@@ -239,6 +254,7 @@ export default function AgendaEditorLayout({
               categories={categories}
               onSave={handleSaveItem}
               onDelete={handleDeleteItem}
+              onDuplicate={handleDuplicateItem}
             />
           ) : (
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", p: 3 }}>

@@ -1,3 +1,4 @@
+import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
 import {
   Box, Button, IconButton, ListItemIcon, ListItemText,
   Menu, MenuItem, Select, Stack, SvgIcon, TextField, Typography, useTheme,
@@ -200,11 +201,13 @@ export default function ItemInlineEditor({
   categories,
   onSave,
   onDelete,
+  onDuplicate,
 }: {
   item: AgendaItem;
   categories: AgendaCategory[];
   onSave: (updated: AgendaItem) => void;
   onDelete: (id: string) => void;
+  onDuplicate: (item: AgendaItem) => void;
 }) {
   const category = categories.find((c) => c.id === item.categoryId);
 
@@ -265,12 +268,12 @@ export default function ItemInlineEditor({
               variant="standard"
               displayEmpty
               sx={{
-                fontSize: 13, color: "text.secondary",
-                "& .MuiSelect-select": { py: 0, pr: "20px !important" },
+                fontSize: 13, color: "text.secondary", fontFamily: "inherit", lineHeight: "20px",
+                "& .MuiSelect-select": { py: 0, pr: "18px !important", lineHeight: "20px", fontSize: 13, color: "text.secondary" },
                 "& .MuiInput-underline:before": { borderBottom: "none" },
                 "& .MuiInput-underline:after": { borderBottom: "none" },
                 "&:hover .MuiInput-underline:before": { borderBottom: "none !important" },
-                "& .MuiSvgIcon-root": { fontSize: 18, color: "text.secondary" },
+                "& .MuiSvgIcon-root": { fontSize: 16, color: "text.secondary", right: 0 },
               }}
             >
               <MenuItem value="" sx={{ fontSize: 13 }}><em>No type</em></MenuItem>
@@ -296,11 +299,19 @@ export default function ItemInlineEditor({
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
+          <MenuItem onClick={() => { setMoreAnchor(null); onDuplicate(item); }}>
+            <ListItemIcon><CopyIcon /></ListItemIcon>
+            <ListItemText>Duplicate</ListItemText>
+          </MenuItem>
+          <Box sx={{ borderBottom: "1px solid", borderColor: "divider" }} />
           <MenuItem
             onClick={() => { setMoreAnchor(null); onDelete(item.id); }}
             sx={{
               color: "var(--lens-semantic-color-status-error-text)",
               "& .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+              "& .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
+              "&:hover .MuiListItemIcon-root": { color: "var(--lens-semantic-color-status-error-text)" },
+              "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
             }}
           >
             <ListItemIcon>

@@ -10,9 +10,7 @@ import type { Meeting } from "../../types/meetings";
 import { isUpcoming } from "../../utils/meetings";
 import AgendaToolbar from "./AgendaToolbar";
 import AgendaTree from "./AgendaTree/AgendaTree";
-import ItemDetailView from "./ItemPanel/ItemDetailView";
-import ItemEditForm from "./ItemPanel/ItemEditForm";
-import ConfirmDialog from "../meetings/ConfirmDialog";
+import ItemInlineEditor from "./ItemPanel/ItemInlineEditor";
 
 function generateId() {
   return `new-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -31,12 +29,6 @@ export default function AgendaEditorLayout({
 
   const [categories, setCategories] = useState<AgendaCategory[]>(initialCategories);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
-  const [editingItemId, setEditingItemId] = useState<string | null>(null);
-  const [isDirty, setIsDirty] = useState(false);
-
-  // Unsaved changes guard
-  const [pendingItemId, setPendingItemId] = useState<string | null>(null);
-  const [unsavedDialogOpen, setUnsavedDialogOpen] = useState(false);
 
   // Add item dialog
   const [addItemOpen, setAddItemOpen] = useState(false);
@@ -51,25 +43,6 @@ export default function AgendaEditorLayout({
       const item = cat.items.find((i) => i.id === id);
       if (item) return item;
     }
-  };
-
-  const requestSelectItem = (id: string) => {
-    if (isDirty && editingItemId && id !== editingItemId) {
-      setPendingItemId(id);
-      setUnsavedDialogOpen(true);
-    } else {
-      setSelectedItemId(id);
-      setEditingItemId(null);
-      setIsDirty(false);
-    }
-  };
-
-  const discardAndNavigate = (nextId: string | null) => {
-    setIsDirty(false);
-    setEditingItemId(null);
-    setSelectedItemId(nextId);
-    setPendingItemId(null);
-    setUnsavedDialogOpen(false);
   };
 
   // ── Category actions ───────────────────────────────────────────────────────
@@ -92,7 +65,6 @@ export default function AgendaEditorLayout({
     setCategories((prev) => prev.filter((c) => c.id !== id));
     if (deleted?.items.some((i) => i.id === selectedItemId)) {
       setSelectedItemId(null);
-      setEditingItemId(null);
     }
   };
 
@@ -110,21 +82,12 @@ export default function AgendaEditorLayout({
   const handleSaveItem = (updated: AgendaItem) => {
     setCategories((prev) =>
       prev.map((c) => {
-        // Remove from old category if moved
-        const withoutItem = c.items.filter((i) => i.id !== updated.id);
         if (c.id === updated.categoryId) {
-          // Check if it was here before or is being moved here
-          const wasHere = c.items.some((i) => i.id === updated.id);
-          if (wasHere) return { ...c, items: c.items.map((i) => i.id === updated.id ? updated : i) };
-          // Being moved here
-          return { ...c, items: [...withoutItem, updated] };
+          return { ...c, items: c.items.map((i) => i.id === updated.id ? updated : i) };
         }
-        return { ...c, items: withoutItem };
+        return c;
       })
     );
-    setEditingItemId(null);
-    setSelectedItemId(updated.id);
-    setIsDirty(false);
   };
 
   const handleDeleteItem = (id: string) => {
@@ -132,8 +95,6 @@ export default function AgendaEditorLayout({
       prev.map((c) => ({ ...c, items: c.items.filter((i) => i.id !== id) }))
     );
     setSelectedItemId(null);
-    setEditingItemId(null);
-    setIsDirty(false);
   };
 
   // ── Add Item dialog ────────────────────────────────────────────────────────
@@ -164,8 +125,6 @@ export default function AgendaEditorLayout({
     );
     setAddItemOpen(false);
     setSelectedItemId(id);
-    setEditingItemId(id);
-    setIsDirty(false);
   };
 
   // ── Reorder ────────────────────────────────────────────────────────────────
@@ -177,7 +136,6 @@ export default function AgendaEditorLayout({
   // ── Render ─────────────────────────────────────────────────────────────────
 
   const selectedItem = selectedItemId ? findItem(selectedItemId) : null;
-  const editingItem = editingItemId ? findItem(editingItemId) : null;
 
   const tab = isUpcoming(meeting.date) ? "Upcoming" : "Previous";
 
@@ -263,7 +221,7 @@ export default function AgendaEditorLayout({
           <AgendaTree
             categories={categories}
             selectedItemId={selectedItemId}
-            onSelectItem={requestSelectItem}
+            onSelectItem={setSelectedItemId}
             onReorder={handleReorder}
             onRenameCategory={handleRenameCategory}
             onDeleteCategory={handleDeleteCategory}
@@ -275,21 +233,12 @@ export default function AgendaEditorLayout({
 
         {/* Right: Item panel */}
         <Box sx={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
-          {editingItem ? (
-            <ItemEditForm
-              item={editingItem}
-              categories={categories}
-              onSave={handleSaveItem}
-              onCancel={() => {
-                setEditingItemId(null);
-                setIsDirty(false);
-              }}
-            />
-          ) : selectedItem ? (
-            <ItemDetailView
+          {selectedItem ? (
+            <ItemInlineEditor
               item={selectedItem}
               categories={categories}
-              onEdit={() => setEditingItemId(selectedItemId)}
+              onSave={handleSaveItem}
+              onDelete={handleDeleteItem}
             />
           ) : (
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", p: 3 }}>
@@ -341,16 +290,6 @@ export default function AgendaEditorLayout({
         </DialogActions>
       </Dialog>
 
-      {/* ── Unsaved changes guard ── */}
-      <ConfirmDialog
-        open={unsavedDialogOpen}
-        title="You have unsaved changes"
-        message="Your changes to this item haven't been saved. What would you like to do?"
-        confirmLabel="Discard changes"
-        destructive
-        onConfirm={() => discardAndNavigate(pendingItemId)}
-        onClose={() => { setPendingItemId(null); setUnsavedDialogOpen(false); }}
-      />
     </Box>
   );
 }

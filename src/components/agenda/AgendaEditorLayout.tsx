@@ -1,3 +1,4 @@
+import { OverflowBreadcrumbs, PageHeader } from "@diligentcorp/atlas-react-bundle";
 import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   MenuItem, Select, Stack, TextField, Typography, useTheme,
@@ -185,62 +186,70 @@ export default function AgendaEditorLayout({
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
 
       {/* ── Header ── */}
-      <Box sx={{ borderBottom: `1px solid ${dividerColor}`, px: 3, pt: 2, pb: 1.5, flexShrink: 0 }}>
-        {/* Breadcrumb row */}
-        <Stack direction="row" alignItems="center" gap={0} sx={{ mb: 1, flexWrap: "nowrap", overflow: "hidden" }}>
-          {[
-            { label: "Community v2", dest: null },
-            { label: "Meetings", dest: "/meetings" },
-            { label: tab, dest: `/meetings?tab=${tab.toLowerCase()}` },
-            { label: meeting.name, dest: `/meetings/${meeting.id}` },
-            { label: "Agenda", dest: null, current: true },
-          ].map((crumb, i, arr) => (
-            <Stack key={crumb.label} direction="row" alignItems="center" sx={{ flexShrink: i < arr.length - 2 ? 0 : 1, minWidth: 0 }}>
-              {crumb.dest ? (
-                <Box
-                  component="button"
-                  onClick={() => navigate(crumb.dest!)}
-                  sx={{
-                    background: "none", border: "none", cursor: "pointer", borderRadius: "8px",
-                    px: "8px", py: "4px", fontSize: 14, fontWeight: 600, lineHeight: "20px",
-                    color: "#282e37", fontFamily: "inherit",
-                    "&:hover": { bgcolor: "action.hover" },
-                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 200,
-                  }}
-                >
-                  {crumb.label}
-                </Box>
-              ) : (
-                <Box sx={{
-                  px: "8px", py: "4px", fontSize: 14, fontWeight: 600, lineHeight: "20px",
-                  color: crumb.current ? "#282e37" : "#6f7377",
-                  whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 200,
-                }}>
-                  {crumb.label}
-                </Box>
-              )}
-              {i < arr.length - 1 && (
-                <Box component="span" sx={{ color: "#9EA3A8", fontSize: 14, px: "2px", flexShrink: 0 }}>›</Box>
-              )}
-            </Stack>
-          ))}
-        </Stack>
-
-        {/* Title + actions row */}
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-          <Stack direction="row" alignItems="center" gap={1.5}>
-            <Typography sx={{ fontSize: 24, fontWeight: 700, lineHeight: "32px" }}>Agenda</Typography>
-            <StatusChip label={meeting.status} />
-          </Stack>
-          <AgendaToolbar
-            onAddCategory={handleAddCategory}
-            onAddItem={() => openAddItem()}
-            hasCategories={categories.length > 0}
-          />
-        </Stack>
-
-        {/* Subtitle */}
-        <Typography sx={{ fontSize: 14, color: "text.secondary", mt: 0.5 }}>{meeting.name}</Typography>
+      <Box sx={{ borderBottom: `1px solid ${dividerColor}`, pb: "12px", flexShrink: 0 }}>
+        <PageHeader
+          breadcrumbs={
+            <OverflowBreadcrumbs
+              items={[
+                { id: "root", label: "Community v2", isDisabled: true },
+                { id: "meetings", label: "Meetings" },
+                { id: "tab", label: tab },
+                { id: "meeting", label: meeting.name },
+              ]}
+            >
+              {(item) => {
+                const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
+                const mutedSx = { ...baseSx, color: "#6f7377" };
+                const activeSx = { ...baseSx, color: "#282e37" };
+                if (item.id === "root") return (
+                  <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
+                    <Typography sx={{ ...mutedSx, letterSpacing: "0.2px" }}>{item.label}</Typography>
+                  </Box>
+                );
+                const label = (
+                  <Box sx={{ display: "flex", alignItems: "center", height: 24, px: "4px" }}>
+                    <Typography sx={activeSx}>{item.label}</Typography>
+                  </Box>
+                );
+                const destinations: Record<string, string> = {
+                  meetings: "/meetings",
+                  tab: `/meetings?tab=${tab.toLowerCase()}`,
+                  meeting: `/meetings/${meeting.id}`,
+                };
+                return (
+                  <Box component="button" onClick={() => navigate(destinations[item.id])} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
+                    {label}
+                  </Box>
+                );
+              }}
+            </OverflowBreadcrumbs>
+          }
+          pageTitle={
+            (<Stack direction="row" alignItems="center" gap={1.5}>
+              <Typography sx={{ fontSize: 24, fontWeight: 700, lineHeight: "32px" }}>Agenda</Typography>
+              <StatusChip label={meeting.status} />
+            </Stack>) as unknown as string
+          }
+          pageSubtitle={
+            <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
+              {meeting.committee}
+            </Typography>
+          }
+          moreButton={
+            <AgendaToolbar
+              onAddCategory={handleAddCategory}
+              onAddItem={() => openAddItem()}
+              hasCategories={categories.length > 0}
+            />
+          }
+          containerProps={{ sx: {
+            "--lens-component-page-header-desktop-middle-container-padding-bottom": "0px",
+            "--lens-component-page-header-desktop-container-gap": "8px",
+            "--lens-component-page-header-desktop-title-container-gap": "12px",
+            "--lens-component-page-header-tablet-title-container-gap": "12px",
+            "& nav.MuiBreadcrumbs-root li:first-child a": { pl: 0 },
+          } }}
+        />
       </Box>
 
       {/* ── Two-panel body ── */}

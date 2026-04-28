@@ -197,8 +197,8 @@ export default function AgendaEditorLayout({
                 { id: "current", label: "Agenda", isCurrent: true },
               ]}
               leadingElement={
-                <Box sx={{ height: 32, display: "flex", alignItems: "center" }}>
-                  <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", color: "#6f7377", letterSpacing: "0.2px", whiteSpace: "nowrap", px: "12px" }}>
+                <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
+                  <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", color: "#6f7377", letterSpacing: "0.2px", whiteSpace: "nowrap" }}>
                     Community v2
                   </Typography>
                 </Box>

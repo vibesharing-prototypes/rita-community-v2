@@ -1,0 +1,212 @@
+{
+  "items": [
+    {
+      "id": "g1",
+      "name": "Complete organizational restructuring",
+      "progress": 85,
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-28",
+      "files": [
+        { "id": "gf1", "fileName": "restructuring-plan-v3.pdf", "name": "Restructuring Plan v3", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-03-28" },
+        { "id": "gf2", "fileName": "org-chart-proposed.xlsx", "name": "Proposed Org Chart", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-03-20" }
+      ]
+    },
+    {
+      "id": "g2",
+      "name": "Launch new community portal",
+      "progress": 60,
+      "access": "Public",
+      "lastModifiedDate": "2025-04-01",
+      "files": [
+        { "id": "gf3", "fileName": "portal-wireframes.pdf", "name": "Portal Wireframes", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-04-01" },
+        { "id": "gf4", "fileName": "user-research-summary.docx", "name": "User Research Summary", "access": "Internal", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-03-18" },
+        { "id": "gf5", "fileName": "portal-mockup.png", "name": "Portal Mockup", "access": "Public", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-25" }
+      ]
+    },
+    {
+      "id": "g3",
+      "name": "Hire 5 key leadership positions",
+      "progress": 40,
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-15",
+      "files": [
+        { "id": "gf6", "fileName": "candidate-pipeline.xlsx", "name": "Candidate Pipeline", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-03-15" }
+      ]
+    },
+    {
+      "id": "g4",
+      "name": "Expand regional partnerships",
+      "progress": 10,
+      "access": "Public",
+      "lastModifiedDate": "2025-02-20",
+      "files": []
+    },
+    {
+      "id": "g5",
+      "name": "Achieve 20% revenue growth",
+      "progress": 0,
+      "access": "Internal",
+      "lastModifiedDate": "2025-01-10",
+      "files": [
+        { "id": "gf7", "fileName": "revenue-targets-2025.xlsx", "name": "Revenue Targets 2025", "access": "Internal", "lastModifiedBy": "Emily Rodriguez", "lastModifiedDate": "2025-01-10" }
+      ]
+    },
+    {
+      "id": "g6",
+      "name": "Complete board self-assessment survey",
+      "progress": 100,
+      "access": "Internal",
+      "lastModifiedDate": "2025-04-05",
+      "files": [
+        { "id": "gf8", "fileName": "self-assessment-results.pdf", "name": "Self-Assessment Results", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-04-05" },
+        { "id": "gf9", "fileName": "survey-responses.xlsx", "name": "Survey Responses", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-04-02" }
+      ]
+    },
+    {
+      "id": "g7",
+      "name": "Conduct annual governance review",
+      "progress": 75,
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-22",
+      "files": [
+        { "id": "gf10", "fileName": "governance-review-draft.docx", "name": "Governance Review Draft", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-03-22" }
+      ]
+    },
+    {
+      "id": "g8",
+      "name": "Onboard 2 new board members",
+      "progress": 50,
+      "access": "Public",
+      "lastModifiedDate": "2025-03-18",
+      "files": [
+        { "id": "gf11", "fileName": "onboarding-checklist.pdf", "name": "Onboarding Checklist", "access": "Public", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-03-18" },
+        { "id": "gf12", "fileName": "board-handbook.pdf", "name": "Board Handbook", "access": "Public", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-03-10" }
+      ]
+    },
+    {
+      "id": "g9",
+      "name": "Reduce operating costs by 10%",
+      "progress": 35,
+      "access": "Internal",
+      "lastModifiedDate": "2025-04-02",
+      "files": [
+        { "id": "gf13", "fileName": "cost-analysis-q1.xlsx", "name": "Cost Analysis Q1", "access": "Internal", "lastModifiedBy": "Emily Rodriguez", "lastModifiedDate": "2025-04-02" }
+      ]
+    },
+    {
+      "id": "g10",
+      "name": "Increase grant funding by 15%",
+      "progress": 55,
+      "access": "Public",
+      "lastModifiedDate": "2025-03-30",
+      "files": [
+        { "id": "gf14", "fileName": "grant-applications.pdf", "name": "Grant Applications", "access": "Public", "lastModifiedBy": "Emily Rodriguez", "lastModifiedDate": "2025-03-30" },
+        { "id": "gf15", "fileName": "funding-sources.docx", "name": "Funding Sources", "access": "Public", "lastModifiedBy": "Emily Rodriguez", "lastModifiedDate": "2025-03-22" }
+      ]
+    },
+    {
+      "id": "g11",
+      "name": "Establish reserve fund target",
+      "progress": 90,
+      "access": "Internal",
+      "lastModifiedDate": "2025-04-08",
+      "files": [
+        { "id": "gf16", "fileName": "reserve-fund-policy.pdf", "name": "Reserve Fund Policy", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-04-08" }
+      ]
+    },
+    {
+      "id": "g12",
+      "name": "Host 4 community town halls",
+      "progress": 75,
+      "access": "Public",
+      "lastModifiedDate": "2025-03-25",
+      "files": [
+        { "id": "gf17", "fileName": "town-hall-schedule.pdf", "name": "Town Hall Schedule", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-03-25" },
+        { "id": "gf18", "fileName": "town-hall-1-recap.docx", "name": "Town Hall #1 Recap", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-03-10" },
+        { "id": "gf19", "fileName": "town-hall-2-recap.docx", "name": "Town Hall #2 Recap", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-03-20" },
+        { "id": "gf20", "fileName": "attendee-feedback.xlsx", "name": "Attendee Feedback", "access": "Public", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-22" }
+      ]
+    },
+    {
+      "id": "g13",
+      "name": "Launch volunteer ambassador program",
+      "progress": 20,
+      "access": "Public",
+      "lastModifiedDate": "2025-04-03",
+      "files": [
+        { "id": "gf21", "fileName": "ambassador-program-proposal.pdf", "name": "Ambassador Program Proposal", "access": "Public", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-04-03" }
+      ]
+    },
+    {
+      "id": "g14",
+      "name": "Achieve 500 new newsletter subscribers",
+      "progress": 65,
+      "access": "Public",
+      "lastModifiedDate": "2025-03-12",
+      "files": []
+    },
+    {
+      "id": "g15",
+      "name": "Complete annual compliance audit",
+      "progress": 100,
+      "access": "Internal",
+      "lastModifiedDate": "2025-02-28",
+      "files": [
+        { "id": "gf22", "fileName": "compliance-audit-report.pdf", "name": "Compliance Audit Report", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-02-28" },
+        { "id": "gf23", "fileName": "audit-checklist.xlsx", "name": "Audit Checklist", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-02-20" }
+      ]
+    },
+    {
+      "id": "g16",
+      "name": "Update risk management framework",
+      "progress": 45,
+      "access": "Internal",
+      "lastModifiedDate": "2025-04-06",
+      "files": [
+        { "id": "gf24", "fileName": "risk-framework-v2.docx", "name": "Risk Framework v2", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-04-06" }
+      ]
+    },
+    {
+      "id": "g17",
+      "name": "Implement cybersecurity training for all staff",
+      "progress": 30,
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-20",
+      "files": [
+        { "id": "gf25", "fileName": "training-curriculum.pdf", "name": "Training Curriculum", "access": "Internal", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-20" },
+        { "id": "gf26", "fileName": "completion-tracker.xlsx", "name": "Completion Tracker", "access": "Internal", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-15" }
+      ]
+    },
+    {
+      "id": "g18",
+      "name": "Define 2026 annual priorities",
+      "progress": 15,
+      "access": "Internal",
+      "lastModifiedDate": "2025-04-10",
+      "files": [
+        { "id": "gf27", "fileName": "priorities-brainstorm.docx", "name": "Priorities Brainstorm", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-04-10" }
+      ]
+    },
+    {
+      "id": "g19",
+      "name": "Board retreat planning",
+      "progress": 70,
+      "access": "Public",
+      "lastModifiedDate": "2025-04-07",
+      "files": [
+        { "id": "gf28", "fileName": "retreat-agenda.pdf", "name": "Retreat Agenda", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-04-07" },
+        { "id": "gf29", "fileName": "venue-options.pptx", "name": "Venue Options", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-04-01" }
+      ]
+    },
+    {
+      "id": "g20",
+      "name": "Update mission statement draft",
+      "progress": 25,
+      "access": "Public",
+      "lastModifiedDate": "2025-03-10",
+      "files": [
+        { "id": "gf30", "fileName": "mission-statement-v2.docx", "name": "Mission Statement v2", "access": "Public", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-03-10" }
+      ]
+    }
+  ]
+}

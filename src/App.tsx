@@ -10,6 +10,13 @@ import TemplateDetailPage from "./pages/TemplateDetailPage.js";
 import CalendarPage from "./pages/CalendarPage.js";
 import PlaceholderPage from "./pages/PlaceholderPage.js";
 import AgendaEditorPage from "./pages/AgendaEditorPage.js";
+import DocumentsPage from "./pages/DocumentsPage.js";
+import FolderDetailPage from "./pages/FolderDetailPage.js";
+import GoalsPage from "./pages/GoalsPage.js";
+import EventsPage from "./pages/EventsPage.js";
+import GoalDetailPage from "./pages/GoalDetailPage.js";
+import EventDetailPage from "./pages/EventDetailPage.js";
+import MembersPage from "./pages/MembersPage.js";
 
 export default function App() {
   return (
@@ -30,10 +37,13 @@ export default function App() {
         <Route path="meetings/:id/agenda" element={<AgendaEditorPage />} />
         <Route path="agenda" element={<PlaceholderPage title="Agenda items" />} />
         <Route path="policies" element={<PlaceholderPage title="Policies" />} />
-        <Route path="library/files" element={<PlaceholderPage title="Files" />} />
-        <Route path="library/goals" element={<PlaceholderPage title="Goals" />} />
-        <Route path="library/events" element={<PlaceholderPage title="Events" />} />
-        <Route path="library/members" element={<PlaceholderPage title="Board members" />} />
+        <Route path="library/documents" element={<DocumentsPage />} />
+        <Route path="library/documents/folder/:folderId" element={<FolderDetailPage />} />
+        <Route path="library/goals" element={<GoalsPage />} />
+        <Route path="library/goals/:goalId" element={<GoalDetailPage />} />
+        <Route path="library/events" element={<EventsPage />} />
+        <Route path="library/events/:eventId" element={<EventDetailPage />} />
+        <Route path="library/members" element={<MembersPage />} />
         <Route path="settings" element={<PlaceholderPage title="Settings" />} />
       </Route>
     </Routes>

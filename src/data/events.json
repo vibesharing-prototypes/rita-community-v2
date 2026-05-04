@@ -1,0 +1,202 @@
+{
+  "items": [
+    {
+      "id": "e1",
+      "name": "Annual Board Retreat",
+      "date": "2025-05-15",
+      "time": "9:00 AM – 4:00 PM",
+      "location": "Lakeside Conference Center, Room A",
+      "access": "Internal",
+      "lastModifiedBy": "Sarah Johnson",
+      "lastModifiedDate": "2025-04-10",
+      "files": [
+        { "id": "ef1", "fileName": "retreat-agenda.pdf", "name": "Retreat Agenda", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-04-10" },
+        { "id": "ef2", "fileName": "strategic-overview.pptx", "name": "Strategic Overview Presentation", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-04-08" }
+      ]
+    },
+    {
+      "id": "e2",
+      "name": "Community Town Hall Q2",
+      "date": "2025-04-28",
+      "time": "6:30 PM – 8:00 PM",
+      "location": "City Hall Auditorium",
+      "access": "Public",
+      "lastModifiedBy": "Michael Chen",
+      "lastModifiedDate": "2025-04-08",
+      "files": [
+        { "id": "ef3", "fileName": "town-hall-talking-points.docx", "name": "Talking Points", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-04-08" }
+      ]
+    },
+    {
+      "id": "e3",
+      "name": "Finance Committee Meeting",
+      "date": "2025-04-22",
+      "time": "2:00 PM – 3:30 PM",
+      "location": "Board Room 201",
+      "access": "Internal",
+      "lastModifiedBy": "Emily Rodriguez",
+      "lastModifiedDate": "2025-04-06",
+      "files": [
+        { "id": "ef4", "fileName": "q1-financial-report.xlsx", "name": "Q1 Financial Report", "access": "Internal", "lastModifiedBy": "Emily Rodriguez", "lastModifiedDate": "2025-04-06" },
+        { "id": "ef5", "fileName": "budget-projections.pdf", "name": "Budget Projections", "access": "Internal", "lastModifiedBy": "Emily Rodriguez", "lastModifiedDate": "2025-04-02" }
+      ]
+    },
+    {
+      "id": "e4",
+      "name": "New Member Orientation",
+      "date": "2025-05-02",
+      "time": "10:00 AM – 12:00 PM",
+      "location": "Training Room B",
+      "access": "Internal",
+      "lastModifiedBy": "Sarah Johnson",
+      "lastModifiedDate": "2025-04-05",
+      "files": [
+        { "id": "ef6", "fileName": "orientation-handbook.pdf", "name": "Orientation Handbook", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-04-05" }
+      ]
+    },
+    {
+      "id": "e5",
+      "name": "Strategic Planning Workshop",
+      "date": "2025-05-10",
+      "time": "8:30 AM – 5:00 PM",
+      "location": "Downtown Convention Center, Hall 3",
+      "access": "Internal",
+      "lastModifiedBy": "James Wilson",
+      "lastModifiedDate": "2025-04-03",
+      "files": [
+        { "id": "ef7", "fileName": "workshop-materials.pdf", "name": "Workshop Materials", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-04-03" },
+        { "id": "ef8", "fileName": "swot-analysis.docx", "name": "SWOT Analysis", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-03-30" },
+        { "id": "ef9", "fileName": "breakout-assignments.xlsx", "name": "Breakout Group Assignments", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-04-01" }
+      ]
+    },
+    {
+      "id": "e6",
+      "name": "Volunteer Appreciation Gala",
+      "date": "2025-06-12",
+      "time": "6:00 PM – 10:00 PM",
+      "location": "Grand Ballroom, Hilton Hotel",
+      "access": "Public",
+      "lastModifiedBy": "David Park",
+      "lastModifiedDate": "2025-04-01",
+      "files": [
+        { "id": "ef10", "fileName": "gala-invitation.pdf", "name": "Gala Invitation", "access": "Public", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-04-01" },
+        { "id": "ef11", "fileName": "seating-chart.xlsx", "name": "Seating Chart", "access": "Internal", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-28" }
+      ]
+    },
+    {
+      "id": "e7",
+      "name": "Budget Review Session",
+      "date": "2025-04-18",
+      "time": "1:00 PM – 2:30 PM",
+      "location": "Board Room 201",
+      "access": "Internal",
+      "lastModifiedBy": "Emily Rodriguez",
+      "lastModifiedDate": "2025-03-28",
+      "files": [
+        { "id": "ef12", "fileName": "budget-review-deck.pptx", "name": "Budget Review Deck", "access": "Internal", "lastModifiedBy": "Emily Rodriguez", "lastModifiedDate": "2025-03-28" }
+      ]
+    },
+    {
+      "id": "e8",
+      "name": "Public Hearing — Zoning Amendment",
+      "date": "2025-05-05",
+      "time": "7:00 PM – 9:00 PM",
+      "location": "City Council Chambers",
+      "access": "Public",
+      "lastModifiedBy": "Michael Chen",
+      "lastModifiedDate": "2025-03-25",
+      "files": [
+        { "id": "ef13", "fileName": "zoning-proposal.pdf", "name": "Zoning Proposal", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-03-25" },
+        { "id": "ef14", "fileName": "public-comments.docx", "name": "Public Comments Summary", "access": "Public", "lastModifiedBy": "Michael Chen", "lastModifiedDate": "2025-03-22" }
+      ]
+    },
+    {
+      "id": "e9",
+      "name": "Board Election Preparation",
+      "date": "2025-06-01",
+      "time": "3:00 PM – 4:30 PM",
+      "location": "Virtual — Zoom",
+      "access": "Internal",
+      "lastModifiedBy": "Sarah Johnson",
+      "lastModifiedDate": "2025-03-22",
+      "files": [
+        { "id": "ef15", "fileName": "election-procedures.pdf", "name": "Election Procedures", "access": "Internal", "lastModifiedBy": "Sarah Johnson", "lastModifiedDate": "2025-03-22" }
+      ]
+    },
+    {
+      "id": "e10",
+      "name": "Cybersecurity Awareness Training",
+      "date": "2025-04-30",
+      "time": "11:00 AM – 12:30 PM",
+      "location": "Virtual — Microsoft Teams",
+      "access": "Internal",
+      "lastModifiedBy": "David Park",
+      "lastModifiedDate": "2025-03-20",
+      "files": [
+        { "id": "ef16", "fileName": "cyber-training-slides.pptx", "name": "Training Slides", "access": "Internal", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-20" }
+      ]
+    },
+    {
+      "id": "e11",
+      "name": "Community Health Fair",
+      "date": "2025-05-20",
+      "time": "10:00 AM – 3:00 PM",
+      "location": "Community Park Pavilion",
+      "access": "Public",
+      "lastModifiedBy": "Michael Chen",
+      "lastModifiedDate": "2025-03-18",
+      "files": []
+    },
+    {
+      "id": "e12",
+      "name": "Annual Compliance Review",
+      "date": "2025-05-28",
+      "time": "9:00 AM – 11:00 AM",
+      "location": "Board Room 201",
+      "access": "Internal",
+      "lastModifiedBy": "James Wilson",
+      "lastModifiedDate": "2025-03-15",
+      "files": [
+        { "id": "ef17", "fileName": "compliance-checklist.xlsx", "name": "Compliance Checklist", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-03-15" }
+      ]
+    },
+    {
+      "id": "e13",
+      "name": "Stakeholder Forum",
+      "date": "2025-06-05",
+      "time": "4:00 PM – 6:00 PM",
+      "location": "Public Library, Meeting Hall",
+      "access": "Public",
+      "lastModifiedBy": "Sarah Johnson",
+      "lastModifiedDate": "2025-03-12",
+      "files": []
+    },
+    {
+      "id": "e14",
+      "name": "Risk Management Workshop",
+      "date": "2025-06-15",
+      "time": "1:00 PM – 4:00 PM",
+      "location": "Training Room A",
+      "access": "Internal",
+      "lastModifiedBy": "James Wilson",
+      "lastModifiedDate": "2025-03-10",
+      "files": [
+        { "id": "ef18", "fileName": "risk-assessment-template.docx", "name": "Risk Assessment Template", "access": "Internal", "lastModifiedBy": "James Wilson", "lastModifiedDate": "2025-03-10" }
+      ]
+    },
+    {
+      "id": "e15",
+      "name": "Summer Fundraising Dinner",
+      "date": "2025-07-10",
+      "time": "7:00 PM – 10:00 PM",
+      "location": "Riverside Country Club",
+      "access": "Public",
+      "lastModifiedBy": "David Park",
+      "lastModifiedDate": "2025-03-08",
+      "files": [
+        { "id": "ef19", "fileName": "fundraiser-program.pdf", "name": "Fundraiser Program", "access": "Public", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-08" },
+        { "id": "ef20", "fileName": "sponsor-list.xlsx", "name": "Sponsor List", "access": "Internal", "lastModifiedBy": "David Park", "lastModifiedDate": "2025-03-05" }
+      ]
+    }
+  ]
+}

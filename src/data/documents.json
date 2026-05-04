@@ -1,0 +1,535 @@
+{
+  "folders": [
+    {
+      "id": "f1",
+      "name": "Contracts",
+      "children": [
+        { "id": "f1a", "name": "District Approved Contracts" },
+        { "id": "f1b", "name": "Teacher Contracts" }
+      ]
+    },
+    { "id": "f2", "name": "Budget Report", "children": [] },
+    { "id": "f3", "name": "BoardDocs Videos", "children": [] },
+    { "id": "f4", "name": "Finance Committee", "children": [] },
+    { "id": "f5", "name": "Friday Notes - 2010", "children": [] },
+    { "id": "f6", "name": "Image Library", "children": [] },
+    { "id": "f7", "name": "Live meeting link", "children": [] },
+    { "id": "f8", "name": "New School Progress", "children": [] },
+    { "id": "f9", "name": "Newsletters", "children": [] },
+    { "id": "f10", "name": "Training Videos", "children": [] },
+    { "id": "f11", "name": "Video", "children": [] }
+  ],
+  "items": [
+    {
+      "id": "d1",
+      "folderId": "f1a",
+      "name": "Brooks Elementary School",
+      "fileName": "brooks-elementary.pdf",
+      "featured": true,
+      "releaseDate": "2016-08-09",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["address", "bids"],
+        "files": [
+          { "name": "twisted x.JPG", "size": "193 KB" },
+          { "name": "Test PDF.pdf", "size": "60 KB" },
+          { "name": "kasb.jpg", "size": "2 KB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Robert E Downey Jr",
+      "lastModifiedDate": "March 26, 2026"
+    },
+    {
+      "id": "d2",
+      "folderId": "f1a",
+      "name": "Lincoln Middle School",
+      "fileName": "lincoln-middle.pdf",
+      "featured": false,
+      "releaseDate": "2020-03-15",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["facilities"],
+        "files": [
+          { "name": "floor-plan.pdf", "size": "1.2 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Sarah Johnson",
+      "lastModifiedDate": "January 12, 2026"
+    },
+    {
+      "id": "d3",
+      "folderId": "f1b",
+      "name": "2025-2026 Teacher Agreement",
+      "fileName": "teacher-agreement-2025-26.pdf",
+      "featured": true,
+      "releaseDate": "2025-07-01",
+      "expireDate": "2026-06-30",
+      "access": "Public",
+      "publicContent": {
+        "tags": ["contracts", "salary"],
+        "files": [
+          { "name": "teacher-agreement-2025-26.pdf", "size": "420 KB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Marcus Williams",
+      "lastModifiedDate": "February 8, 2026"
+    },
+    {
+      "id": "d4",
+      "folderId": "f1b",
+      "name": "Substitute Teacher Handbook",
+      "fileName": "sub-handbook-2024.pdf",
+      "featured": false,
+      "releaseDate": "2024-01-10",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["handbook", "substitute"],
+        "files": [
+          { "name": "sub-handbook-2024.pdf", "size": "310 KB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "Emily Nakamura",
+      "lastModifiedDate": "January 10, 2024"
+    },
+    {
+      "id": "d5",
+      "folderId": "f2",
+      "name": "Annual Budget FY2026",
+      "fileName": "budget-fy2026.xlsx",
+      "featured": true,
+      "releaseDate": "2025-09-01",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["budget", "fiscal year"],
+        "files": [
+          { "name": "budget-fy2026.pdf", "size": "2.1 MB" },
+          { "name": "budget-summary.xlsx", "size": "85 KB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Emily Nakamura",
+      "lastModifiedDate": "March 1, 2026"
+    },
+    {
+      "id": "d6",
+      "folderId": "f2",
+      "name": "Q1 Expenditure Report",
+      "fileName": "q1-expenditures.pdf",
+      "featured": false,
+      "releaseDate": "2026-01-15",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["expenditures", "quarterly"],
+        "files": [
+          { "name": "q1-expenditures.pdf", "size": "540 KB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "James Huang",
+      "lastModifiedDate": "January 15, 2026"
+    },
+    {
+      "id": "d7",
+      "folderId": "f4",
+      "name": "Finance Committee Charter",
+      "fileName": "finance-charter.pdf",
+      "featured": false,
+      "releaseDate": "2023-06-01",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["charter", "governance"],
+        "files": [
+          { "name": "finance-charter.pdf", "size": "128 KB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Dr. Patricia Chen",
+      "lastModifiedDate": "June 1, 2023"
+    },
+    {
+      "id": "d8",
+      "folderId": "f4",
+      "name": "Investment Policy Review",
+      "fileName": "investment-review-2025.pdf",
+      "featured": false,
+      "releaseDate": "2025-11-20",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": null,
+      "executiveContent": {
+        "tags": ["investment", "policy"],
+        "files": [
+          { "name": "investment-review-2025.pdf", "size": "890 KB" }
+        ]
+      },
+      "lastModifiedBy": "Robert Okafor",
+      "lastModifiedDate": "November 20, 2025"
+    },
+    {
+      "id": "d9",
+      "folderId": "f6",
+      "name": "District Logo Pack",
+      "fileName": "logo-full-color.png",
+      "featured": false,
+      "releaseDate": "2022-03-10",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["branding", "logo"],
+        "files": [
+          { "name": "logo-full-color.png", "size": "2.4 MB" },
+          { "name": "logo-white.png", "size": "1.8 MB" },
+          { "name": "logo-guidelines.pdf", "size": "3.5 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Linda Torres",
+      "lastModifiedDate": "March 10, 2022"
+    },
+    {
+      "id": "d10",
+      "folderId": "f8",
+      "name": "School Improvement Plan 2025-2026",
+      "fileName": "improvement-plan-25-26.docx",
+      "featured": false,
+      "releaseDate": "2025-08-15",
+      "expireDate": "2026-08-14",
+      "access": "Public",
+      "publicContent": {
+        "tags": ["improvement", "strategic"],
+        "files": [
+          { "name": "improvement-plan-25-26.pdf", "size": "670 KB" }
+        ]
+      },
+      "administrativeContent": {
+        "tags": ["metrics", "internal"],
+        "files": [
+          { "name": "metrics-dashboard.xlsx", "size": "120 KB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "Dr. Patricia Chen",
+      "lastModifiedDate": "August 15, 2025"
+    },
+    {
+      "id": "d11",
+      "folderId": "f9",
+      "name": "January 2026 Newsletter",
+      "fileName": "newsletter-jan-2026.pdf",
+      "featured": false,
+      "releaseDate": "2026-01-05",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["newsletter", "monthly"],
+        "files": [
+          { "name": "newsletter-jan-2026.pdf", "size": "4.2 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Linda Torres",
+      "lastModifiedDate": "January 5, 2026"
+    },
+    {
+      "id": "d12",
+      "folderId": "f9",
+      "name": "February 2026 Newsletter",
+      "fileName": "newsletter-feb-2026.pdf",
+      "featured": false,
+      "releaseDate": "2026-02-03",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["newsletter", "monthly"],
+        "files": [
+          { "name": "newsletter-feb-2026.pdf", "size": "3.8 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Linda Torres",
+      "lastModifiedDate": "February 3, 2026"
+    },
+    {
+      "id": "d13",
+      "folderId": "f5",
+      "name": "Week 1 Notes - August 2010",
+      "fileName": "friday-notes-wk1.pdf",
+      "featured": false,
+      "releaseDate": "2010-08-06",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["notes", "weekly"],
+        "files": [
+          { "name": "friday-notes-wk1.pdf", "size": "45 KB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Admin",
+      "lastModifiedDate": "August 6, 2010"
+    },
+    {
+      "id": "d14",
+      "folderId": "f3",
+      "name": "Board Meeting Recording - March 2026",
+      "fileName": "board-meeting-mar-2026.mp4",
+      "featured": false,
+      "releaseDate": "2026-03-20",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["recording", "board meeting"],
+        "files": [
+          { "name": "board-meeting-mar-2026.mp4", "size": "1.2 GB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "James Huang",
+      "lastModifiedDate": "March 20, 2026"
+    },
+    {
+      "id": "d15",
+      "folderId": "f7",
+      "name": "Zoom Meeting Credentials",
+      "fileName": "zoom-info.docx",
+      "featured": false,
+      "releaseDate": "2025-01-01",
+      "expireDate": "2026-12-31",
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["credentials", "zoom"],
+        "files": [
+          { "name": "zoom-info.docx", "size": "12 KB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "Marcus Williams",
+      "lastModifiedDate": "January 1, 2025"
+    },
+    {
+      "id": "d16",
+      "folderId": "f6",
+      "name": "Campus Photo Gallery",
+      "fileName": "campus-photos.png",
+      "featured": false,
+      "releaseDate": "2025-04-12",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["photos", "campus"],
+        "files": [
+          { "name": "campus-overview.jpg", "size": "5.1 MB" },
+          { "name": "aerial-shot.png", "size": "8.2 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Rita Eltes",
+      "lastModifiedDate": "April 12, 2025"
+    },
+    {
+      "id": "d17",
+      "folderId": "f10",
+      "name": "New Board Member Orientation",
+      "fileName": "orientation-video.mp4",
+      "featured": true,
+      "releaseDate": "2025-10-01",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["training", "orientation"],
+        "files": [
+          { "name": "orientation-video.mp4", "size": "245 MB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "William Pecor",
+      "lastModifiedDate": "October 1, 2025"
+    },
+    {
+      "id": "d18",
+      "folderId": "f2",
+      "name": "Budget Presentation Q3",
+      "fileName": "budget-q3-presentation.pptx",
+      "featured": false,
+      "releaseDate": "2026-01-20",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["budget", "presentation"],
+        "files": [
+          { "name": "budget-q3-presentation.pptx", "size": "12 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Emily Nakamura",
+      "lastModifiedDate": "January 20, 2026"
+    },
+    {
+      "id": "d19",
+      "folderId": "f11",
+      "name": "Graduation Ceremony 2025",
+      "fileName": "graduation-2025.mp4",
+      "featured": false,
+      "releaseDate": "2025-06-15",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["graduation", "ceremony"],
+        "files": [
+          { "name": "graduation-2025.mp4", "size": "890 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "Nonie Dalton",
+      "lastModifiedDate": "June 15, 2025"
+    },
+    {
+      "id": "d20",
+      "folderId": "f1a",
+      "name": "Vendor Services Agreement",
+      "fileName": "vendor-agreement.docx",
+      "featured": false,
+      "releaseDate": "2025-11-03",
+      "expireDate": "2026-11-02",
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["vendor", "agreement"],
+        "files": [
+          { "name": "vendor-agreement.docx", "size": "156 KB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "Rita Eltes",
+      "lastModifiedDate": "November 3, 2025"
+    },
+    {
+      "id": "d21",
+      "folderId": null,
+      "name": "!PotHole.pdf",
+      "fileName": "!PotHole.pdf",
+      "featured": false,
+      "releaseDate": "2025-08-06",
+      "expireDate": null,
+      "access": "Public",
+      "publicContent": {
+        "tags": ["report"],
+        "files": [
+          { "name": "!PotHole.pdf", "size": "1.3 MB" }
+        ]
+      },
+      "administrativeContent": null,
+      "executiveContent": null,
+      "lastModifiedBy": "William Pecor",
+      "lastModifiedDate": "Aug 6, 2025"
+    },
+    {
+      "id": "d22",
+      "folderId": null,
+      "name": "Book test spreadsheet.xlsx",
+      "fileName": "book-test-spreadsheet.xlsx",
+      "featured": false,
+      "releaseDate": "2026-04-13",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["test", "spreadsheet"],
+        "files": [
+          { "name": "book-test-spreadsheet.xlsx", "size": "45 KB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "Rita Eltes",
+      "lastModifiedDate": "April 13, 2026"
+    },
+    {
+      "id": "d23",
+      "folderId": null,
+      "name": "Minutes Attachments.pptx",
+      "fileName": "minutes-attachments.pptx",
+      "featured": false,
+      "releaseDate": "2025-08-25",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["minutes", "attachments"],
+        "files": [
+          { "name": "minutes-attachments.pptx", "size": "8.5 MB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "William Pecor",
+      "lastModifiedDate": "Aug 25, 2025"
+    },
+    {
+      "id": "d24",
+      "folderId": null,
+      "name": "Rita's new test document.docx",
+      "fileName": "ritas-new-test-document.docx",
+      "featured": false,
+      "releaseDate": "2026-04-13",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["test"],
+        "files": [
+          { "name": "ritas-new-test-document.docx", "size": "22 KB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "Rita Eltes",
+      "lastModifiedDate": "April 13, 2026"
+    },
+    {
+      "id": "d25",
+      "folderId": null,
+      "name": "screencapture-go-boarddocs-training.png",
+      "fileName": "screencapture-go-boarddocs-training.png",
+      "featured": false,
+      "releaseDate": "2026-04-13",
+      "expireDate": null,
+      "access": "Internal",
+      "publicContent": null,
+      "administrativeContent": {
+        "tags": ["screenshot"],
+        "files": [
+          { "name": "screencapture-go-boarddocs-training.png", "size": "3.2 MB" }
+        ]
+      },
+      "executiveContent": null,
+      "lastModifiedBy": "Rita Eltes",
+      "lastModifiedDate": "April 13, 2026"
+    }
+  ]
+}

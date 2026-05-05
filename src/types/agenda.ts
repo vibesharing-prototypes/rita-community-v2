@@ -33,6 +33,7 @@ export type AgendaItem = {
   };
   lastModifiedBy?: string;
   lastModifiedAt?: string;
+  membersOnly?: boolean;
 };
 
 export type AgendaCategory = {

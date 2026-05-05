@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import { Droppable, Draggable, DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
 import { useRef, useState } from "react";
-import type { AgendaCategory } from "../../../types/agenda";
+import type { AgendaCategory, AgendaItem } from "../../../types/agenda";
 import ItemRow from "./ItemRow";
 import ConfirmDialog from "../../meetings/ConfirmDialog";
 
@@ -17,6 +17,8 @@ export default function CategoryRow({
   onRenameCategory,
   onDeleteCategory,
   onRenameItem,
+  onDuplicateItem,
+  onDeleteItem,
   onAddItem,
 }: {
   category: AgendaCategory;
@@ -27,6 +29,8 @@ export default function CategoryRow({
   onRenameCategory: (id: string, name: string) => void;
   onDeleteCategory: (id: string) => void;
   onRenameItem: (id: string, subject: string) => void;
+  onDuplicateItem: (item: AgendaItem) => void;
+  onDeleteItem: (id: string) => void;
   onAddItem: (categoryId: string) => void;
 }) {
   const [editing, setEditing] = useState(false);
@@ -63,8 +67,10 @@ export default function CategoryRow({
         gap={0.5}
         onDoubleClick={startEdit}
         sx={{
-          px: 1, py: "6px", bgcolor: "#F3F4F5", borderRadius: "6px",
-          "&:hover .cat-drag-handle": { opacity: 1 },
+          pl: "4px", pr: "4px", py: "4px", borderRadius: "8px",
+          position: "relative",
+          "&:hover .cat-drag-handle, &:hover .cat-more-btn": { opacity: 1 },
+          "&:hover": { bgcolor: "action.hover" },
           cursor: "default",
         }}
       >
@@ -75,6 +81,7 @@ export default function CategoryRow({
           sx={{
             opacity: 0, cursor: "grab", flexShrink: 0, display: "flex", alignItems: "center",
             color: "text.disabled",
+            width: 14, height: 14,
             "& svg": { width: 14, height: 14 },
           }}
         >
@@ -84,7 +91,7 @@ export default function CategoryRow({
         </Box>
 
         {/* Number */}
-        <Typography sx={{ fontSize: 13, fontWeight: 700, color: "text.secondary", flexShrink: 0, minWidth: 20 }}>
+        <Typography sx={{ fontSize: 13, fontWeight: 700, color: "text.secondary", flexShrink: 0, mr: "2px" }}>
           {index + 1}.
         </Typography>
 
@@ -104,7 +111,11 @@ export default function CategoryRow({
             }}
           />
         ) : (
-          <Typography sx={{ fontSize: 13, fontWeight: 700, lineHeight: "20px", flex: 1, minWidth: 0 }}>
+          <Typography sx={{
+            fontSize: 13, fontWeight: 700, lineHeight: "18px", flex: 1, minWidth: 0,
+            display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
+            overflow: "hidden", wordBreak: "break-word",
+          }}>
             {category.name}
           </Typography>
         )}
@@ -113,8 +124,14 @@ export default function CategoryRow({
         {!editing && (
           <IconButton
             size="small"
+            className="cat-more-btn"
             onClick={(e) => { e.stopPropagation(); setMenuAnchor(e.currentTarget); }}
-            sx={{ flexShrink: 0, opacity: 0.6, "&:hover": { opacity: 1 } }}
+            sx={{
+              flexShrink: 0,
+              opacity: menuAnchor ? 1 : 0,
+              transition: "opacity 0.15s",
+              "&:hover": { opacity: 1 },
+            }}
           >
             <SvgIcon sx={{ width: 16, height: 16 }}>
               <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
@@ -152,6 +169,8 @@ export default function CategoryRow({
                       dragHandleProps={provided.dragHandleProps}
                       onSelect={onSelectItem}
                       onRename={onRenameItem}
+                      onDuplicate={onDuplicateItem}
+                      onDelete={onDeleteItem}
                     />
                   </Box>
                 )}
@@ -161,7 +180,7 @@ export default function CategoryRow({
 
             {/* Empty category inline prompt */}
             {category.items.length === 0 && (
-              <Box sx={{ pl: "28px", py: "4px" }}>
+              <Box sx={{ pl: "16px", py: "4px" }}>
                 <Button
                   size="small"
                   variant="text"

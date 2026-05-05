@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
-import type { AgendaCategory } from "../../../types/agenda";
+import type { AgendaCategory, AgendaItem } from "../../../types/agenda";
 import CategoryRow from "./CategoryRow";
 import AgendaTreeEmpty from "./AgendaTreeEmpty";
 
@@ -12,6 +12,8 @@ export default function AgendaTree({
   onRenameCategory,
   onDeleteCategory,
   onRenameItem,
+  onDuplicateItem,
+  onDeleteItem,
   onAddCategory,
   onAddItem,
 }: {
@@ -22,6 +24,8 @@ export default function AgendaTree({
   onRenameCategory: (id: string, name: string) => void;
   onDeleteCategory: (id: string) => void;
   onRenameItem: (id: string, subject: string) => void;
+  onDuplicateItem: (item: AgendaItem) => void;
+  onDeleteItem: (id: string) => void;
   onAddCategory: () => void;
   onAddItem: (categoryId: string) => void;
 }) {
@@ -76,6 +80,8 @@ export default function AgendaTree({
                       onRenameCategory={onRenameCategory}
                       onDeleteCategory={onDeleteCategory}
                       onRenameItem={onRenameItem}
+                      onDuplicateItem={onDuplicateItem}
+                      onDeleteItem={onDeleteItem}
                       onAddItem={onAddItem}
                     />
                   </Box>

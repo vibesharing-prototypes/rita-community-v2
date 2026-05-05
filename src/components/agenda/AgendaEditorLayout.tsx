@@ -1,14 +1,16 @@
 import { OverflowBreadcrumbs, PageHeader } from "@diligentcorp/atlas-react-bundle";
 import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  MenuItem, Select, Stack, TextField, Typography, useTheme,
+  IconButton, MenuItem, Select, Stack, TextField, Tooltip, Typography, useTheme,
 } from "@mui/material";
+import ExpandSideNavIcon from "@diligentcorp/atlas-react-bundle/icons/ExpandSideNav";
+import DownloadIcon from "@diligentcorp/atlas-react-bundle/icons/Download";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import type { AgendaCategory, AgendaItem } from "../../types/agenda";
 import type { Meeting } from "../../types/meetings";
 import { isUpcoming } from "../../utils/meetings";
-import AgendaToolbar from "./AgendaToolbar";
+import AgendaToolbar, { type AgendaPanelView } from "./AgendaToolbar";
 import AgendaTree from "./AgendaTree/AgendaTree";
 import ItemInlineEditor from "./ItemPanel/ItemInlineEditor";
 
@@ -29,6 +31,8 @@ export default function AgendaEditorLayout({
 
   const [categories, setCategories] = useState<AgendaCategory[]>(initialCategories);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [agendaCollapsed, setAgendaCollapsed] = useState(false);
+  const [panelView, setPanelView] = useState<AgendaPanelView>("content");
 
   // Add item dialog
   const [addItemOpen, setAddItemOpen] = useState(false);
@@ -201,18 +205,37 @@ export default function AgendaEditorLayout({
               }}
             </OverflowBreadcrumbs>
           }
-          pageTitle={"Agenda"}
+          pageTitle={(
+            <Box sx={{
+              display: "flex", alignItems: "baseline", minWidth: 0, maxWidth: "100%", gap: "8px",
+              fontSize: "24px", fontWeight: 600, lineHeight: "32px",
+              overflow: "hidden",
+            }}>
+              <Box component="span" sx={{ flexShrink: 0 }}>Agenda —</Box>
+              <Box component="span" sx={{
+                minWidth: 0, flex: 1,
+                overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+              }}>
+                {meeting.name}
+              </Box>
+            </Box>
+          ) as unknown as string}
           pageSubtitle={
             <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
               {meeting.committee}
             </Typography>
           }
           moreButton={
-            <AgendaToolbar
-              onAddCategory={handleAddCategory}
-              onAddItem={() => openAddItem()}
-              hasCategories={categories.length > 0}
-            />
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Tooltip title="Download">
+                <IconButton size="medium" aria-label="Download">
+                  <DownloadIcon style={{ fontSize: 20 }} />
+                </IconButton>
+              </Tooltip>
+              <Button variant="outlined" size="medium">
+                Share
+              </Button>
+            </Stack>
           }
           containerProps={{ sx: {
             "--lens-component-page-header-desktop-middle-container-padding-bottom": "0px",
@@ -227,23 +250,97 @@ export default function AgendaEditorLayout({
       {/* ── Two-panel body ── */}
       <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
-        {/* Left: Agenda tree */}
+        {/* Collapsed-state open button (overlays when collapsed) */}
+        {agendaCollapsed && (
+          <Box sx={{ p: 2, flexShrink: 0 }}>
+            <Tooltip title="Open agenda">
+              <IconButton
+                size="small"
+                onClick={() => setAgendaCollapsed(false)}
+                aria-label="Open agenda"
+                sx={{
+                  border: `1px solid ${dividerColor}`,
+                  borderRadius: "8px",
+                  bgcolor: "#fff",
+                  "&:hover": { bgcolor: "action.hover" },
+                }}
+              >
+                <ExpandSideNavIcon style={{ fontSize: 18 }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
+
+        {/* Left: Agenda tree (card) */}
         <Box sx={{
-          width: "30%", minWidth: 240, maxWidth: 360,
-          borderRight: `1px solid ${dividerColor}`,
-          overflowY: "auto", p: 1.5,
+          width: agendaCollapsed ? 0 : "30%",
+          minWidth: agendaCollapsed ? 0 : 280,
+          maxWidth: agendaCollapsed ? 0 : 380,
+          pt: 2, pb: 2,
+          pl: agendaCollapsed ? 0 : 2,
+          pr: agendaCollapsed ? 0 : "12px",
+          display: "flex", flexDirection: "column",
+          flexShrink: 0,
+          overflow: "hidden",
+          opacity: agendaCollapsed ? 0 : 1,
+          transition: "width 160ms ease-out, min-width 160ms ease-out, max-width 160ms ease-out, padding 160ms ease-out, opacity 120ms ease-out",
         }}>
-          <AgendaTree
-            categories={categories}
-            selectedItemId={selectedItemId}
-            onSelectItem={setSelectedItemId}
-            onReorder={handleReorder}
-            onRenameCategory={handleRenameCategory}
-            onDeleteCategory={handleDeleteCategory}
-            onRenameItem={handleRenameItem}
-            onAddCategory={handleAddCategory}
-            onAddItem={openAddItem}
-          />
+          <Box sx={{
+            border: `1px solid ${dividerColor}`,
+            borderRadius: "12px",
+            bgcolor: "#fff",
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            minHeight: 0,
+            overflow: "hidden",
+            minWidth: 268,
+          }}>
+            {/* Card header */}
+            <Box sx={{
+              px: 1, py: 1,
+              borderBottom: `1px solid ${dividerColor}`,
+              flexShrink: 0,
+            }}>
+              <AgendaToolbar
+                view={panelView}
+                onChangeView={setPanelView}
+                onAddCategory={handleAddCategory}
+                onAddItem={() => openAddItem()}
+                onCollapse={() => setAgendaCollapsed(true)}
+                hasCategories={categories.length > 0}
+              />
+            </Box>
+
+            {/* Body */}
+            <Box sx={{ overflowY: "auto", flex: 1, p: 1 }}>
+              {panelView === "content" && (
+                <AgendaTree
+                  categories={categories}
+                  selectedItemId={selectedItemId}
+                  onSelectItem={setSelectedItemId}
+                  onReorder={handleReorder}
+                  onRenameCategory={handleRenameCategory}
+                  onDeleteCategory={handleDeleteCategory}
+                  onRenameItem={handleRenameItem}
+                  onDuplicateItem={handleDuplicateItem}
+                  onDeleteItem={handleDeleteItem}
+                  onAddCategory={handleAddCategory}
+                  onAddItem={openAddItem}
+                />
+              )}
+              {panelView === "search" && (
+                <Box sx={{ p: 2, textAlign: "center", color: "text.secondary", fontSize: 13 }}>
+                  Search coming soon
+                </Box>
+              )}
+              {panelView === "notes" && (
+                <Box sx={{ p: 2, textAlign: "center", color: "text.secondary", fontSize: 13 }}>
+                  Notes coming soon
+                </Box>
+              )}
+            </Box>
+          </Box>
         </Box>
 
         {/* Right: Item panel */}

@@ -393,6 +393,7 @@
               "categoryId": "m4-cat-2",
               "type": ["Reports"],
               "status": "Draft",
+              "membersOnly": true,
               "publicContent": "Status update on completion of the FY2026 internal audit plan.",
               "staffContent": "4 of 7 planned audits complete. Payroll audit and IT General Controls audit in progress. Benefits audit deferred to FY27 due to resource constraints.",
               "executiveContent": "",

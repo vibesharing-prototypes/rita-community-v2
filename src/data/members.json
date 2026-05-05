@@ -1,0 +1,100 @@
+{
+  "items": [
+    {
+      "id": "m1",
+      "name": "Sarah Johnson",
+      "role": "Chair",
+      "email": "sarah.johnson@example.org",
+      "access": "Public",
+      "lastModifiedDate": "2025-04-10"
+    },
+    {
+      "id": "m2",
+      "name": "Michael Chen",
+      "role": "Vice Chair",
+      "email": "michael.chen@example.org",
+      "access": "Public",
+      "lastModifiedDate": "2025-04-08"
+    },
+    {
+      "id": "m3",
+      "name": "Emily Rodriguez",
+      "role": "Treasurer",
+      "email": "emily.rodriguez@example.org",
+      "access": "Internal",
+      "lastModifiedDate": "2025-04-06"
+    },
+    {
+      "id": "m4",
+      "name": "James Wilson",
+      "role": "Secretary",
+      "email": "james.wilson@example.org",
+      "access": "Public",
+      "lastModifiedDate": "2025-04-03"
+    },
+    {
+      "id": "m5",
+      "name": "David Park",
+      "role": "Board Member",
+      "email": "david.park@example.org",
+      "access": "Public",
+      "lastModifiedDate": "2025-04-01"
+    },
+    {
+      "id": "m6",
+      "name": "Lisa Thompson",
+      "role": "Board Member",
+      "email": "lisa.thompson@example.org",
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-28"
+    },
+    {
+      "id": "m7",
+      "name": "Robert Garcia",
+      "role": "Board Member",
+      "email": "robert.garcia@example.org",
+      "access": "Public",
+      "lastModifiedDate": "2025-03-25"
+    },
+    {
+      "id": "m8",
+      "name": "Angela Martinez",
+      "role": "Board Member",
+      "email": "angela.martinez@example.org",
+      "access": "Public",
+      "lastModifiedDate": "2025-03-22"
+    },
+    {
+      "id": "m9",
+      "name": "Thomas Brown",
+      "role": "Board Member",
+      "email": "thomas.brown@example.org",
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-20"
+    },
+    {
+      "id": "m10",
+      "name": "Jennifer Lee",
+      "role": "Board Member",
+      "email": "jennifer.lee@example.org",
+      "access": "Public",
+      "lastModifiedDate": "2025-03-18"
+    },
+    {
+      "id": "m11",
+      "name": "Christopher Davis",
+      "role": "Advisory Member",
+      "email": "christopher.davis@example.org",
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-15"
+    },
+    {
+      "id": "m12",
+      "name": "Patricia Nguyen",
+      "role": "Advisory Member",
+      "email": "patricia.nguyen@example.org",
+      "access": "Internal",
+      "lastModifiedDate": "2025-03-12"
+    }
+  ]
+}

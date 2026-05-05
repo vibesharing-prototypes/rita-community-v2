@@ -70,7 +70,7 @@ export default function Navigation() {
           onClose={() => setLibraryOpen(false)}
         >
           <FolderIcon slot="icon" />
-          <RoutedNavLink to="/library/files" label="Files" />
+          <RoutedNavLink to="/library/documents" label="Documents" />
           <RoutedNavLink to="/library/goals" label="Goals" />
           <RoutedNavLink to="/library/events" label="Events" />
           <RoutedNavLink to="/library/members" label="Board members" />

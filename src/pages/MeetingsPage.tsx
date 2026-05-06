@@ -15,6 +15,7 @@ import SearchIcon from "@diligentcorp/atlas-react-bundle/icons/Search";
 import VisibleIcon from "@diligentcorp/atlas-react-bundle/icons/Visible";
 import ArchiveIcon from "@diligentcorp/atlas-react-bundle/icons/Archive";
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
+import MoreIcon from "@diligentcorp/atlas-react-bundle/icons/More";
 import UnarchiveIcon from "@diligentcorp/atlas-react-bundle/icons/Unarchive";
 import {
   Accordion,
@@ -23,7 +24,9 @@ import {
   Alert,
   Box,
   Button,
+  Checkbox,
   ListItemIcon,
+  ListItemText,
   Menu,
   IconButton,
   InputAdornment,
@@ -49,7 +52,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 import PageLayout from "../components/PageLayout.js";
-import MeetingDetailView from "../components/meetings/MeetingDetailView";
 import MeetingRowActions from "../components/meetings/MeetingRowActions";
 import TemplatePickerDialog, { type NewMeetingResult } from "../components/meetings/TemplatePickerDialog";
 import CommitteePickerDialog from "../components/meetings/CommitteePickerDialog";
@@ -80,12 +82,33 @@ export default function MeetingsPage() {
   const [templates, setTemplates] = useState<MeetingTemplate[]>(seedTemplates);
   const activeTab: MeetingTab = (searchParams.get("tab") as MeetingTab | null) ?? "upcoming";
   const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("date-asc");
-  const [committeeFilter, setCommitteeFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState<MeetingStatus | "All">("All");
-  const [visibilityFilter, setVisibilityFilter] = useState<MeetingVisibility | "All">("All");
-  const [startDateFilter, setStartDateFilter] = useState<Date | null>(null);
-  const [endDateFilter, setEndDateFilter] = useState<Date | null>(null);
+  const [upcomingSortBy, setUpcomingSortBy] = useState("date-asc");
+  const [previousSortBy, setPreviousSortBy] = useState("date-desc");
+  const sortBy = activeTab === "previous" ? previousSortBy : upcomingSortBy;
+  const setSortBy = activeTab === "previous" ? setPreviousSortBy : setUpcomingSortBy;
+  type MeetingFilters = {
+    committee: string[];
+    status: MeetingStatus | "All";
+    visibility: MeetingVisibility | "All";
+    startDate: Date | null;
+    endDate: Date | null;
+  };
+  const emptyFilters: MeetingFilters = { committee: [], status: "All", visibility: "All", startDate: null, endDate: null };
+  const [upcomingFilters, setUpcomingFilters] = useState<MeetingFilters>(emptyFilters);
+  const [previousFilters, setPreviousFilters] = useState<MeetingFilters>(emptyFilters);
+  const filters = activeTab === "previous" ? previousFilters : upcomingFilters;
+  const setFilters = activeTab === "previous" ? setPreviousFilters : setUpcomingFilters;
+  const committeeFilter = filters.committee;
+  const statusFilter = filters.status;
+  const visibilityFilter = filters.visibility;
+  const startDateFilter = filters.startDate;
+  const endDateFilter = filters.endDate;
+  const setCommitteeFilter = (v: string[] | ((prev: string[]) => string[])) =>
+    setFilters((prev) => ({ ...prev, committee: typeof v === "function" ? (v as (p: string[]) => string[])(prev.committee) : v }));
+  const setStatusFilter = (v: MeetingStatus | "All") => setFilters((prev) => ({ ...prev, status: v }));
+  const setVisibilityFilter = (v: MeetingVisibility | "All") => setFilters((prev) => ({ ...prev, visibility: v }));
+  const setStartDateFilter = (v: Date | null) => setFilters((prev) => ({ ...prev, startDate: v }));
+  const setEndDateFilter = (v: Date | null) => setFilters((prev) => ({ ...prev, endDate: v }));
   type PendingAction =
     | { type: "make-active" | "make-draft" | "publish-to-site" | "remove-from-site" | "delete"; meeting: Meeting };
   type FilterType = "date" | "status" | "visibility" | "committee";
@@ -94,7 +117,7 @@ export default function MeetingsPage() {
   const [filterConfigAnchor, setFilterConfigAnchor] = useState<{ el: HTMLElement; type: FilterType } | null>(null);
   type TemplateFilterType = "status" | "committee";
   const allTemplateFilterTypes: TemplateFilterType[] = ["status", "committee"];
-  const [templateCommitteeFilter, setTemplateCommitteeFilter] = useState("");
+  const [templateCommitteeFilter, setTemplateCommitteeFilter] = useState<string[]>([]);
   const [templateStatusFilter, setTemplateStatusFilter] = useState<"All" | "Active" | "Archived">("Active");
   const [templateFilterConfigAnchor, setTemplateFilterConfigAnchor] = useState<{ el: HTMLElement; type: TemplateFilterType } | null>(null);
 
@@ -109,7 +132,7 @@ export default function MeetingsPage() {
     switch (type) {
       case "status": return statusFilter !== "All";
       case "visibility": return visibilityFilter !== "All";
-      case "committee": return !!committeeFilter;
+      case "committee": return committeeFilter.length > 0;
       case "date": return !!startDateFilter || !!endDateFilter;
     }
   };
@@ -118,14 +141,14 @@ export default function MeetingsPage() {
   const clearFilter = (type: FilterType) => {
     if (type === "status") setStatusFilter("All");
     if (type === "visibility") setVisibilityFilter("All");
-    if (type === "committee") setCommitteeFilter("");
+    if (type === "committee") setCommitteeFilter([]);
     if (type === "date") { setStartDateFilter(null); setEndDateFilter(null); }
   };
 
   const clearAllFilters = () => {
     setStatusFilter("All");
     setVisibilityFilter("All");
-    setCommitteeFilter("");
+    setCommitteeFilter([]);
     setStartDateFilter(null);
     setEndDateFilter(null);
   };
@@ -138,26 +161,30 @@ export default function MeetingsPage() {
   const isTemplateFilterActive = (type: TemplateFilterType) => {
     switch (type) {
       case "status": return templateStatusFilter !== "All";
-      case "committee": return !!templateCommitteeFilter;
+      case "committee": return templateCommitteeFilter.length > 0;
     }
   };
   const anyTemplateFilterActive = allTemplateFilterTypes.some(isTemplateFilterActive);
 
   const clearTemplateFilter = (type: TemplateFilterType) => {
     if (type === "status") setTemplateStatusFilter("All");
-    if (type === "committee") setTemplateCommitteeFilter("");
+    if (type === "committee") setTemplateCommitteeFilter([]);
   };
 
   const clearAllTemplateFilters = () => {
     setTemplateStatusFilter("All");
-    setTemplateCommitteeFilter("");
+    setTemplateCommitteeFilter([]);
   };
 
   const getActiveFilterLabel = (type: FilterType): string => {
     switch (type) {
       case "status": return statusFilter;
       case "visibility": return visibilityFilter;
-      case "committee": return committeeFilter;
+      case "committee": {
+        if (committeeFilter.length === 0) return "";
+        if (committeeFilter.length === 1) return committeeFilter[0];
+        return `${committeeFilter[0]} +${committeeFilter.length - 1}`;
+      }
       case "date": {
         if (startDateFilter && endDateFilter)
           return `${format(startDateFilter, "MMM d, yyyy")} – ${format(endDateFilter, "MMM d, yyyy")}`;
@@ -170,7 +197,11 @@ export default function MeetingsPage() {
   const getActiveTemplateFilterLabel = (type: TemplateFilterType): string => {
     switch (type) {
       case "status": return templateStatusFilter;
-      case "committee": return templateCommitteeFilter;
+      case "committee": {
+        if (templateCommitteeFilter.length === 0) return "";
+        if (templateCommitteeFilter.length === 1) return templateCommitteeFilter[0];
+        return `${templateCommitteeFilter[0]} +${templateCommitteeFilter.length - 1}`;
+      }
     }
   };
 
@@ -179,10 +210,10 @@ export default function MeetingsPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newTemplateDialogOpen, setNewTemplateDialogOpen] = useState(false);
+  const [templateRowMenuAnchor, setTemplateRowMenuAnchor] = useState<{ el: HTMLElement; template: MeetingTemplate } | null>(null);
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
   const [duplicateSource, setDuplicateSource] = useState<Meeting | null>(null);
   const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
-  const [detailView, setDetailView] = useState<Meeting | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -192,10 +223,6 @@ export default function MeetingsPage() {
     }
   }, [searchOpen]);
 
-  useEffect(() => {
-    setSearch("");
-    setSearchOpen(false);
-  }, [activeTab]);
 
   const filteredMeetings = useMemo(() => {
     return meetings
@@ -206,7 +233,7 @@ export default function MeetingsPage() {
       .filter((meeting) =>
         visibilityFilter === "All" ? true : meeting.visibility === visibilityFilter,
       )
-      .filter((meeting) => (!committeeFilter ? true : meeting.committee === committeeFilter))
+      .filter((meeting) => (committeeFilter.length === 0 ? true : committeeFilter.includes(meeting.committee)))
       .filter((meeting) => (!startDateFilter ? true : meeting.date >= startDateFilter.toISOString().slice(0, 10)))
       .filter((meeting) => (!endDateFilter ? true : meeting.date <= endDateFilter.toISOString().slice(0, 10)));
   }, [meetings, search, statusFilter, visibilityFilter, committeeFilter, startDateFilter, endDateFilter]);
@@ -228,22 +255,8 @@ export default function MeetingsPage() {
   const visibleTemplates = useMemo(() => templates
     .filter((t) => !search ? true : t.name.toLowerCase().includes(search.toLowerCase()))
     .filter((t) => templateStatusFilter === "All" ? true : t.status === templateStatusFilter)
-    .filter((t) => !templateCommitteeFilter ? true : t.committee === templateCommitteeFilter),
+    .filter((t) => templateCommitteeFilter.length === 0 ? true : templateCommitteeFilter.includes(t.committee)),
   [templates, search, templateStatusFilter, templateCommitteeFilter]);
-  if (detailView) {
-    return (
-      <MeetingDetailView
-        meeting={detailView}
-        onBack={() => setDetailView(null)}
-        onUpdate={(updated) => {
-          setMeetings((prev) => prev.map((m) => (m.id === updated.id ? updated : m)));
-          setDetailView(updated);
-        }}
-      />
-    );
-  }
-
-
   return (
     <PageLayout id="page-meetings">
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr auto", alignItems: "center" }}>
@@ -314,52 +327,34 @@ export default function MeetingsPage() {
         </Tabs>
 
         <Stack direction="row" alignItems="center" sx={{ pb: "4px", gap: "8px" }}>
-          <IconButton
-            size="medium"
-            onClick={() => setFilterRowVisible((v) => !v)}
-            color="tertiary"
-            sx={{
-              ...(filterRowVisible && {
-                bgcolor: "var(--lens-component-button-tertiary-hover-background)",
-                "&:hover": { bgcolor: "var(--lens-component-button-tertiary-hover-background)" },
-              }),
-              ...((activeTab === "templates" ? anyTemplateFilterActive : anyFilterActive) && { "& svg": { color: "#0040d5" } }),
-            }}
-          >
-            <FilterListIcon />
-          </IconButton>
-          {activeTab !== "templates" && (
-            <IconButton
-              size="medium"
-              onClick={(e) => setSortMenuAnchor(e.currentTarget)}
-              color="tertiary"
-            >
-              <SortIcon />
-            </IconButton>
-          )}
           <Box sx={{
-            width: searchOpen ? 0 : 40,
-            overflow: "hidden",
-            opacity: searchOpen ? 0 : 1,
+            position: "relative",
+            width: searchOpen ? 220 : 40,
+            height: 40,
             flexShrink: 0,
-            transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 150ms ease",
+            transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1)",
           }}>
-            <IconButton
-              size="medium"
-              onClick={() => setSearchOpen(true)}
-              color="tertiary"
-              tabIndex={searchOpen ? -1 : 0}
-            >
-              <SearchIcon />
-            </IconButton>
-          </Box>
-          <Box sx={{
-            width: searchOpen ? 220 : 0,
-            overflow: "hidden",
-            opacity: searchOpen ? 1 : 0,
-            flexShrink: 0,
-            transition: "width 250ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease 50ms",
-          }}>
+            <Box sx={{
+              position: "absolute", inset: 0,
+              opacity: searchOpen ? 0 : 1,
+              pointerEvents: searchOpen ? "none" : "auto",
+              transition: "opacity 150ms ease",
+            }}>
+              <IconButton
+                size="medium"
+                onClick={() => setSearchOpen(true)}
+                color="tertiary"
+                tabIndex={searchOpen ? -1 : 0}
+              >
+                <SearchIcon />
+              </IconButton>
+            </Box>
+            <Box sx={{
+              position: "absolute", inset: 0,
+              opacity: searchOpen ? 1 : 0,
+              pointerEvents: searchOpen ? "auto" : "none",
+              transition: "opacity 200ms ease 50ms",
+            }}>
             <TextField
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -393,7 +388,31 @@ export default function MeetingsPage() {
                 },
               }}
             />
+            </Box>
           </Box>
+          <IconButton
+            size="medium"
+            onClick={() => setFilterRowVisible((v) => !v)}
+            color="tertiary"
+            sx={{
+              ...(filterRowVisible && {
+                bgcolor: "var(--lens-component-button-tertiary-hover-background)",
+                "&:hover": { bgcolor: "var(--lens-component-button-tertiary-hover-background)" },
+              }),
+              ...((activeTab === "templates" ? anyTemplateFilterActive : anyFilterActive) && { "& svg": { color: "#0040d5" } }),
+            }}
+          >
+            <FilterListIcon />
+          </IconButton>
+          {activeTab !== "templates" && (
+            <IconButton
+              size="medium"
+              onClick={(e) => setSortMenuAnchor(e.currentTarget)}
+              color="tertiary"
+            >
+              <SortIcon />
+            </IconButton>
+          )}
           <Menu
             anchorEl={sortMenuAnchor}
             open={Boolean(sortMenuAnchor)}
@@ -550,9 +569,14 @@ export default function MeetingsPage() {
               <MenuItem key="internal" selected={visibilityFilter === "Internal"} onClick={() => { setVisibilityFilter("Internal"); setFilterConfigAnchor(null); }}>Internal</MenuItem>,
               <MenuItem key="public" selected={visibilityFilter === "Public"} onClick={() => { setVisibilityFilter("Public"); setFilterConfigAnchor(null); }}>Public</MenuItem>,
             ]}
-            {filterConfigAnchor?.type === "committee" && committees.map((c) => (
-              <MenuItem key={c} selected={committeeFilter === c} onClick={() => { setCommitteeFilter(c); setFilterConfigAnchor(null); }}>{c}</MenuItem>
-            ))}
+            {filterConfigAnchor?.type === "committee" && (
+              <CommitteeMultiSelect
+                options={committees}
+                selected={committeeFilter}
+                onToggle={(c) => setCommitteeFilter((prev) => prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c])}
+                onClear={() => setCommitteeFilter([])}
+              />
+            )}
             {filterConfigAnchor?.type === "date" && (
               <Box sx={{ p: 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -586,9 +610,14 @@ export default function MeetingsPage() {
               <MenuItem key="active" selected={templateStatusFilter === "Active"} onClick={() => { setTemplateStatusFilter("Active"); setTemplateFilterConfigAnchor(null); }}>Active</MenuItem>,
               <MenuItem key="archived" selected={templateStatusFilter === "Archived"} onClick={() => { setTemplateStatusFilter("Archived"); setTemplateFilterConfigAnchor(null); }}>Archived</MenuItem>,
             ]}
-            {templateFilterConfigAnchor?.type === "committee" && committees.map((c) => (
-              <MenuItem key={c} selected={templateCommitteeFilter === c} onClick={() => { setTemplateCommitteeFilter(c); setTemplateFilterConfigAnchor(null); }}>{c}</MenuItem>
-            ))}
+            {templateFilterConfigAnchor?.type === "committee" && (
+              <CommitteeMultiSelect
+                options={committees}
+                selected={templateCommitteeFilter}
+                onToggle={(c) => setTemplateCommitteeFilter((prev) => prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c])}
+                onClear={() => setTemplateCommitteeFilter([])}
+              />
+            )}
           </Menu>
 
           {/* Upcoming tab */}
@@ -608,7 +637,7 @@ export default function MeetingsPage() {
                         <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                         <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                       </Box>
-                      <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
+                      <Typography variant="subtitle2" onClick={() => navigate(`/meetings/${meeting.id}`)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
                         {meeting.name}
                       </Typography>
                     </Stack>
@@ -666,7 +695,7 @@ export default function MeetingsPage() {
                                 <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
                                 <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                               </Box>
-                              <Typography variant="subtitle2" onClick={() => setDetailView(meeting)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
+                              <Typography variant="subtitle2" onClick={() => navigate(`/meetings/${meeting.id}`)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
                                 {meeting.name}
                               </Typography>
                             </Stack>
@@ -842,7 +871,7 @@ export default function MeetingsPage() {
             };
           }
           setMeetings((prev) => [newMeeting, ...prev]);
-          setDetailView(newMeeting);
+          navigate(`/meetings/${newMeeting.id}`, { state: { meeting: newMeeting } });
         }}
       />
       <DuplicateMeetingDialog
@@ -896,5 +925,63 @@ export default function MeetingsPage() {
         onClose={() => setPendingAction(null)}
       />
     </PageLayout>
+  );
+}
+
+function CommitteeMultiSelect({
+  options,
+  selected,
+  onToggle,
+}: {
+  options: string[];
+  selected: string[];
+  onToggle: (committee: string) => void;
+  onClear: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const showSearch = options.length > 5;
+  const filtered = !query.trim()
+    ? options
+    : options.filter((o) => o.toLowerCase().includes(query.trim().toLowerCase()));
+
+  return (
+    <>
+      {showSearch && (
+        <Box sx={{ px: 1.5, pt: 1, pb: 1 }} onKeyDown={(e) => e.stopPropagation()}>
+          <TextField
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search committees"
+            size="small"
+            fullWidth
+            autoFocus
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon style={{ fontSize: 16 }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+        </Box>
+      )}
+      {filtered.length === 0 ? (
+        <Box sx={{ px: 2, py: 1.5, color: "text.secondary", fontSize: 13 }}>
+          No committees match
+        </Box>
+      ) : (
+        filtered.map((c) => {
+          const checked = selected.includes(c);
+          return (
+            <MenuItem key={c} selected={checked} onClick={() => onToggle(c)}>
+              <Checkbox checked={checked} size="small" sx={{ p: 0, mr: "4px" }} disableRipple />
+              {c}
+            </MenuItem>
+          );
+        })
+      )}
+    </>
   );
 }

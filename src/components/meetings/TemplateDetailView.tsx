@@ -29,10 +29,12 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { differenceInHours, differenceInMinutes, format, isSameDay, parse } from "date-fns";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
 
 import ConfirmDialog from "./ConfirmDialog";
 import PageLayout from "../PageLayout";
 import type { MeetingTemplate } from "../../types/meetings";
+import { getAgendaFor } from "../../data/runtimeAgendaStore";
 
 // ── Shared picker styles ───────────────────────────────────────────────────
 
@@ -302,6 +304,7 @@ export default function TemplateDetailView({
   onUseTemplate?: () => void;
 }) {
   const { tokens } = useTheme();
+  const navigate = useNavigate();
   const dividerColor =
     tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
 
@@ -330,7 +333,7 @@ export default function TemplateDetailView({
             <OverflowBreadcrumbs
               items={[
                 { id: "root", label: "Community v2", isDisabled: true },
-                { id: "meetings", label: "Meetings", isDisabled: true },
+                { id: "meetings", label: "Meetings" },
                 { id: "templates", label: "Templates" },
                 { id: "current", label: draft.name, isCurrent: true },
               ]}
@@ -357,7 +360,7 @@ export default function TemplateDetailView({
                   </Box>
                 );
                 return (
-                  <Box component="button" onClick={onBack} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
+                  <Box component="button" onClick={item.id === "meetings" ? () => navigate("/meetings") : onBack} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>
                     {label}
                   </Box>
                 );
@@ -368,9 +371,21 @@ export default function TemplateDetailView({
             (<EditableTitleField value={draft.name} onSave={(val) => save({ name: val })} />) as unknown as string
           }
           pageSubtitle={
-            <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
-              {draft.committee}
-            </Typography>
+            <Stack direction="row" alignItems="center" gap="6px">
+              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
+                {draft.committee}
+              </Typography>
+              {lastEdited && (
+                <>
+                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px" }}>·</Typography>
+                  <Tooltip title={`Edited by you on ${format(lastEdited, "MMMM d")} at ${format(lastEdited, "h:mm a")}`} placement="bottom-start">
+                    <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px", cursor: "default" }}>
+                      {formatEditedLabel(lastEdited)}
+                    </Typography>
+                  </Tooltip>
+                </>
+              )}
+            </Stack>
           }
           moreButton={
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end", alignSelf: "stretch" }}>
@@ -424,16 +439,6 @@ export default function TemplateDetailView({
                 </Menu>
               </Stack>
               </Box>
-              {lastEdited && (
-                <Tooltip
-                  title={`Edited by you on ${format(lastEdited, "MMMM d")} at ${format(lastEdited, "h:mm a")}`}
-                  placement="bottom-end"
-                >
-                  <Typography sx={{ fontSize: 12, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)", cursor: "default" }}>
-                    {formatEditedLabel(lastEdited)}
-                  </Typography>
-                </Tooltip>
-              )}
             </Box>
           }
           containerProps={{
@@ -461,13 +466,27 @@ export default function TemplateDetailView({
             <Typography flex={1} minWidth={0} sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
               Agenda
             </Typography>
-            <Button
-              variant="outlined"
-              size="small"
-              startIcon={<SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>}
-            >
-              Add
-            </Button>
+            {(() => {
+              const hasAgenda = getAgendaFor(draft.id).some((c) => c.items.length > 0);
+              return hasAgenda ? (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => navigate(`/meetings/templates/${draft.id}/agenda`)}
+                >
+                  Edit
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<SvgIcon sx={{ width: 16, height: 16 }}><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></SvgIcon>}
+                  onClick={() => navigate(`/meetings/templates/${draft.id}/agenda`)}
+                >
+                  Add
+                </Button>
+              );
+            })()}
           </Stack>
         </Box>
 

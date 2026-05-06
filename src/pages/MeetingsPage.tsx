@@ -67,6 +67,7 @@ import type {
 } from "../types/meetings";
 import { formatDateLong, getDayOfMonth, getMonthAbbrev, getYear, isUpcoming } from "../utils/meetings";
 import meetingsData from "../data/meetings.json";
+import { cloneAgendaFromTemplate } from "../data/runtimeAgendaStore";
 
 export default function MeetingsPage() {
   const { presets, tokens } = useTheme();
@@ -715,8 +716,8 @@ export default function MeetingsPage() {
                             <MeetingRowActions
                               status={meeting.status}
                               visibility={meeting.visibility}
-                              onMakeActive={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Active" as const } : m)))}
-                              onMakeDraft={() => setMeetings((prev) => prev.map((m) => (m.id === meeting.id ? { ...m, status: "Draft" as const } : m)))}
+                              onMakeActive={() => setPendingAction({ type: "make-active", meeting })}
+                              onMakeDraft={() => setPendingAction({ type: "make-draft", meeting })}
                               onToggleVisibility={() => setPendingAction({ type: meeting.visibility === "Internal" ? "publish-to-site" : "remove-from-site", meeting })}
                               onDuplicate={() => { setDuplicateSource(meeting); setDuplicateDialogOpen(true); }}
                               onDelete={() => setPendingAction({ type: "delete", meeting })}
@@ -767,32 +768,13 @@ export default function MeetingsPage() {
                   <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.location ?? "—"}</Typography>
                 </Stack>
                 <Stack direction="row" spacing={0.5} sx={{ ml: "auto" }}>
-                  <Tooltip title="Duplicate">
-                    <IconButton size="medium" aria-label="Duplicate template">
-                      <CopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                  {template.status === "Archived" ? (
-                    <Tooltip title="Unarchive">
-                      <IconButton
-                        size="medium"
-                        aria-label="Unarchive template"
-                        onClick={() => setTemplates((prev) => prev.map((t) => t.id === template.id ? { ...t, status: "Active" as const } : t))}
-                      >
-                        <UnarchiveIcon />
-                      </IconButton>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Archive">
-                      <IconButton
-                        size="medium"
-                        aria-label="Archive template"
-                        onClick={() => setTemplates((prev) => prev.map((t) => t.id === template.id ? { ...t, status: "Archived" as const } : t))}
-                      >
-                        <ArchiveIcon />
-                      </IconButton>
-                    </Tooltip>
-                  )}
+                  <IconButton
+                    size="medium"
+                    aria-label="More options"
+                    onClick={(e) => setTemplateRowMenuAnchor({ el: e.currentTarget, template })}
+                  >
+                    <MoreIcon />
+                  </IconButton>
                 </Stack>
               </Box>
             ))}
@@ -801,6 +783,84 @@ export default function MeetingsPage() {
           </Box>
 
         </Box>
+
+      <Menu
+        anchorEl={templateRowMenuAnchor?.el}
+        open={Boolean(templateRowMenuAnchor)}
+        onClose={() => setTemplateRowMenuAnchor(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MenuItem
+          onClick={() => {
+            const tpl = templateRowMenuAnchor!.template;
+            setTemplateRowMenuAnchor(null);
+            const newMeeting: Meeting = {
+              id: `m-new-${Date.now()}`,
+              name: tpl.name,
+              date: new Date().toISOString().slice(0, 10),
+              time: tpl.time,
+              location: tpl.location,
+              description: tpl.description,
+              committee: tpl.committee,
+              status: "Draft",
+              visibility: "Internal",
+              agendaStatus: "Not published",
+              agendaCategories: 0,
+              agendaItems: 0,
+              membersOnly: false,
+              publicRTS: false,
+            };
+            setMeetings((prev) => [newMeeting, ...prev]);
+            cloneAgendaFromTemplate(tpl.id, newMeeting.id);
+            navigate(`/meetings/${newMeeting.id}`, { state: { meeting: newMeeting } });
+          }}
+        >
+          <ListItemIcon><CalendarIcon /></ListItemIcon>
+          <ListItemText>Use template</ListItemText>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            const tpl = templateRowMenuAnchor!.template;
+            setTemplateRowMenuAnchor(null);
+            const copy: MeetingTemplate = {
+              ...tpl,
+              id: `t-new-${Date.now()}`,
+              name: `Copy of ${tpl.name}`,
+              status: "Active",
+              meetingsCreated: 0,
+            };
+            setTemplates((prev) => [copy, ...prev]);
+            navigate(`/meetings/templates/${copy.id}`, { state: { template: copy } });
+          }}
+        >
+          <ListItemIcon><CopyIcon /></ListItemIcon>
+          <ListItemText>Duplicate</ListItemText>
+        </MenuItem>
+        {templateRowMenuAnchor?.template.status === "Archived" ? (
+          <MenuItem
+            onClick={() => {
+              const id = templateRowMenuAnchor!.template.id;
+              setTemplateRowMenuAnchor(null);
+              setTemplates((prev) => prev.map((t) => t.id === id ? { ...t, status: "Active" as const } : t));
+            }}
+          >
+            <ListItemIcon><UnarchiveIcon /></ListItemIcon>
+            <ListItemText>Unarchive</ListItemText>
+          </MenuItem>
+        ) : (
+          <MenuItem
+            onClick={() => {
+              const id = templateRowMenuAnchor!.template.id;
+              setTemplateRowMenuAnchor(null);
+              setTemplates((prev) => prev.map((t) => t.id === id ? { ...t, status: "Archived" as const } : t));
+            }}
+          >
+            <ListItemIcon><ArchiveIcon /></ListItemIcon>
+            <ListItemText>Archive</ListItemText>
+          </MenuItem>
+        )}
+      </Menu>
 
       <CommitteePickerDialog
         open={newTemplateDialogOpen}
@@ -845,6 +905,7 @@ export default function MeetingsPage() {
               membersOnly: false,
               publicRTS: false,
             };
+            cloneAgendaFromTemplate(tpl.id, newMeeting.id);
           } else if (result.type === "duplicate") {
             const src = result.meeting;
             newMeeting = {
@@ -855,6 +916,7 @@ export default function MeetingsPage() {
               status: "Draft",
               visibility: "Internal",
             };
+            cloneAgendaFromTemplate(src.id, newMeeting.id);
           } else {
             newMeeting = {
               id: `m-new-${Date.now()}`,

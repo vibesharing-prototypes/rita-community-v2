@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router";
 import TemplateDetailView from "../components/meetings/TemplateDetailView";
 import meetingsData from "../data/meetings.json";
 import type { Meeting, MeetingTemplate } from "../types/meetings";
+import { cloneAgendaFromTemplate } from "../data/runtimeAgendaStore";
 
 export default function TemplateDetailPage() {
   const { id } = useParams();
@@ -43,6 +44,7 @@ export default function TemplateDetailPage() {
           membersOnly: false,
           publicRTS: false,
         };
+        cloneAgendaFromTemplate(template.id, newMeeting.id);
         navigate(`/meetings/${newMeeting.id}`, { state: { meeting: newMeeting } });
       }}
     />

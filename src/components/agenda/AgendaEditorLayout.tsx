@@ -5,8 +5,9 @@ import {
 } from "@mui/material";
 import ExpandSideNavIcon from "@diligentcorp/atlas-react-bundle/icons/ExpandSideNav";
 import DownloadIcon from "@diligentcorp/atlas-react-bundle/icons/Download";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { setAgendaFor } from "../../data/runtimeAgendaStore";
 import type { AgendaCategory, AgendaItem } from "../../types/agenda";
 import type { Meeting } from "../../types/meetings";
 import { isUpcoming } from "../../utils/meetings";
@@ -21,15 +22,21 @@ function generateId() {
 export default function AgendaEditorLayout({
   meeting,
   initialCategories,
+  kind = "meeting",
 }: {
   meeting: Meeting;
   initialCategories: AgendaCategory[];
+  kind?: "meeting" | "template";
 }) {
   const { tokens } = useTheme();
   const dividerColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState<AgendaCategory[]>(initialCategories);
+
+  useEffect(() => {
+    setAgendaFor(meeting.id, categories);
+  }, [meeting.id, categories]);
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
   const [agendaCollapsed, setAgendaCollapsed] = useState(false);
   const [panelView, setPanelView] = useState<AgendaPanelView>("content");
@@ -156,7 +163,7 @@ export default function AgendaEditorLayout({
 
   const selectedItem = selectedItemId ? findItem(selectedItemId) : null;
 
-  const tab = isUpcoming(meeting.date) ? "Upcoming" : "Previous";
+  const tab = kind === "template" ? "Templates" : isUpcoming(meeting.date) ? "Upcoming" : "Previous";
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
@@ -195,7 +202,7 @@ export default function AgendaEditorLayout({
                 const destinations: Record<string, string> = {
                   meetings: "/meetings",
                   tab: `/meetings?tab=${tab.toLowerCase()}`,
-                  meeting: `/meetings/${meeting.id}`,
+                  meeting: kind === "template" ? `/meetings/templates/${meeting.id}` : `/meetings/${meeting.id}`,
                 };
                 return (
                   <Box component="button" onClick={() => navigate(destinations[item.id])} sx={{ display: "flex", alignItems: "center", justifyContent: "center", px: "12px", py: "4px", borderRadius: "10px", cursor: "pointer", background: "none", border: "none", "&:hover": { bgcolor: "action.hover" } }}>

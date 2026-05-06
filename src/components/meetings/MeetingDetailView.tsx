@@ -582,7 +582,7 @@ export default function MeetingDetailView({
                 <Button
                   variant="outlined"
                   size="small"
-                  onClick={() => navigate(`/meetings/${draft.id}/agenda`)}
+                  onClick={() => navigate(`/meetings/${draft.id}/agenda`, { state: { meeting: draft } })}
                 >
                   Edit
                 </Button>

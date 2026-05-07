@@ -9,8 +9,15 @@ import {
   Box, IconButton, ListItemIcon, ListItemText,
   Menu, MenuItem, Stack, SvgIcon, TextField, Tooltip, Typography, useTheme,
 } from "@mui/material";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import {
+  ClassicEditor, Bold, Italic, Underline, Strikethrough,
+  List, Link, Essentials, Paragraph,
+  Heading, Indent, IndentBlock, BlockQuote, Undo,
+} from "ckeditor5";
+import "ckeditor5/ckeditor5.css";
 import { differenceInHours, differenceInMinutes, format, isSameDay } from "date-fns";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { AgendaAttachment, AgendaCategory, AgendaItem, AgendaItemType } from "../../../types/agenda";
 
 const ALL_TYPES: AgendaItemType[] = [
@@ -54,33 +61,97 @@ function InlineTitle({ value, onSave }: { value: string; onSave: (v: string) => 
   );
 }
 
-// ── Inline description ─────────────────────────────────────────────────────
+// ── CKEditor config ────────────────────────────────────────────────────────
 
-function InlineDescription({
+const ckEditorConfig = {
+  plugins: [
+    Essentials, Paragraph, Heading, Bold, Italic, Underline, Strikethrough,
+    List, Link, Indent, IndentBlock, BlockQuote, Undo,
+  ],
+  toolbar: {
+    items: ["bold", "italic", "underline", "strikethrough", "|", "bulletedList", "numberedList", "|", "outdent", "indent", "|", "link", "blockQuote", "|", "undo", "redo"],
+  },
+  licenseKey: "GPL",
+};
+
+// ── Rich text description ──────────────────────────────────────────────────
+
+function RichTextDescription({
   value, onSave, placeholder,
 }: { value: string; onSave: (v: string) => void; placeholder: string }) {
-  const [val, setVal] = useState(value);
+  const [isEditing, setIsEditing] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<InstanceType<typeof ClassicEditor> | null>(null);
 
-  useEffect(() => { setVal(value); }, [value]);
+  const handleSaveAndClose = () => {
+    const data = editorRef.current?.getData() ?? value;
+    if (data !== value) onSave(data);
+    setIsEditing(false);
+  };
+
+  const handleBlur = (_event: unknown, editor: InstanceType<typeof ClassicEditor>) => {
+    // Delay so toolbar balloon clicks don't prematurely close the editor
+    setTimeout(() => {
+      if (wrapperRef.current && !wrapperRef.current.contains(document.activeElement)) {
+        const data = editor.getData();
+        if (data !== value) onSave(data);
+        setIsEditing(false);
+      }
+    }, 150);
+  };
+
+  if (!isEditing) {
+    const isEmpty = !value || value === "<p></p>" || value === "<p>&nbsp;</p>" || value.trim() === "";
+    return (
+      <Box
+        onClick={() => setIsEditing(true)}
+        sx={{
+          cursor: "text",
+          minHeight: 22,
+          borderRadius: "4px",
+          py: "2px",
+          px: "4px",
+          mx: "-4px",
+          "&:hover": { backgroundColor: "action.hover" },
+          "& p": { margin: 0, fontSize: 14, lineHeight: "22px", fontFamily: "inherit" },
+          "& ul, & ol": { mt: 0, mb: 0, pl: "20px", fontSize: 14, lineHeight: "22px" },
+          "& li": { fontSize: 14, lineHeight: "22px" },
+          "& a": { color: "primary.main" },
+          "& strong": { fontWeight: 600 },
+          "& blockquote": { borderLeft: "3px solid", borderColor: "divider", pl: 1, ml: 0, my: "4px" },
+        }}
+      >
+        {isEmpty ? (
+          <Typography sx={{ fontSize: 14, lineHeight: "22px", color: "text.disabled", fontStyle: "italic" }}>
+            {placeholder}
+          </Typography>
+        ) : (
+          <div dangerouslySetInnerHTML={{ __html: value }} />
+        )}
+      </Box>
+    );
+  }
 
   return (
-    <TextField
-      value={val}
-      onChange={(e) => setVal(e.target.value)}
-      onBlur={() => { if (val !== value) onSave(val); }}
-      onKeyDown={(e) => { if (e.key === "Escape") { setVal(value); (e.target as HTMLElement).blur(); } }}
-      multiline
-      minRows={1}
-      fullWidth
-      variant="standard"
-      placeholder={placeholder}
-      inputProps={{ style: { fontSize: 14, lineHeight: "22px", fontFamily: "inherit", padding: 0 } }}
+    <Box
+      ref={wrapperRef}
       sx={{
-        "& .MuiInput-root": { borderRadius: "4px", py: "2px", alignItems: "flex-start", "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" } },
-        "& .MuiInput-root::before": { borderBottom: "none !important" },
-        "& .MuiInput-root::after": { borderBottom: "none" },
+        "& .ck-editor__editable": { minHeight: "80px", fontSize: 14, fontFamily: "inherit" },
+        "& .ck.ck-editor__main>.ck-editor__editable": { borderRadius: "0 0 4px 4px" },
+        "& .ck.ck-toolbar": { borderRadius: "4px 4px 0 0" },
       }}
-    />
+    >
+      <CKEditor
+        editor={ClassicEditor}
+        config={ckEditorConfig}
+        data={value}
+        onReady={(editor) => {
+          editorRef.current = editor as InstanceType<typeof ClassicEditor>;
+          editor.focus();
+        }}
+        onBlur={handleBlur as Parameters<typeof CKEditor>[0]["onBlur"]}
+      />
+    </Box>
   );
 }
 
@@ -195,7 +266,7 @@ function ContentSection({
         </IconButton>
       </Stack>
       <Box sx={{ pl: "40px" }}>
-        <InlineDescription value={content} onSave={onSave} placeholder={placeholder} />
+        <RichTextDescription value={content} onSave={onSave} placeholder={placeholder} />
         {attachments.length > 0 && (
           <Stack gap={0.75} sx={{ mt: 1.5 }}>
             {attachments.map((att) => <AttachmentRow key={att.id} att={att} />)}

@@ -11,6 +11,7 @@ import { setAgendaFor } from "../../data/runtimeAgendaStore";
 import type { AgendaCategory, AgendaItem } from "../../types/agenda";
 import type { Meeting } from "../../types/meetings";
 import { isUpcoming } from "../../utils/meetings";
+import StatusChip from "../meetings/StatusChip";
 import AgendaToolbar, { type AgendaPanelView } from "./AgendaToolbar";
 import AgendaTree from "./AgendaTree/AgendaTree";
 import ItemInlineEditor from "./ItemPanel/ItemInlineEditor";
@@ -228,9 +229,14 @@ export default function AgendaEditorLayout({
             </Box>
           ) as unknown as string}
           pageSubtitle={
-            <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
-              {meeting.committee}
-            </Typography>
+            <Stack direction="row" alignItems="center" gap={1}>
+              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
+                {meeting.committee}
+              </Typography>
+              {meeting.status === "Draft"
+                ? <StatusChip label="Draft" />
+                : <StatusChip label={meeting.visibility} />}
+            </Stack>
           }
           moreButton={
             <Stack direction="row" spacing={1} alignItems="center">

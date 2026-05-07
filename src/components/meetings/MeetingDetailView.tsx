@@ -579,6 +579,9 @@ export default function MeetingDetailView({
                 <Typography flex={1} minWidth={0} sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
                   Agenda
                 </Typography>
+                <IconButton size="small" aria-label="Download agenda">
+                  <DownloadIcon sx={{ width: 18, height: 18 }} />
+                </IconButton>
                 <Button
                   variant="outlined"
                   size="small"

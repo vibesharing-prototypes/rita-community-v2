@@ -16,6 +16,7 @@ import {
   Heading, Indent, IndentBlock, BlockQuote, Undo,
 } from "ckeditor5";
 import "ckeditor5/ckeditor5.css";
+import "./ItemInlineEditor.css";
 import { differenceInHours, differenceInMinutes, format, isSameDay } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import type { AgendaAttachment, AgendaCategory, AgendaItem, AgendaItemType } from "../../../types/agenda";
@@ -135,6 +136,7 @@ function RichTextDescription({
   return (
     <Box
       ref={wrapperRef}
+      className="agenda-ck-editor"
       sx={{
         "& .ck-editor__editable": { minHeight: "80px", fontSize: 14, fontFamily: "inherit" },
         "& .ck.ck-editor__main>.ck-editor__editable": { borderRadius: "0 0 4px 4px" },

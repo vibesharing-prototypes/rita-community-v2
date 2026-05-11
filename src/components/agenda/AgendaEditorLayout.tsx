@@ -38,7 +38,12 @@ export default function AgendaEditorLayout({
   useEffect(() => {
     setAgendaFor(meeting.id, categories);
   }, [meeting.id, categories]);
-  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(() => {
+    for (const cat of initialCategories) {
+      if (cat.items.length > 0) return cat.items[0].id;
+    }
+    return null;
+  });
   const [agendaCollapsed, setAgendaCollapsed] = useState(false);
   const [panelView, setPanelView] = useState<AgendaPanelView>("content");
 

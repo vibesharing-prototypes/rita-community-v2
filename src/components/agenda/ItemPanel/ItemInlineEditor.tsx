@@ -3,6 +3,8 @@ import GroupIcon from "@diligentcorp/atlas-react-bundle/icons/Group";
 import LanguageIcon from "@diligentcorp/atlas-react-bundle/icons/Language";
 import CustomerAdminIcon from "@diligentcorp/atlas-react-bundle/icons/CustomerAdmin";
 import AttachIcon from "@diligentcorp/atlas-react-bundle/icons/Attach";
+import DocumentIcon from "@diligentcorp/atlas-react-bundle/icons/Document";
+import RemoveCircleIcon from "@diligentcorp/atlas-react-bundle/icons/RemoveCircle";
 import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
 import UnlockedIcon from "@diligentcorp/atlas-react-bundle/icons/Unlocked";
 import {
@@ -113,6 +115,9 @@ function RichTextDescription({
           py: "2px",
           px: "4px",
           mx: "-4px",
+          fontSize: 14,
+          lineHeight: "22px",
+          fontFamily: "inherit",
           "&:hover": { backgroundColor: "action.hover" },
           "& p": { margin: 0, fontSize: 14, lineHeight: "22px", fontFamily: "inherit" },
           "& ul, & ol": { mt: 0, mb: 0, pl: "20px", fontSize: 14, lineHeight: "22px" },
@@ -201,32 +206,49 @@ function TypeSelect({ value, onChange }: { value: AgendaItemType | ""; onChange:
 
 // ── Attachment row ─────────────────────────────────────────────────────────
 
-function AttachmentRow({ att }: { att: AgendaAttachment }) {
+function AttachmentRow({ att, onRemove, borderColor }: { att: AgendaAttachment; onRemove?: () => void; borderColor: string }) {
   return (
     <Stack
-      component="a"
-      href="#"
-      onClick={(e) => e.preventDefault()}
       direction="row"
       alignItems="center"
-      gap={1}
+      gap={0.5}
       sx={{
-        textDecoration: "none",
-        color: "primary.main",
-        cursor: "pointer",
+        border: `1px solid ${borderColor}`,
+        borderRadius: "4px",
+        p: "4px",
+        "&:hover": { bgcolor: "action.hover" },
+        "&:hover .att-remove": { opacity: 1 },
         "&:hover .att-name": { textDecoration: "underline" },
       }}
     >
-      <AttachIcon sx={{ width: 16, height: 16, color: "text.secondary", flexShrink: 0 }} />
+      <DocumentIcon style={{ width: 20, height: 20, flexShrink: 0 }} />
       <Typography
+        component="a"
+        href="#"
+        onClick={(e: React.MouseEvent) => e.preventDefault()}
         className="att-name"
         sx={{
-          fontSize: 13, fontWeight: 600, color: "primary.main", flex: 1, minWidth: 0,
+          fontSize: 12, fontWeight: 600, lineHeight: "16px", letterSpacing: "0.3px",
+          color: "var(--lens-semantic-color-type-default, #282e37)",
+          flex: 1, minWidth: 0,
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+          textDecoration: "none",
+          cursor: "pointer",
         }}
       >
         {att.filename}
       </Typography>
+      {onRemove && (
+        <IconButton
+          className="att-remove"
+          size="small"
+          onClick={onRemove}
+          aria-label="Remove attachment"
+          sx={{ opacity: 0, transition: "opacity 120ms", flexShrink: 0 }}
+        >
+          <RemoveCircleIcon style={{ width: 18, height: 18 }} />
+        </IconButton>
+      )}
     </Stack>
   );
 }
@@ -234,16 +256,32 @@ function AttachmentRow({ att }: { att: AgendaAttachment }) {
 // ── Content section ────────────────────────────────────────────────────────
 
 function ContentSection({
-  icon, label, content, attachments, onSave, placeholder, borderColor,
+  icon, label, content, attachments, onSave, onAddAttachment, onRemoveAttachment, placeholder, borderColor,
 }: {
   icon: React.ReactNode;
   label: string;
   content: string;
   attachments: AgendaAttachment[];
   onSave: (v: string) => void;
+  onAddAttachment: (att: AgendaAttachment) => void;
+  onRemoveAttachment: (id: string) => void;
   placeholder: string;
   borderColor: string;
 }) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    files.forEach((file) => {
+      onAddAttachment({
+        id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        filename: file.name,
+        tier: "public",
+      });
+    });
+    e.target.value = "";
+  };
+
   return (
     <Box sx={{
       pt: "12px", pr: "12px", pl: "12px", pb: "16px",
@@ -251,6 +289,13 @@ function ContentSection({
       borderRadius: "12px",
       bgcolor: "#fff",
     }}>
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
       <Stack direction="row" alignItems="center" gap={1.5} sx={{ mb: 1 }}>
         <Box sx={{
           backgroundColor: "#E4F3FF",
@@ -263,15 +308,24 @@ function ContentSection({
           {icon}
         </Box>
         <Typography sx={{ fontSize: 14, fontWeight: 600, flex: 1 }}>{label}</Typography>
-        <IconButton size="small" sx={{ flexShrink: 0 }} aria-label="Attach file">
-          <AttachIcon sx={{ width: 18, height: 18 }} />
-        </IconButton>
+        <Tooltip title="Attach file">
+          <IconButton size="small" sx={{ flexShrink: 0 }} aria-label="Attach file" onClick={() => fileInputRef.current?.click()}>
+            <AttachIcon sx={{ width: 18, height: 18 }} />
+          </IconButton>
+        </Tooltip>
       </Stack>
       <Box sx={{ pl: "40px" }}>
         <RichTextDescription value={content} onSave={onSave} placeholder={placeholder} />
         {attachments.length > 0 && (
-          <Stack gap={0.75} sx={{ mt: 1.5 }}>
-            {attachments.map((att) => <AttachmentRow key={att.id} att={att} />)}
+          <Stack gap={1} sx={{ mt: 1.5 }}>
+            <Typography sx={{ fontSize: 12, fontWeight: 600, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default, #282e37)" }}>
+              Attachments
+            </Typography>
+            <Stack>
+              {attachments.map((att) => (
+                <AttachmentRow key={att.id} att={att} onRemove={() => onRemoveAttachment(att.id)} borderColor={borderColor} />
+              ))}
+            </Stack>
           </Stack>
         )}
       </Box>
@@ -402,7 +456,7 @@ export default function ItemInlineEditor({
           {/* Edited label */}
           {lastModifiedAt && (
             <Tooltip title={`Edited by you on ${format(lastModifiedAt, "MMMM d")} at ${format(lastModifiedAt, "h:mm a")}`} placement="bottom-start">
-              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px", cursor: "default", mt: 0.25 }}>
+              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px", cursor: "default", mt: 0.25, width: "fit-content" }}>
                 {formatEditedLabel(lastModifiedAt)}
               </Typography>
             </Tooltip>
@@ -462,6 +516,14 @@ export default function ItemInlineEditor({
           attachments={item.attachments.public}
           placeholder="Add public content…"
           onSave={(v) => { setPublicContent(v); onSave(saved({ publicContent: v })); }}
+          onAddAttachment={(att) => {
+            const next = { ...item.attachments, public: [...item.attachments.public, att] };
+            onSave(saved({ attachments: next }));
+          }}
+          onRemoveAttachment={(id) => {
+            const next = { ...item.attachments, public: item.attachments.public.filter((a) => a.id !== id) };
+            onSave(saved({ attachments: next }));
+          }}
           borderColor={borderColor}
         />
         <ContentSection
@@ -471,6 +533,14 @@ export default function ItemInlineEditor({
           attachments={item.attachments.staff}
           placeholder="Add admin content…"
           onSave={(v) => { setStaffContent(v); onSave(saved({ staffContent: v })); }}
+          onAddAttachment={(att) => {
+            const next = { ...item.attachments, staff: [...item.attachments.staff, { ...att, tier: "staff" as const }] };
+            onSave(saved({ attachments: next }));
+          }}
+          onRemoveAttachment={(id) => {
+            const next = { ...item.attachments, staff: item.attachments.staff.filter((a) => a.id !== id) };
+            onSave(saved({ attachments: next }));
+          }}
           borderColor={borderColor}
         />
         <ContentSection
@@ -480,6 +550,14 @@ export default function ItemInlineEditor({
           attachments={item.attachments.executive}
           placeholder="Add executive content…"
           onSave={(v) => { setExecutiveContent(v); onSave(saved({ executiveContent: v })); }}
+          onAddAttachment={(att) => {
+            const next = { ...item.attachments, executive: [...item.attachments.executive, { ...att, tier: "executive" as const }] };
+            onSave(saved({ attachments: next }));
+          }}
+          onRemoveAttachment={(id) => {
+            const next = { ...item.attachments, executive: item.attachments.executive.filter((a) => a.id !== id) };
+            onSave(saved({ attachments: next }));
+          }}
           borderColor={borderColor}
         />
       </Stack>

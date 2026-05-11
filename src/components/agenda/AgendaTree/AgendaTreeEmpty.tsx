@@ -3,7 +3,7 @@ import { Box, Button, SvgIcon, Typography } from "@mui/material";
 export default function AgendaTreeEmpty({ onAddCategory }: { onAddCategory: () => void }) {
   return (
     <Box sx={{ p: 3, textAlign: "center" }}>
-      <Typography sx={{ fontSize: 14, color: "text.secondary", mb: 1.5 }}>
+      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.secondary", mb: 1.5 }}>
         No agenda items yet.
       </Typography>
       <Button

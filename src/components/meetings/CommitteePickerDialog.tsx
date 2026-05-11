@@ -53,7 +53,7 @@ function CommitteeCard({
         <GroupIcon />
       </Box>
       <Typography
-        sx={{ fontSize: "16px", fontWeight: 600, lineHeight: "24px", flex: 1, textAlign: "left" }}
+        sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)', flex: 1, textAlign: "left" }}
       >
         {title}
       </Typography>
@@ -92,7 +92,7 @@ export default function CommitteePickerDialog({
         }}
       >
         <Box>
-          <Typography sx={{ fontSize: 22, fontWeight: 600, lineHeight: "28px" }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-title-h4-md-line-height)' }}>
             New template
           </Typography>
           <Typography variant="body2" color="text.secondary">

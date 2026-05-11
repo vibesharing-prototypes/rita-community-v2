@@ -72,10 +72,10 @@ export default function DuplicateMeetingDialog({
         <DialogTitle
           component="div"
           sx={{
-            fontSize: "20px",
-            fontWeight: 600,
-            lineHeight: "24px",
-            letterSpacing: 0,
+            fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)',
+            fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+            lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)',
+            letterSpacing: 'var(--lens-semantic-letter-spacing-normal)',
             color: "var(--lens-semantic-color-type-default)",
             display: "flex",
             alignItems: "flex-start",

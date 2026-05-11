@@ -456,14 +456,14 @@ export default function MeetingsPage() {
                     <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, flexShrink: 0, color: active ? "#0040d5" : "#242628", "& svg": { width: 16, height: 16, display: "block" } }}>
                       {icon}
                     </Box>
-                    <Typography sx={{ px: "4px", fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                    <Typography sx={{ px: "4px", fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: active ? "#0040d5" : "#242628", whiteSpace: "nowrap" }}>
                       {active ? getActiveTemplateFilterLabel(type) : label}
                     </Typography>
                     <Box
                       sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", flexShrink: 0, color: active ? "#0040d5" : "var(--lens-semantic-color-type-muted)", borderRadius: "50%", "&:hover": { bgcolor: active ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
                       onClick={(e) => { e.stopPropagation(); if (active) { clearTemplateFilter(type); } else { setTemplateFilterConfigAnchor({ el: (e.currentTarget.closest("[data-filter-chip]") as HTMLElement) ?? e.currentTarget, type }); } }}
                     >
-                      {active ? <CloseIcon sx={{ fontSize: 16 }} /> : <ExpandDownIcon sx={{ fontSize: 16 }} />}
+                      {active ? <CloseIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} /> : <ExpandDownIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />}
                     </Box>
                   </Box>
                 );
@@ -508,11 +508,10 @@ export default function MeetingsPage() {
                       {icon}
                     </Box>
                     <Typography sx={{
-                      px: "4px", fontSize: 12, fontWeight: 400,
-                      lineHeight: "16px", letterSpacing: "0.3px",
+                      px: "4px", fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)',
+                      lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
                       color: active ? "#0040d5" : "#242628",
                       whiteSpace: "nowrap",
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
                     }}>
                       {active ? getActiveFilterLabel(type) : label}
                     </Typography>
@@ -535,8 +534,8 @@ export default function MeetingsPage() {
                       }}
                     >
                       {active
-                        ? <CloseIcon sx={{ fontSize: 16 }} />
-                        : <ExpandDownIcon sx={{ fontSize: 16 }} />
+                        ? <CloseIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />
+                        : <ExpandDownIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />
                       }
                     </Box>
                   </Box>
@@ -583,11 +582,11 @@ export default function MeetingsPage() {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <Stack spacing={2}>
                     <Stack spacing={0.5}>
-                      <Typography variant="body2" sx={{ fontSize: 12, fontWeight: 600 }}>After</Typography>
+                      <Typography variant="body2" sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>After</Typography>
                       <DatePicker value={startDateFilter} onChange={(v) => setStartDateFilter(v)} slotProps={{ textField: { size: "small" } }} />
                     </Stack>
                     <Stack spacing={0.5}>
-                      <Typography variant="body2" sx={{ fontSize: 12, fontWeight: 600 }}>Before</Typography>
+                      <Typography variant="body2" sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>Before</Typography>
                       <DatePicker value={endDateFilter} onChange={(v) => setEndDateFilter(v)} slotProps={{ textField: { size: "small" } }} />
                     </Stack>
                     <Button size="small" variant="outlined" onClick={() => setFilterConfigAnchor(null)}>Apply</Button>
@@ -635,8 +634,8 @@ export default function MeetingsPage() {
                   >
                     <Stack direction="row" alignItems="center" gap="12px" sx={{ flex: 1, minWidth: 0 }}>
                       <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
-                        <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
-                        <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
+                        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
+                        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                       </Box>
                       <Typography variant="subtitle2" onClick={() => navigate(`/meetings/${meeting.id}`)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
                         {meeting.name}
@@ -644,13 +643,13 @@ export default function MeetingsPage() {
                     </Stack>
                     <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 200, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                       <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                         {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
                       </Typography>
                     </Stack>
                     <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                       <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                      <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{meeting.committee}</Typography>
+                      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{meeting.committee}</Typography>
                     </Stack>
                     <Box sx={{ width: 90, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                       {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
@@ -680,7 +679,7 @@ export default function MeetingsPage() {
                     <AccordionSummary>
                       <Typography variant="subtitle2">
                         {year}{" "}
-                        <Box component="span" sx={{ fontWeight: 400 }}>({yearMeetings.length})</Box>
+                        <Box component="span" sx={{ fontWeight: 'var(--lens-core-font-weight-regular)' }}>({yearMeetings.length})</Box>
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{ px: 2, pb: 2, pt: 0 }}>
@@ -693,8 +692,8 @@ export default function MeetingsPage() {
                           >
                             <Stack direction="row" alignItems="center" gap="12px" sx={{ flex: 1, minWidth: 0 }}>
                               <Box sx={{ width: 50, height: 50, flexShrink: 0, bgcolor: "#E4F3FF", borderRadius: "8px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", color: "var(--lens-semantic-color-type-default)" }}>
-                                <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
-                                <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
+                                <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', display: "block", width: "100%" }}>{getMonthAbbrev(meeting.date)}</Typography>
+                                <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', display: "block", width: "100%" }}>{getDayOfMonth(meeting.date)}</Typography>
                               </Box>
                               <Typography variant="subtitle2" onClick={() => navigate(`/meetings/${meeting.id}`)} sx={{ cursor: "pointer", minWidth: 0, whiteSpace: "normal", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden", "&:hover": { textDecoration: "underline" } }}>
                                 {meeting.name}
@@ -702,13 +701,13 @@ export default function MeetingsPage() {
                             </Stack>
                             <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 200, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                               <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><CalendarIcon /></Box>
-                              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                                 {formatDateLong(meeting.date)} · {meeting.time ?? "Time TBD"}
                               </Typography>
                             </Stack>
                             <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                               <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{meeting.committee}</Typography>
+                              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{meeting.committee}</Typography>
                             </Stack>
                             <Box sx={{ width: 90, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                               {meeting.status === "Draft" ? <StatusChip label="Draft" /> : <StatusChip label={meeting.visibility} />}
@@ -757,15 +756,15 @@ export default function MeetingsPage() {
                 </Stack>
                 <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 160, flexShrink: 0, "@media (max-width: 699px)": { display: "none" } }}>
                   <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><GroupIcon /></Box>
-                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.committee}</Typography>
+                  <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.committee}</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 120, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                   <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><ClockIcon /></Box>
-                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.time ?? "—"}</Typography>
+                  <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.time ?? "—"}</Typography>
                 </Stack>
                 <Stack direction="row" alignItems="center" gap="4px" sx={{ width: 180, flexShrink: 0, "@media (max-width: 959px)": { display: "none" } }}>
                   <Box sx={{ display: "flex", alignItems: "center", width: 20, height: 20, color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}><LocationIcon /></Box>
-                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.location ?? "—"}</Typography>
+                  <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{template.location ?? "—"}</Typography>
                 </Stack>
                 <Stack direction="row" spacing={0.5} sx={{ ml: "auto" }}>
                   <IconButton
@@ -1021,7 +1020,7 @@ function CommitteeMultiSelect({
               input: {
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon style={{ fontSize: 16 }} />
+                    <SearchIcon style={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />
                   </InputAdornment>
                 ),
               },
@@ -1030,7 +1029,7 @@ function CommitteeMultiSelect({
         </Box>
       )}
       {filtered.length === 0 ? (
-        <Box sx={{ px: 2, py: 1.5, color: "text.secondary", fontSize: 13 }}>
+        <Box sx={{ px: 2, py: 1.5, color: "text.secondary", fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>
           No committees match
         </Box>
       ) : (

@@ -74,11 +74,11 @@ function OptionCard({
         {icon}
       </Box>
       <Stack flex={1} alignItems="flex-start" gap="2px">
-        <Typography sx={{ fontSize: "14px", fontWeight: 600, lineHeight: "20px", letterSpacing: "0.2px", color: "text.primary" }}>
+        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', color: "text.primary" }}>
           {title}
         </Typography>
         {subtitle && (
-          <Typography sx={{ fontSize: "12px", fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)" }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-muted)" }}>
             {subtitle}
           </Typography>
         )}
@@ -154,10 +154,10 @@ export default function TemplatePickerDialog({
           </IconButton>
         )}
         <Stack gap="4px" flex={1} minWidth={0}>
-          <Typography sx={{ fontSize: 20, fontWeight: 600, lineHeight: "24px", letterSpacing: 0 }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-normal)' }}>
             {stepTitle[step]}
           </Typography>
-          <Typography sx={{ fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: "text.secondary" }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "text.secondary" }}>
             {stepSubtitle[step]}
           </Typography>
         </Stack>

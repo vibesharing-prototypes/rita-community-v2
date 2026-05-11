@@ -91,7 +91,7 @@ export default function CategoryRow({
         </Box>
 
         {/* Number */}
-        <Typography sx={{ fontSize: 13, fontWeight: 700, color: "text.secondary", flexShrink: 0, mr: "2px" }}>
+        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-bold)', color: "text.secondary", flexShrink: 0, mr: "2px" }}>
           {index + 1}.
         </Typography>
 
@@ -106,13 +106,13 @@ export default function CategoryRow({
             onKeyDown={handleKeyDown}
             sx={{
               flex: 1, border: "1px solid", borderColor: "primary.main", borderRadius: "4px",
-              px: 1, py: "2px", fontSize: 13, fontWeight: 700, lineHeight: "20px",
+              px: 1, py: "2px", fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
               outline: "none", bgcolor: "white", fontFamily: "inherit",
             }}
           />
         ) : (
           <Typography sx={{
-            fontSize: 13, fontWeight: 700, lineHeight: "18px", flex: 1, minWidth: 0,
+            fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', flex: 1, minWidth: 0,
             display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
             overflow: "hidden", wordBreak: "break-word",
           }}>
@@ -190,7 +190,7 @@ export default function CategoryRow({
                     </SvgIcon>
                   }
                   onClick={() => onAddItem(category.id)}
-                  sx={{ fontSize: 12, color: "text.secondary", py: "2px" }}
+                  sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "text.secondary", py: "2px" }}
                 >
                   Add item
                 </Button>

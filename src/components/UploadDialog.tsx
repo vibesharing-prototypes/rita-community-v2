@@ -61,9 +61,9 @@ export default function UploadDialog({
       <DialogTitle
         component="div"
         sx={{
-          fontSize: "20px",
-          fontWeight: 600,
-          lineHeight: "24px",
+          fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)',
+          fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+          lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)',
           color: "var(--lens-semantic-color-type-default)",
           display: "flex",
           alignItems: "flex-start",
@@ -126,10 +126,10 @@ export default function UploadDialog({
                 justifyContent: "center",
               }}
             >
-              <UploadIcon style={{ fontSize: 24, color: "var(--lens-semantic-color-type-muted)" }} />
+              <UploadIcon style={{ fontSize: 'var(--lens-semantic-font-title-h2-display-font-size)', color: "var(--lens-semantic-color-type-muted)" }} />
             </Box>
             <Stack alignItems="center" gap={0.5}>
-              <Typography variant="body1" sx={{ fontWeight: 600 }}>
+              <Typography variant="body1" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>
                 Drag and drop files here
               </Typography>
               <Typography

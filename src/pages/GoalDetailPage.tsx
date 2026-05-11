@@ -257,7 +257,7 @@ export default function GoalDetailPage() {
 
   const filterHeaderSx = (isActive: boolean) => ({
     userSelect: "none" as const,
-    ...(isActive && { color: "primary.main", fontWeight: 700 }),
+    ...(isActive && { color: "primary.main", fontWeight: 'var(--lens-core-font-weight-bold)' }),
   });
 
   const fileRowSx = {
@@ -282,7 +282,7 @@ export default function GoalDetailPage() {
           breadcrumbs={
             <OverflowBreadcrumbs items={breadcrumbItems}>
               {(item) => {
-                const disabledSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377", pl: "4px", pr: "12px", py: "4px" };
+                const disabledSx = { fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', color: "#6f7377", pl: "4px", pr: "12px", py: "4px" };
                 if (item.id === "product" || item.isCurrent) {
                   return <Typography key={item.id} sx={disabledSx}>{item.label}</Typography>;
                 }
@@ -324,10 +324,10 @@ export default function GoalDetailPage() {
         <Box sx={{ maxWidth: 400 }}>
           <Stack gap={1}>
             <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Typography variant="body2" sx={{ fontWeight: 600, color }}>
+              <Typography variant="body2" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)', color }}>
                 {status}
               </Typography>
-              <Typography variant="body2" sx={{ fontWeight: 600, color }}>
+              <Typography variant="body2" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)', color }}>
                 {goal.progress}%
               </Typography>
             </Stack>
@@ -483,7 +483,7 @@ export default function GoalDetailPage() {
                           <Typography
                             variant="body2"
                             sx={{
-                              fontWeight: 500,
+                              fontWeight: 'var(--lens-core-font-weight-medium)',
                               color: "primary.main",
                               "&:hover": {
                                 textDecoration: "underline",
@@ -506,7 +506,7 @@ export default function GoalDetailPage() {
                       </TableCell>
                       <TableCell align="right" sx={{ width: 48 }}>
                         <IconButton size="small" onClick={(e) => openMenu(e, file.id)}>
-                          <MoreIcon style={{ fontSize: 18 }} />
+                          <MoreIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -561,13 +561,13 @@ export default function GoalDetailPage() {
       >
         <MenuItem onClick={closeMenu}>
           <ListItemIcon>
-            <EditIcon style={{ fontSize: 20 }} />
+            <EditIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Rename</ListItemText>
         </MenuItem>
         <MenuItem onClick={() => { setPublishTargetId(menuItemId); closeMenu(); }}>
           <ListItemIcon>
-            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 20 }} /> : <UnlockedIcon style={{ fontSize: 20 }} />}
+            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} /> : <UnlockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />}
           </ListItemIcon>
           <ListItemText>{isMenuItemPublic ? "Remove from site" : "Publish to site"}</ListItemText>
         </MenuItem>
@@ -586,7 +586,7 @@ export default function GoalDetailPage() {
           }}
         >
           <ListItemIcon>
-            <TrashIcon style={{ fontSize: 20 }} />
+            <TrashIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>
@@ -603,13 +603,13 @@ export default function GoalDetailPage() {
       >
         <MenuItem onClick={() => setHeaderMenuAnchor(null)}>
           <ListItemIcon>
-            <EditIcon style={{ fontSize: 20 }} />
+            <EditIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Rename</ListItemText>
         </MenuItem>
         <MenuItem onClick={() => { setPublishTargetId(goal.id); setHeaderMenuAnchor(null); }}>
           <ListItemIcon>
-            {isGoalPublic ? <LockedIcon style={{ fontSize: 20 }} /> : <UnlockedIcon style={{ fontSize: 20 }} />}
+            {isGoalPublic ? <LockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} /> : <UnlockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />}
           </ListItemIcon>
           <ListItemText>{isGoalPublic ? "Remove from site" : "Publish to site"}</ListItemText>
         </MenuItem>
@@ -636,7 +636,7 @@ export default function GoalDetailPage() {
           }}
         >
           <ListItemIcon>
-            <TrashIcon style={{ fontSize: 20 }} />
+            <TrashIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>

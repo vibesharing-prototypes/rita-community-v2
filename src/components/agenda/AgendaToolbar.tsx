@@ -37,10 +37,10 @@ export default function AgendaToolbar({
         <Button
           size="small"
           onClick={() => onChangeView("content")}
-          startIcon={<ListIcon style={{ fontSize: 16 }} />}
+          startIcon={<ListIcon style={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />}
           sx={{
             minWidth: 0, px: "10px", py: "4px",
-            fontSize: 13, fontWeight: 600,
+            fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)',
             color: isActive("content") ? ACTIVE_FG : "text.secondary",
             bgcolor: isActive("content") ? ACTIVE_BG : "transparent",
             "&:hover": {
@@ -64,7 +64,7 @@ export default function AgendaToolbar({
             },
           }}
         >
-          <SearchIcon style={{ fontSize: 18 }} />
+          <SearchIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
         </IconButton>
 
         <IconButton
@@ -79,7 +79,7 @@ export default function AgendaToolbar({
             },
           }}
         >
-          <AnnotationsIcon style={{ fontSize: 18 }} />
+          <AnnotationsIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
         </IconButton>
       </Stack>
 
@@ -90,7 +90,7 @@ export default function AgendaToolbar({
           onClick={(e) => setAnchor(e.currentTarget)}
           aria-label="Add"
         >
-          <AddIcon style={{ fontSize: 18 }} />
+          <AddIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
         </IconButton>
         <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={close}>
           <MenuItem onClick={() => { close(); onAddCategory(); }}>

@@ -163,7 +163,7 @@ export default function MembersPage() {
             <Typography
               variant="body2"
               sx={{
-                fontWeight: 500,
+                fontWeight: 'var(--lens-core-font-weight-medium)',
                 color: "primary.main",
                 "&:hover": { textDecoration: "underline", cursor: "pointer" },
               }}
@@ -172,7 +172,7 @@ export default function MembersPage() {
             </Typography>
             <Typography
               variant="caption"
-              sx={{ color: "var(--lens-semantic-color-type-muted)", lineHeight: 1.3 }}
+              sx={{ color: "var(--lens-semantic-color-type-muted)", lineHeight: 'var(--lens-semantic-font-text-body-line-height)' }}
             >
               {item.email}
             </Typography>
@@ -190,7 +190,7 @@ export default function MembersPage() {
       </TableCell>
       <TableCell align="right" sx={{ width: 48 }}>
         <IconButton size="small" onClick={(e) => openMenu(e, item.id)}>
-          <MoreIcon style={{ fontSize: 18 }} />
+          <MoreIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
         </IconButton>
       </TableCell>
     </TableRow>
@@ -302,14 +302,14 @@ export default function MembersPage() {
                   <VisibleIcon />
                 </Box>
               </Box>
-              <Typography sx={{ px: 1, fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: isAccessActive ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <Typography sx={{ px: 1, fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: isAccessActive ? "#0040d5" : "#242628", whiteSpace: "nowrap" }}>
                 {isAccessActive ? accessFilter : "Visibility"}
               </Typography>
               <Box
                 sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", flexShrink: 0, color: isAccessActive ? "#0040d5" : "var(--lens-semantic-color-type-muted)", borderRadius: "50%", "&:hover": { bgcolor: isAccessActive ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
                 onClick={(e) => { e.stopPropagation(); if (isAccessActive) { setAccessFilter("All"); } else { setFilterConfigAnchor((e.currentTarget.closest("[data-filter-chip]") as HTMLElement) ?? e.currentTarget); } }}
               >
-                {isAccessActive ? <CloseIcon sx={{ fontSize: 16 }} /> : <ExpandDownIcon sx={{ fontSize: 16 }} />}
+                {isAccessActive ? <CloseIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} /> : <ExpandDownIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />}
               </Box>
             </Box>
             <Button variant="text" size="small" onClick={() => setAccessFilter("All")} sx={{ visibility: anyFilterActive ? "visible" : "hidden" }}>
@@ -388,7 +388,7 @@ export default function MembersPage() {
       >
         <MenuItem onClick={closeMenu}>
           <ListItemIcon>
-            <EditIcon style={{ fontSize: 20 }} />
+            <EditIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
@@ -399,7 +399,7 @@ export default function MembersPage() {
           }}
         >
           <ListItemIcon>
-            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 20 }} /> : <UnlockedIcon style={{ fontSize: 20 }} />}
+            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} /> : <UnlockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />}
           </ListItemIcon>
           <ListItemText>{isMenuItemPublic ? "Remove from site" : "Publish to site"}</ListItemText>
         </MenuItem>
@@ -419,7 +419,7 @@ export default function MembersPage() {
           }}
         >
           <ListItemIcon>
-            <TrashIcon style={{ fontSize: 20 }} />
+            <TrashIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Remove</ListItemText>
         </MenuItem>

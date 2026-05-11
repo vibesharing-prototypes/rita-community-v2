@@ -187,7 +187,7 @@ export default function CalendarPage() {
                     {DAYS_SHORT.map((d) => (
                       <Typography
                         key={d}
-                        sx={{ textAlign: "center", color: "text.disabled", fontWeight: 700, fontSize: 9, lineHeight: "18px" }}
+                        sx={{ textAlign: "center", color: "text.disabled", fontWeight: 'var(--lens-core-font-weight-bold)', fontSize: 'var(--lens-semantic-font-text-sm-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)' }}
                       >
                         {d[0]}
                       </Typography>
@@ -210,8 +210,8 @@ export default function CalendarPage() {
                         >
                           <Typography
                             sx={{
-                              fontSize: 10,
-                              fontWeight: hasMeetings || isToday ? 700 : 400,
+                              fontSize: 'var(--lens-semantic-font-text-sm-font-size)',
+                              fontWeight: hasMeetings || isToday ? 'var(--lens-core-font-weight-bold)' : 'var(--lens-core-font-weight-regular)',
                               color: isToday ? "#ffffff" : "text.primary",
                             }}
                           >
@@ -267,7 +267,7 @@ export default function CalendarPage() {
         <Box sx={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", borderBottom: `1px solid ${divider}`, bgcolor: "var(--lens-component-table-header-background-color)" }}>
           {DAYS_SHORT.map((d) => (
             <Box key={d} sx={{ py: 1, px: 1.5 }}>
-              <Typography variant="caption" sx={{ fontWeight: 600, color: "text.secondary" }}>{d}</Typography>
+              <Typography variant="caption" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: "text.secondary" }}>{d}</Typography>
             </Box>
           ))}
         </Box>
@@ -317,8 +317,8 @@ export default function CalendarPage() {
                         borderRadius: "50%",
                         bgcolor: isToday ? "primary.main" : "transparent",
                         color: isToday ? "primary.contrastText" : cell.other ? "#9E9E9E" : "text.primary",
-                        fontWeight: isToday ? 700 : 400,
-                        fontSize: 13,
+                        fontWeight: isToday ? 'var(--lens-core-font-weight-bold)' : 'var(--lens-core-font-weight-regular)',
+                        fontSize: 'var(--lens-semantic-font-text-body-font-size)',
                         "&:hover": { bgcolor: isToday ? "primary.dark" : "action.hover" },
                       }}
                     >
@@ -341,9 +341,9 @@ export default function CalendarPage() {
                       >
                         <Typography
                           sx={{
-                            fontSize: 11,
-                            fontWeight: 600,
-                            lineHeight: "16px",
+                            fontSize: 'var(--lens-semantic-font-label-xs-font-size)',
+                            fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+                            lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
                             display: "block",
                             whiteSpace: "nowrap",
                             overflow: "hidden",
@@ -357,7 +357,7 @@ export default function CalendarPage() {
                   ))}
                   {overflow > 0 && (
                     <Typography
-                      sx={{ fontSize: 11, color: "text.secondary", cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                      sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', color: "text.secondary", cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
                       onClick={() => { setCurrentDate(new Date(`${cell.dateStr}T12:00:00`)); setView("day"); }}
                     >
                       +{overflow} more
@@ -431,7 +431,7 @@ export default function CalendarPage() {
                     alignItems: "center",
                   }}
                 >
-                  <Typography sx={{ fontSize: 11, fontWeight: 600, color: isWeekend ? "text.secondary" : "text.primary" }}>
+                  <Typography sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: isWeekend ? "text.secondary" : "text.primary" }}>
                     {DAYS_SHORT[(date.getDay() + 6) % 7]}
                   </Typography>
                   <Typography
@@ -442,8 +442,8 @@ export default function CalendarPage() {
                       borderRadius: "50%",
                       bgcolor: isToday ? "primary.main" : "transparent",
                       color: isToday ? "primary.contrastText" : isWeekend ? "text.secondary" : "text.primary",
-                      fontSize: 16,
-                      fontWeight: isToday ? 700 : 400,
+                      fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)',
+                      fontWeight: isToday ? 'var(--lens-core-font-weight-bold)' : 'var(--lens-core-font-weight-regular)',
                       cursor: isMultiDay ? "pointer" : "default",
                       "&:hover": isMultiDay ? { bgcolor: isToday ? "primary.dark" : "action.hover" } : {},
                     }}
@@ -466,7 +466,7 @@ export default function CalendarPage() {
               }}
             >
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", pr: 1 }}>
-                <Typography sx={{ fontSize: 10, color: "text.secondary" }}>All day</Typography>
+                <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-sm-font-size)', color: "text.secondary" }}>All day</Typography>
               </Box>
               {allDayByCol.map((meetings, i) => (
                 <Box key={i} sx={{ borderLeft: `1px solid ${divider}`, p: "4px", display: "flex", flexDirection: "column", gap: "2px" }}>
@@ -481,7 +481,7 @@ export default function CalendarPage() {
                         overflow: "hidden",
                       }}
                     >
-                      <Typography sx={{ fontSize: 11, fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.name}</Typography>
+                      <Typography sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.name}</Typography>
                     </Box>
                   ))}
                 </Box>
@@ -496,7 +496,7 @@ export default function CalendarPage() {
                   key={h}
                   sx={{ position: "absolute", top: (h - HOUR_START) * HOUR_HEIGHT - 8, right: 8, height: HOUR_HEIGHT }}
                 >
-                  <Typography sx={{ fontSize: 10, color: "text.secondary", whiteSpace: "nowrap" }}>
+                  <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-sm-font-size)', color: "text.secondary", whiteSpace: "nowrap" }}>
                     {formatHour(h)}
                   </Typography>
                 </Box>
@@ -560,10 +560,10 @@ export default function CalendarPage() {
                             zIndex: 1,
                           }}
                         >
-                          <Typography sx={{ fontSize: 11, fontWeight: 600, lineHeight: "14px", display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          <Typography sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {m.name}
                           </Typography>
-                          <Typography sx={{ fontSize: 10, color: "text.secondary", display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-sm-font-size)', color: "text.secondary", display: "block", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {m.time}
                           </Typography>
                         </Box>
@@ -602,13 +602,13 @@ export default function CalendarPage() {
               ]}
             >
               {(item) => {
-                const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
+                const baseSx = { fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
                 const mutedSx = { ...baseSx, color: "#6f7377" };
                 const activeSx = { ...baseSx, color: "#282e37" };
                 if (item.isCurrent) return <span />;
                 if (item.id === "root") return (
                   <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
-                    <Typography sx={{ ...mutedSx, letterSpacing: "0.2px" }}>{item.label}</Typography>
+                    <Typography sx={{ ...mutedSx, letterSpacing: 'var(--lens-semantic-letter-spacing-xs)' }}>{item.label}</Typography>
                   </Box>
                 );
                 const textSx = item.isDisabled ? mutedSx : activeSx;
@@ -650,7 +650,7 @@ export default function CalendarPage() {
           <IconButton size="small" onClick={goToPrev} aria-label="Previous">
             <ArrowLeftIcon />
           </IconButton>
-          <Typography variant="subtitle1" sx={{ minWidth: 260, textAlign: "center", fontWeight: 600 }}>
+          <Typography variant="subtitle1" sx={{ minWidth: 260, textAlign: "center", fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>
             {getTitle()}
           </Typography>
           <IconButton size="small" onClick={goToNext} aria-label="Next">

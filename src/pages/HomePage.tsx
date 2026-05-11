@@ -145,28 +145,28 @@ export default function HomePage() {
                         <DateBadge month={meeting.month} day={meeting.day} />
                         <Stack flex={1} minWidth={0} gap="2px">
                           <Typography noWrap sx={{
-                            fontSize: "14px",
+                            fontSize: 'var(--lens-semantic-font-text-body-font-size)',
                             fontWeight: "var(--lens-core-font-weight-semi-bold)",
-                            lineHeight: "20px",
-                            letterSpacing: "0.2px",
+                            lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
+                            letterSpacing: 'var(--lens-semantic-letter-spacing-xs)',
                             color: "var(--lens-semantic-color-type-default)",
                           }}>
                             {meeting.name}
                           </Typography>
                           <Typography noWrap sx={{
-                            fontSize: "12px",
+                            fontSize: 'var(--lens-semantic-font-text-md-font-size)',
                             fontWeight: "var(--lens-core-font-weight-regular)",
-                            lineHeight: "16px",
-                            letterSpacing: "0.3px",
+                            lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
+                            letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
                             color: "var(--lens-semantic-color-type-default)",
                           }}>
                             {meeting.fullDate} · {meeting.time}
                           </Typography>
                           <Typography noWrap sx={{
-                            fontSize: "12px",
+                            fontSize: 'var(--lens-semantic-font-text-md-font-size)',
                             fontWeight: "var(--lens-core-font-weight-regular)",
-                            lineHeight: "16px",
-                            letterSpacing: "0.3px",
+                            lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
+                            letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
                             color: "var(--lens-semantic-color-type-muted)",
                           }}>
                             {meeting.committee}
@@ -202,19 +202,19 @@ export default function HomePage() {
                       <Stack direction="row" alignItems="center" sx={{ flex: 1, pr: "12px", py: 1 }} minWidth={0}>
                         <Stack flex={1} minWidth={0} gap="4px">
                           <Typography noWrap sx={{
-                            fontSize: "14px",
+                            fontSize: 'var(--lens-semantic-font-text-body-font-size)',
                             fontWeight: "var(--lens-core-font-weight-semi-bold)",
-                            lineHeight: "20px",
-                            letterSpacing: "0.2px",
+                            lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
+                            letterSpacing: 'var(--lens-semantic-letter-spacing-xs)',
                             color: "var(--lens-semantic-color-type-default)",
                           }}>
                             {meeting.name}
                           </Typography>
                           <Typography sx={{
-                            fontSize: "12px",
+                            fontSize: 'var(--lens-semantic-font-text-md-font-size)',
                             fontWeight: "var(--lens-core-font-weight-regular)",
-                            lineHeight: "16px",
-                            letterSpacing: "0.3px",
+                            lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
+                            letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
                             color: "var(--lens-semantic-color-type-muted)",
                           }}>
                             {meeting.formattedDate} · {meeting.committee}
@@ -263,13 +263,13 @@ export default function HomePage() {
                     backgroundColor: "#E4F3FF",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <CalendarIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                    <CalendarIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)', width: 20, height: 20 }} />
                   </Box>
                   <Stack flex={1} minWidth={0} gap="4px">
-                    <Typography noWrap sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                    <Typography noWrap sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-default)" }}>
                       {meeting.title}
                     </Typography>
-                    <Typography sx={{ fontSize: "10px", fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: "12px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)" }}>
+                    <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-sm-font-size)', fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: 'var(--lens-semantic-font-text-sm-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-muted)" }}>
                       {meeting.date} · {meeting.committee}
                     </Typography>
                   </Stack>
@@ -298,13 +298,13 @@ export default function HomePage() {
                     backgroundColor: "#E4F3FF",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <PolicyIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                    <PolicyIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)', width: 20, height: 20 }} />
                   </Box>
                   <Stack flex={1} minWidth={0} gap="4px">
-                    <Typography noWrap sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                    <Typography noWrap sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-default)" }}>
                       {policy.title}
                     </Typography>
-                    <Typography sx={{ fontSize: "10px", fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: "12px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)" }}>
+                    <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-sm-font-size)', fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: 'var(--lens-semantic-font-text-sm-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-muted)" }}>
                       {policy.subtitle}
                     </Typography>
                   </Stack>
@@ -333,10 +333,10 @@ export default function HomePage() {
                     backgroundColor: "#E4F3FF",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <DocumentIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                    <DocumentIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)', width: 20, height: 20 }} />
                   </Box>
                   <Stack flex={1} minWidth={0} gap="4px">
-                    <Typography noWrap sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                    <Typography noWrap sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-default)" }}>
                       {doc.title}
                     </Typography>
                   </Stack>
@@ -365,14 +365,14 @@ export default function HomePage() {
                     backgroundColor: "#E4F3FF",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}>
-                    <GoalIcon style={{ fontSize: 20, width: 20, height: 20 }} />
+                    <GoalIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)', width: 20, height: 20 }} />
                   </Box>
                   <Stack flex={1} minWidth={0} gap="4px">
                     <Stack direction="row" alignItems="center" gap="4px">
-                      <Typography noWrap flex={1} sx={{ fontSize: "12px", fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default)" }}>
+                      <Typography noWrap flex={1} sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: "var(--lens-core-font-weight-semi-bold)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-default)" }}>
                         {goal.title}
                       </Typography>
-                      <Typography sx={{ fontSize: "10px", fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: "12px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}>
+                      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-sm-font-size)', fontWeight: "var(--lens-core-font-weight-regular)", lineHeight: 'var(--lens-semantic-font-text-sm-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-muted)", flexShrink: 0 }}>
                         {goal.progress}%
                       </Typography>
                     </Stack>

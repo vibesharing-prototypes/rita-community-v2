@@ -53,7 +53,7 @@ function InlineTitle({ value, onSave }: { value: string; onSave: (v: string) => 
       }}
       fullWidth
       variant="standard"
-      inputProps={{ style: { fontSize: 20, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.15px", fontFamily: "inherit", padding: 0 } }}
+      inputProps={{ style: { fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-title-h4-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', fontFamily: "inherit", padding: 0 } }}
       sx={{
         mx: "-4px",
         "& .MuiInput-root": { borderRadius: "4px", px: "4px", "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" } },
@@ -115,20 +115,20 @@ function RichTextDescription({
           py: "2px",
           px: "4px",
           mx: "-4px",
-          fontSize: 14,
-          lineHeight: "22px",
+          fontSize: 'var(--lens-semantic-font-text-body-font-size)',
+          lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
           fontFamily: "inherit",
           "&:hover": { backgroundColor: "action.hover" },
-          "& p": { margin: 0, fontSize: 14, lineHeight: "22px", fontFamily: "inherit" },
-          "& ul, & ol": { mt: 0, mb: 0, pl: "20px", fontSize: 14, lineHeight: "22px" },
-          "& li": { fontSize: 14, lineHeight: "22px" },
+          "& p": { margin: 0, fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', fontFamily: "inherit" },
+          "& ul, & ol": { mt: 0, mb: 0, pl: "20px", fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)' },
+          "& li": { fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)' },
           "& a": { color: "primary.main" },
-          "& strong": { fontWeight: 600 },
+          "& strong": { fontWeight: 'var(--lens-core-font-weight-semi-bold)' },
           "& blockquote": { borderLeft: "3px solid", borderColor: "divider", pl: 1, ml: 0, my: "4px" },
         }}
       >
         {isEmpty ? (
-          <Typography sx={{ fontSize: 14, lineHeight: "22px", color: "text.disabled", fontStyle: "italic" }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', color: "text.disabled", fontStyle: "italic" }}>
             {placeholder}
           </Typography>
         ) : (
@@ -143,7 +143,7 @@ function RichTextDescription({
       ref={wrapperRef}
       className="agenda-ck-editor"
       sx={{
-        "& .ck-editor__editable": { minHeight: "80px", fontSize: 14, fontFamily: "inherit" },
+        "& .ck-editor__editable": { minHeight: "80px", fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontFamily: "inherit" },
         "& .ck.ck-editor__main>.ck-editor__editable": { borderRadius: "0 0 4px 4px" },
         "& .ck.ck-toolbar": { borderRadius: "4px 4px 0 0" },
       }}
@@ -175,7 +175,7 @@ function TypeSelect({ value, onChange }: { value: AgendaItemType | ""; onChange:
         onClick={(e) => setAnchor(e.currentTarget)}
         sx={{
           background: "none", border: "none", cursor: "pointer", p: 0,
-          fontSize: 13, color: "text.secondary", fontFamily: "inherit", lineHeight: "20px",
+          fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.secondary", fontFamily: "inherit", lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
           display: "inline-flex", alignItems: "center", gap: "2px",
           borderRadius: "4px", px: "4px", mx: "-4px",
           "&:hover": { bgcolor: "action.hover" },
@@ -193,11 +193,11 @@ function TypeSelect({ value, onChange }: { value: AgendaItemType | ""; onChange:
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
-        <MenuItem onClick={() => { onChange(""); setAnchor(null); }} sx={{ fontSize: 13 }}>
+        <MenuItem onClick={() => { onChange(""); setAnchor(null); }} sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>
           <em>No type</em>
         </MenuItem>
         {ALL_TYPES.map((t) => (
-          <MenuItem key={t} onClick={() => { onChange(t); setAnchor(null); }} sx={{ fontSize: 13 }}>{t}</MenuItem>
+          <MenuItem key={t} onClick={() => { onChange(t); setAnchor(null); }} sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>{t}</MenuItem>
         ))}
       </Menu>
     </>
@@ -228,7 +228,7 @@ function AttachmentRow({ att, onRemove, borderColor }: { att: AgendaAttachment; 
         onClick={(e: React.MouseEvent) => e.preventDefault()}
         className="att-name"
         sx={{
-          fontSize: 12, fontWeight: 600, lineHeight: "16px", letterSpacing: "0.3px",
+          fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
           color: "var(--lens-semantic-color-type-default, #282e37)",
           flex: 1, minWidth: 0,
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
@@ -307,7 +307,7 @@ function ContentSection({
         }}>
           {icon}
         </Box>
-        <Typography sx={{ fontSize: 14, fontWeight: 600, flex: 1 }}>{label}</Typography>
+        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', flex: 1 }}>{label}</Typography>
         <Tooltip title="Attach file">
           <IconButton size="small" sx={{ flexShrink: 0 }} aria-label="Attach file" onClick={() => fileInputRef.current?.click()}>
             <AttachIcon sx={{ width: 18, height: 18 }} />
@@ -318,7 +318,7 @@ function ContentSection({
         <RichTextDescription value={content} onSave={onSave} placeholder={placeholder} />
         {attachments.length > 0 && (
           <Stack gap={1} sx={{ mt: 1.5 }}>
-            <Typography sx={{ fontSize: 12, fontWeight: 600, lineHeight: "16px", letterSpacing: "0.3px", color: "var(--lens-semantic-color-type-default, #282e37)" }}>
+            <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-default, #282e37)" }}>
               Attachments
             </Typography>
             <Stack>
@@ -421,12 +421,12 @@ export default function ItemInlineEditor({
           {/* Category · Type */}
           <Stack direction="row" alignItems="center" flexWrap="wrap" sx={{ mt: 0.5, rowGap: "4px" }}>
             {category && (
-              <Typography sx={{ fontSize: 13, color: "text.secondary", whiteSpace: "nowrap" }}>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.secondary", whiteSpace: "nowrap" }}>
                 {category.name}
               </Typography>
             )}
             {category && (
-              <Typography sx={{ fontSize: 13, color: "text.secondary", mx: "4px" }}>·</Typography>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.secondary", mx: "4px" }}>·</Typography>
             )}
             <TypeSelect
               value={type}
@@ -446,7 +446,7 @@ export default function ItemInlineEditor({
                 <Box sx={{ display: "flex", alignItems: "center", flexShrink: 0, "& svg": { width: 16, height: 16, display: "block" } }}>
                   <LockedIcon />
                 </Box>
-                <Typography sx={{ fontSize: 12, fontWeight: 600, lineHeight: "16px", letterSpacing: "0.3px", color: "inherit" }}>
+                <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "inherit" }}>
                   Members only
                 </Typography>
               </Box>
@@ -456,7 +456,7 @@ export default function ItemInlineEditor({
           {/* Edited label */}
           {lastModifiedAt && (
             <Tooltip title={`Edited by you on ${format(lastModifiedAt, "MMMM d")} at ${format(lastModifiedAt, "h:mm a")}`} placement="bottom-start">
-              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px", cursor: "default", mt: 0.25, width: "fit-content" }}>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', cursor: "default", mt: 0.25, width: "fit-content" }}>
                 {formatEditedLabel(lastModifiedAt)}
               </Typography>
             </Tooltip>

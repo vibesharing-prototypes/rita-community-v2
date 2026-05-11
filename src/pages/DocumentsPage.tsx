@@ -385,7 +385,7 @@ export default function DocumentsPage() {
     userSelect: "none" as const,
     ...(isActive && {
       color: "primary.main",
-      fontWeight: 700,
+      fontWeight: 'var(--lens-core-font-weight-bold)',
     }),
   });
 
@@ -417,7 +417,7 @@ export default function DocumentsPage() {
             <Typography
               variant="body2"
               sx={{
-                fontWeight: 500,
+                fontWeight: 'var(--lens-core-font-weight-medium)',
                 color: "primary.main",
                 "&:hover": { textDecoration: "underline", cursor: "pointer" },
               }}
@@ -448,7 +448,7 @@ export default function DocumentsPage() {
               />
             </IconButton>
             <IconButton size="small" onClick={(e) => openMenu(e, item.id)}>
-              <MoreIcon style={{ fontSize: 18 }} />
+              <MoreIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
             </IconButton>
           </Stack>
         </TableCell>
@@ -504,7 +504,7 @@ export default function DocumentsPage() {
             <Typography
               variant="body2"
               sx={{
-                fontWeight: 600,
+                fontWeight: 'var(--lens-core-font-weight-semi-bold)',
                 color: "primary.main",
                 "&:hover": { textDecoration: "underline", cursor: "pointer" },
               }}
@@ -537,7 +537,7 @@ export default function DocumentsPage() {
             size="small"
             onClick={(e) => openMenu(e, folderId)}
           >
-            <MoreIcon style={{ fontSize: 18 }} />
+            <MoreIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
           </IconButton>
         </TableCell>
       </TableRow>
@@ -569,7 +569,7 @@ export default function DocumentsPage() {
             <Typography
               variant="body2"
               sx={{
-                fontWeight: 600,
+                fontWeight: 'var(--lens-core-font-weight-semi-bold)',
                 color: "primary.main",
                 "&:hover": { textDecoration: "underline", cursor: "pointer" },
               }}
@@ -821,14 +821,14 @@ export default function DocumentsPage() {
                   <VisibleIcon />
                 </Box>
               </Box>
-              <Typography sx={{ px: 1, fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: isAccessActive ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <Typography sx={{ px: 1, fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: isAccessActive ? "#0040d5" : "#242628", whiteSpace: "nowrap" }}>
                 {isAccessActive ? accessFilter : "Visibility"}
               </Typography>
               <Box
                 sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", flexShrink: 0, color: isAccessActive ? "#0040d5" : "var(--lens-semantic-color-type-muted)", borderRadius: "50%", "&:hover": { bgcolor: isAccessActive ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
                 onClick={(e) => { e.stopPropagation(); if (isAccessActive) { setAccessFilter("All"); } else { setAccessFilterAnchor((e.currentTarget.closest("[data-filter-chip]") as HTMLElement) ?? e.currentTarget); } }}
               >
-                {isAccessActive ? <CloseIcon sx={{ fontSize: 16 }} /> : <ExpandDownIcon sx={{ fontSize: 16 }} />}
+                {isAccessActive ? <CloseIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} /> : <ExpandDownIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />}
               </Box>
             </Box>
             {/* Last modified chip */}
@@ -842,14 +842,14 @@ export default function DocumentsPage() {
                   <CalendarIcon />
                 </Box>
               </Box>
-              <Typography sx={{ px: 1, fontSize: 12, fontWeight: 400, lineHeight: "16px", letterSpacing: "0.3px", color: isDateFilterActive ? "#0040d5" : "#242628", whiteSpace: "nowrap", fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              <Typography sx={{ px: 1, fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: isDateFilterActive ? "#0040d5" : "#242628", whiteSpace: "nowrap" }}>
                 {dateFilterLabel}
               </Typography>
               <Box
                 sx={{ display: "flex", alignItems: "center", justifyContent: "center", width: 20, height: 20, mr: "2px", flexShrink: 0, color: isDateFilterActive ? "#0040d5" : "var(--lens-semantic-color-type-muted)", borderRadius: "50%", "&:hover": { bgcolor: isDateFilterActive ? "rgba(0,64,213,0.12)" : "rgba(0,0,0,0.06)" } }}
                 onClick={(e) => { e.stopPropagation(); if (isDateFilterActive) { setLastModifiedFrom(null); setLastModifiedTo(null); } else { setLastModifiedFilterAnchor((e.currentTarget.closest("[data-filter-chip]") as HTMLElement) ?? e.currentTarget); } }}
               >
-                {isDateFilterActive ? <CloseIcon sx={{ fontSize: 16 }} /> : <ExpandDownIcon sx={{ fontSize: 16 }} />}
+                {isDateFilterActive ? <CloseIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} /> : <ExpandDownIcon sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />}
               </Box>
             </Box>
             <Button variant="text" size="small" onClick={() => { setAccessFilter("All"); setLastModifiedFrom(null); setLastModifiedTo(null); }} sx={{ visibility: anyFilterActive ? "visible" : "hidden" }}>
@@ -930,11 +930,11 @@ export default function DocumentsPage() {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Stack spacing={2}>
               <Stack spacing={0.5}>
-                <Typography variant="body2" sx={{ fontSize: 12, fontWeight: 600 }}>After</Typography>
+                <Typography variant="body2" sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>After</Typography>
                 <DatePicker value={lastModifiedFrom} onChange={(v) => setLastModifiedFrom(v)} slotProps={{ textField: { size: "small" } }} />
               </Stack>
               <Stack spacing={0.5}>
-                <Typography variant="body2" sx={{ fontSize: 12, fontWeight: 600 }}>Before</Typography>
+                <Typography variant="body2" sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>Before</Typography>
                 <DatePicker value={lastModifiedTo} onChange={(v) => setLastModifiedTo(v)} slotProps={{ textField: { size: "small" } }} />
               </Stack>
               <Button size="small" variant="outlined" onClick={() => setLastModifiedFilterAnchor(null)}>Apply</Button>
@@ -968,13 +968,13 @@ export default function DocumentsPage() {
       >
         <MenuItem onClick={closeMenu}>
           <ListItemIcon>
-            <MoveIcon style={{ fontSize: 20 }} />
+            <MoveIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Move</ListItemText>
         </MenuItem>
         <MenuItem onClick={closeMenu}>
           <ListItemIcon>
-            <EditIcon style={{ fontSize: 20 }} />
+            <EditIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Rename</ListItemText>
         </MenuItem>
@@ -985,7 +985,7 @@ export default function DocumentsPage() {
           }}
         >
           <ListItemIcon>
-            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 20 }} /> : <UnlockedIcon style={{ fontSize: 20 }} />}
+            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} /> : <UnlockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />}
           </ListItemIcon>
           <ListItemText>{isMenuItemPublic ? "Remove from site" : "Publish to site"}</ListItemText>
         </MenuItem>
@@ -1004,7 +1004,7 @@ export default function DocumentsPage() {
             "&:hover .MuiListItemText-primary": { color: "var(--lens-semantic-color-status-error-text)" },
           }}
         >
-          <ListItemIcon><TrashIcon style={{ fontSize: 20 }} /></ListItemIcon>
+          <ListItemIcon><TrashIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} /></ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>
       </Menu>
@@ -1126,10 +1126,10 @@ export default function DocumentsPage() {
                 },
                 "& .MuiAlert-message": {
                   color: "#ffffff",
-                  fontSize: "1rem",
-                  lineHeight: "1.5rem",
-                  letterSpacing: "0.2px",
-                  fontWeight: 400,
+                  fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)',
+                  lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)',
+                  letterSpacing: 'var(--lens-semantic-letter-spacing-xs)',
+                  fontWeight: 'var(--lens-core-font-weight-regular)',
                   paddingTop: "8px",
                   paddingBottom: "8px",
                   paddingLeft: "16px",

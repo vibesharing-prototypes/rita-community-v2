@@ -239,7 +239,7 @@ export default function EventDetailPage() {
 
   const filterHeaderSx = (isActive: boolean) => ({
     userSelect: "none" as const,
-    ...(isActive && { color: "primary.main", fontWeight: 700 }),
+    ...(isActive && { color: "primary.main", fontWeight: 'var(--lens-core-font-weight-bold)' }),
   });
 
   const fileRowSx = {
@@ -264,7 +264,7 @@ export default function EventDetailPage() {
           breadcrumbs={
             <OverflowBreadcrumbs items={breadcrumbItems}>
               {(item) => {
-                const disabledSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", color: "#6f7377", pl: "4px", pr: "12px", py: "4px" };
+                const disabledSx = { fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', color: "#6f7377", pl: "4px", pr: "12px", py: "4px" };
                 if (item.id === "product" || item.isCurrent) {
                   return <Typography key={item.id} sx={disabledSx}>{item.label}</Typography>;
                 }
@@ -306,24 +306,24 @@ export default function EventDetailPage() {
         <Stack gap={1}>
           <Stack direction="row" alignItems="center" gap={1}>
             <CalendarIcon style={{ fontSize: ICON_SIZE, color: "var(--lens-semantic-color-type-muted)" }} />
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+            <Typography variant="body2" sx={{ fontWeight: 'var(--lens-core-font-weight-medium)' }}>
               {event.date}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" gap={1}>
             <ClockIcon style={{ fontSize: ICON_SIZE, color: "var(--lens-semantic-color-type-muted)" }} />
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+            <Typography variant="body2" sx={{ fontWeight: 'var(--lens-core-font-weight-medium)' }}>
               {event.time}
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" gap={1}>
             <Typography
               variant="body2"
-              sx={{ color: "var(--lens-semantic-color-type-muted)", fontWeight: 600 }}
+              sx={{ color: "var(--lens-semantic-color-type-muted)", fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}
             >
               Location:
             </Typography>
-            <Typography variant="body2" sx={{ fontWeight: 500 }}>
+            <Typography variant="body2" sx={{ fontWeight: 'var(--lens-core-font-weight-medium)' }}>
               {event.location}
             </Typography>
           </Stack>
@@ -457,7 +457,7 @@ export default function EventDetailPage() {
                           <Typography
                             variant="body2"
                             sx={{
-                              fontWeight: 500,
+                              fontWeight: 'var(--lens-core-font-weight-medium)',
                               color: "primary.main",
                               "&:hover": {
                                 textDecoration: "underline",
@@ -480,7 +480,7 @@ export default function EventDetailPage() {
                       </TableCell>
                       <TableCell align="right" sx={{ width: 48 }}>
                         <IconButton size="small" onClick={(ev) => openMenu(ev, file.id)}>
-                          <MoreIcon style={{ fontSize: 18 }} />
+                          <MoreIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -535,13 +535,13 @@ export default function EventDetailPage() {
       >
         <MenuItem onClick={closeMenu}>
           <ListItemIcon>
-            <EditIcon style={{ fontSize: 20 }} />
+            <EditIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Rename</ListItemText>
         </MenuItem>
         <MenuItem onClick={() => { setPublishTargetId(menuItemId); closeMenu(); }}>
           <ListItemIcon>
-            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 20 }} /> : <UnlockedIcon style={{ fontSize: 20 }} />}
+            {isMenuItemPublic ? <LockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} /> : <UnlockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />}
           </ListItemIcon>
           <ListItemText>{isMenuItemPublic ? "Remove from site" : "Publish to site"}</ListItemText>
         </MenuItem>
@@ -560,7 +560,7 @@ export default function EventDetailPage() {
           }}
         >
           <ListItemIcon>
-            <TrashIcon style={{ fontSize: 20 }} />
+            <TrashIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>
@@ -577,13 +577,13 @@ export default function EventDetailPage() {
       >
         <MenuItem onClick={() => setHeaderMenuAnchor(null)}>
           <ListItemIcon>
-            <EditIcon style={{ fontSize: 20 }} />
+            <EditIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Rename</ListItemText>
         </MenuItem>
         <MenuItem onClick={() => { setPublishTargetId(event?.id ?? null); setHeaderMenuAnchor(null); }}>
           <ListItemIcon>
-            {isEventPublic ? <LockedIcon style={{ fontSize: 20 }} /> : <UnlockedIcon style={{ fontSize: 20 }} />}
+            {isEventPublic ? <LockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} /> : <UnlockedIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />}
           </ListItemIcon>
           <ListItemText>{isEventPublic ? "Remove from site" : "Publish to site"}</ListItemText>
         </MenuItem>
@@ -602,7 +602,7 @@ export default function EventDetailPage() {
           }}
         >
           <ListItemIcon>
-            <TrashIcon style={{ fontSize: 20 }} />
+            <TrashIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>

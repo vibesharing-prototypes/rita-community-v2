@@ -39,7 +39,7 @@ export default function StatusChip({ label }: { label: string }) {
           {icon}
         </Box>
       )}
-      <Typography sx={{ fontSize: 12, fontWeight: 600, lineHeight: "16px", letterSpacing: "0.3px", color: "inherit" }}>
+      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "inherit" }}>
         {label}
       </Typography>
     </Box>

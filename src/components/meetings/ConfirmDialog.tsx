@@ -32,10 +32,10 @@ export default function ConfirmDialog({
       <DialogTitle
         component="div"
         sx={{
-          fontSize: "20px",
-          fontWeight: 600,
-          lineHeight: "24px",
-          letterSpacing: 0,
+          fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)',
+          fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+          lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)',
+          letterSpacing: 'var(--lens-semantic-letter-spacing-normal)',
           color: "var(--lens-semantic-color-type-default)",
           display: "flex",
           alignItems: "flex-start",
@@ -50,7 +50,7 @@ export default function ConfirmDialog({
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Typography sx={{ fontSize: "14px", fontWeight: 400, lineHeight: "20px", letterSpacing: "0.2px", color: "var(--lens-semantic-color-type-default)" }}>
+        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-regular)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', color: "var(--lens-semantic-color-type-default)" }}>
           {message}
         </Typography>
       </DialogContent>

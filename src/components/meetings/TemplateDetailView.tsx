@@ -52,8 +52,8 @@ const TRIGGER_SX = {
   px: "4px",
   py: "4px",
   cursor: "pointer",
-  fontSize: "1rem",
-  lineHeight: 1.5,
+  fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)',
+  lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)',
   userSelect: "none" as const,
   "&:hover": { backgroundColor: "action.hover" },
 };
@@ -85,7 +85,7 @@ function TimeField({
         sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}
       >
         <ClockIcon />
-        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>
           Time
         </Typography>
       </Stack>
@@ -148,17 +148,17 @@ function EditableTitleField({
       sx={{
         "& .MuiInput-root": {
           borderRadius: "4px",
-          fontSize: "24px",
-          fontWeight: 600,
-          lineHeight: "32px",
+          fontSize: 'var(--lens-semantic-font-title-h2-display-font-size)',
+          fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+          lineHeight: 'var(--lens-semantic-font-title-h2-display-line-height)',
           "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
         },
         "& .MuiInput-input.MuiInput-input": {
           pl: 0, pr: "4px",
           fontFamily: "inherit",
-          fontSize: "24px",
-          fontWeight: 600,
-          lineHeight: "32px",
+          fontSize: 'var(--lens-semantic-font-title-h2-display-font-size)',
+          fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+          lineHeight: 'var(--lens-semantic-font-title-h2-display-line-height)',
         },
         "& .MuiInput-root::before": { borderBottom: "none !important" },
       }}
@@ -192,7 +192,7 @@ function EditableField({
         sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}
       >
         {icon}
-        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>
           {label}
         </Typography>
       </Stack>
@@ -248,7 +248,7 @@ function EditableMultilineField({
         sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}
       >
         {icon}
-        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>
           {label}
         </Typography>
       </Stack>
@@ -339,13 +339,13 @@ export default function TemplateDetailView({
               ]}
             >
               {(item) => {
-                const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
+                const baseSx = { fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" };
                 const mutedSx = { ...baseSx, color: "#6f7377" };
                 const activeSx = { ...baseSx, color: "#282e37" };
                 if (item.isCurrent) return <span />;
                 if (item.id === "root") return (
                   <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
-                    <Typography sx={{ ...mutedSx, letterSpacing: "0.2px" }}>{item.label}</Typography>
+                    <Typography sx={{ ...mutedSx, letterSpacing: 'var(--lens-semantic-letter-spacing-xs)' }}>{item.label}</Typography>
                   </Box>
                 );
                 const textSx = item.isDisabled ? mutedSx : activeSx;
@@ -372,14 +372,14 @@ export default function TemplateDetailView({
           }
           pageSubtitle={
             <Stack direction="row" alignItems="center" gap="6px">
-              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)' }}>
                 {draft.committee}
               </Typography>
               {lastEdited && (
                 <>
-                  <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px" }}>·</Typography>
+                  <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)' }}>·</Typography>
                   <Tooltip title={`Edited by you on ${format(lastEdited, "MMMM d")} at ${format(lastEdited, "h:mm a")}`} placement="bottom-start">
-                    <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px", cursor: "default" }}>
+                    <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', cursor: "default" }}>
                       {formatEditedLabel(lastEdited)}
                     </Typography>
                   </Tooltip>
@@ -463,7 +463,7 @@ export default function TemplateDetailView({
             <Box sx={{ backgroundColor: "#E4F3FF", borderRadius: "12px", p: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <AgendaIcon sx={{ width: 24, height: 24 }} />
             </Box>
-            <Typography flex={1} minWidth={0} sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
+            <Typography flex={1} minWidth={0} sx={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-title-h4-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)' }}>
               Agenda
             </Typography>
             {(() => {

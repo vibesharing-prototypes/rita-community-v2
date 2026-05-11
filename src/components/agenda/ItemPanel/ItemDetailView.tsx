@@ -15,13 +15,13 @@ function TierSection({
 
   return (
     <Box>
-      <Typography sx={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.8px", textTransform: "uppercase", color: "text.secondary", mb: 1 }}>
+      <Typography sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-bold)', letterSpacing: 'var(--lens-semantic-letter-spacing-md)', textTransform: "uppercase", color: "text.secondary", mb: 1 }}>
         {label}
       </Typography>
       {hasContent ? (
         <Stack gap={1}>
           {content.trim() && (
-            <Typography sx={{ fontSize: 14, lineHeight: "22px", whiteSpace: "pre-wrap" }}>
+            <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', whiteSpace: "pre-wrap" }}>
               {content}
             </Typography>
           )}
@@ -30,11 +30,11 @@ function TierSection({
               <SvgIcon sx={{ width: 16, height: 16, color: "text.secondary", flexShrink: 0 }}>
                 <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
               </SvgIcon>
-              <Typography sx={{ fontSize: 13, color: "primary.main", flex: 1 }}>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "primary.main", flex: 1 }}>
                 {att.filename}
               </Typography>
               <Box sx={{
-                fontSize: 11, fontWeight: 600, px: "8px", py: "2px",
+                fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', px: "8px", py: "2px",
                 bgcolor: att.tier === "public" ? "#C2FFD2" : att.tier === "staff" ? "#FFF2AA" : "#F3E8FF",
                 color: att.tier === "public" ? "#006D3E" : att.tier === "staff" ? "#504700" : "#5B21B6",
                 borderRadius: "9999px",
@@ -45,7 +45,7 @@ function TierSection({
           ))}
         </Stack>
       ) : (
-        <Typography sx={{ fontSize: 13, color: "text.disabled", fontStyle: "italic" }}>
+        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.disabled", fontStyle: "italic" }}>
           No content added yet.
         </Typography>
       )}
@@ -73,11 +73,11 @@ export default function ItemDetailView({
       {/* Header row */}
       <Stack direction="row" alignItems="flex-start" justifyContent="space-between" gap={1}>
         <Stack gap={0.5} flex={1} minWidth={0}>
-          <Typography sx={{ fontSize: 18, fontWeight: 600, lineHeight: "28px", letterSpacing: "0.2px" }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-title-h4-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)' }}>
             {item.subject}
           </Typography>
           {category && (
-            <Typography sx={{ fontSize: 13, color: "text.secondary" }}>
+            <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.secondary" }}>
               {category.name}
             </Typography>
           )}
@@ -91,21 +91,21 @@ export default function ItemDetailView({
       <Stack direction="row" gap={2} flexWrap="wrap">
         {item.type.length > 0 && (
           <Stack gap={0.5}>
-            <Typography sx={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.8px", textTransform: "uppercase", color: "text.secondary" }}>
+            <Typography sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-bold)', letterSpacing: 'var(--lens-semantic-letter-spacing-md)', textTransform: "uppercase", color: "text.secondary" }}>
               Type
             </Typography>
-            <Typography sx={{ fontSize: 13 }}>{item.type.join(", ")}</Typography>
+            <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>{item.type.join(", ")}</Typography>
           </Stack>
         )}
         <Stack gap={0.5}>
-          <Typography sx={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.8px", textTransform: "uppercase", color: "text.secondary" }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-bold)', letterSpacing: 'var(--lens-semantic-letter-spacing-md)', textTransform: "uppercase", color: "text.secondary" }}>
             Status
           </Typography>
           <Box sx={{
             display: "inline-flex", alignItems: "center", height: 22,
             bgcolor: "#F3F3F3", color: "#515255", borderRadius: "9999px", px: "10px",
           }}>
-            <Typography sx={{ fontSize: 12, fontWeight: 600, lineHeight: "16px" }}>Draft</Typography>
+            <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)' }}>Draft</Typography>
           </Box>
         </Stack>
       </Stack>
@@ -135,7 +135,7 @@ export default function ItemDetailView({
       {lastModified && (
         <>
           <Divider />
-          <Typography sx={{ fontSize: 12, color: "text.secondary" }}>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "text.secondary" }}>
             Last modified: {lastModified}
           </Typography>
         </>

@@ -32,10 +32,10 @@ export default function DateBadge({ month, day }: { month: string; day: string }
       <Typography
         component="span"
         sx={{
-          fontSize: "12px",
+          fontSize: 'var(--lens-semantic-font-text-md-font-size)',
           fontWeight: regular,
-          lineHeight: "16px",
-          letterSpacing: "0.3px",
+          lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
+          letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
           display: "block",
           width: "100%",
         }}
@@ -45,10 +45,10 @@ export default function DateBadge({ month, day }: { month: string; day: string }
       <Typography
         component="span"
         sx={{
-          fontSize: "14px",
+          fontSize: 'var(--lens-semantic-font-text-body-font-size)',
           fontWeight: semiBold,
-          lineHeight: "20px",
-          letterSpacing: "0.2px",
+          lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
+          letterSpacing: 'var(--lens-semantic-letter-spacing-xs)',
           display: "block",
           width: "100%",
         }}

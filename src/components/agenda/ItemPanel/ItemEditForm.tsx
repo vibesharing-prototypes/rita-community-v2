@@ -22,11 +22,11 @@ function AttachmentRow({
       <SvgIcon sx={{ width: 16, height: 16, color: "text.secondary", flexShrink: 0 }}>
         <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
       </SvgIcon>
-      <Typography sx={{ fontSize: 13, flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', flex: 1, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
         {att.filename}
       </Typography>
       <Box sx={{
-        fontSize: 11, fontWeight: 600, px: "8px", py: "2px", flexShrink: 0,
+        fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', px: "8px", py: "2px", flexShrink: 0,
         bgcolor: att.tier === "public" ? "#C2FFD2" : att.tier === "staff" ? "#FFF2AA" : "#F3E8FF",
         color: att.tier === "public" ? "#006D3E" : att.tier === "staff" ? "#504700" : "#5B21B6",
         borderRadius: "9999px",
@@ -59,7 +59,7 @@ function TierEditSection({
 }) {
   return (
     <Stack gap={1.5}>
-      <Typography sx={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.8px", textTransform: "uppercase", color: "text.secondary" }}>
+      <Typography sx={{ fontSize: 'var(--lens-semantic-font-label-xs-font-size)', fontWeight: 'var(--lens-core-font-weight-bold)', letterSpacing: 'var(--lens-semantic-letter-spacing-md)', textTransform: "uppercase", color: "text.secondary" }}>
         {label}
       </Typography>
       <TextField
@@ -70,7 +70,7 @@ function TierEditSection({
         placeholder="Add content…"
         size="small"
         fullWidth
-        inputProps={{ style: { fontSize: 14, lineHeight: "22px" } }}
+        inputProps={{ style: { fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)' } }}
       />
       {attachments.length > 0 && (
         <Stack gap={0.75}>
@@ -87,7 +87,7 @@ function TierEditSection({
             <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
           </SvgIcon>
         }
-        sx={{ alignSelf: "flex-start", fontSize: 13, color: "text.secondary" }}
+        sx={{ alignSelf: "flex-start", fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.secondary" }}
         // File upload is a stub in this prototype
         disabled
       >
@@ -142,7 +142,7 @@ export default function ItemEditForm({
     <Stack gap={0} sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       {/* Fixed header */}
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2.5, py: 1.5, borderBottom: "1px solid", borderColor: "divider", flexShrink: 0 }}>
-        <Typography sx={{ fontSize: 16, fontWeight: 600 }}>Edit Agenda Item</Typography>
+        <Typography sx={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>Edit Agenda Item</Typography>
         <Stack direction="row" gap={1}>
           <Button variant="outlined" size="small" onClick={onCancel}>Cancel</Button>
           <Button variant="contained" size="small" onClick={handleSave}>Save</Button>
@@ -153,7 +153,7 @@ export default function ItemEditForm({
       <Stack gap={2.5} sx={{ flex: 1, overflowY: "auto", p: 2.5 }}>
         {/* Subject */}
         <Stack gap={0.5}>
-          <Typography sx={{ fontSize: 12, fontWeight: 600, color: "text.secondary" }}>Subject *</Typography>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: "text.secondary" }}>Subject *</Typography>
           <TextField
             value={subject}
             onChange={(e) => { setSubject(e.target.value); setSubjectError(false); }}
@@ -161,28 +161,28 @@ export default function ItemEditForm({
             fullWidth
             error={subjectError}
             helperText={subjectError ? "Subject is required" : undefined}
-            inputProps={{ style: { fontSize: 14 } }}
+            inputProps={{ style: { fontSize: 'var(--lens-semantic-font-text-body-font-size)' } }}
           />
         </Stack>
 
         {/* Category */}
         <Stack gap={0.5}>
-          <Typography sx={{ fontSize: 12, fontWeight: 600, color: "text.secondary" }}>Category</Typography>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: "text.secondary" }}>Category</Typography>
           <Select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
             size="small"
-            sx={{ fontSize: 14 }}
+            sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}
           >
             {categories.map((c) => (
-              <MenuItem key={c.id} value={c.id} sx={{ fontSize: 14 }}>{c.name}</MenuItem>
+              <MenuItem key={c.id} value={c.id} sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>{c.name}</MenuItem>
             ))}
           </Select>
         </Stack>
 
         {/* Type */}
         <Stack gap={0.5}>
-          <Typography sx={{ fontSize: 12, fontWeight: 600, color: "text.secondary" }}>Type</Typography>
+          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: "text.secondary" }}>Type</Typography>
           <FormGroup row sx={{ gap: 0 }}>
             {ALL_TYPES.map((t) => (
               <FormControlLabel
@@ -194,7 +194,7 @@ export default function ItemEditForm({
                     size="small"
                   />
                 }
-                label={<Typography sx={{ fontSize: 13 }}>{t}</Typography>}
+                label={<Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>{t}</Typography>}
                 sx={{ mr: 1.5 }}
               />
             ))}

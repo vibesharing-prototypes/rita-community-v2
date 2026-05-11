@@ -187,14 +187,14 @@ export default function AgendaEditorLayout({
               ]}
               leadingElement={
                 <Box sx={{ height: 32, display: "flex", alignItems: "center", pr: "16px" }}>
-                  <Typography sx={{ fontSize: 14, fontWeight: 600, lineHeight: "20px", color: "#6f7377", letterSpacing: "0.2px", whiteSpace: "nowrap" }}>
+                  <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', color: "#6f7377", letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', whiteSpace: "nowrap" }}>
                     Community v2
                   </Typography>
                 </Box>
               }
             >
               {(item) => {
-                const baseSx = { fontSize: 14, fontWeight: 600, lineHeight: "20px", letterSpacing: "0.14px", whiteSpace: "nowrap" as const };
+                const baseSx = { fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-xs)', whiteSpace: "nowrap" as const };
                 const activeSx = { ...baseSx, color: "#282e37" };
                 if (item.isCurrent) return <span />;
                 const isMeeting = item.id === "meeting";
@@ -221,7 +221,7 @@ export default function AgendaEditorLayout({
           pageTitle={(
             <Box sx={{
               display: "flex", alignItems: "baseline", minWidth: 0, maxWidth: "100%", gap: "8px",
-              fontSize: "24px", fontWeight: 600, lineHeight: "32px",
+              fontSize: 'var(--lens-semantic-font-title-h2-display-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-title-h2-display-line-height)',
               overflow: "hidden",
             }}>
               <Box component="span" sx={{ flexShrink: 0 }}>Agenda —</Box>
@@ -235,7 +235,7 @@ export default function AgendaEditorLayout({
           ) as unknown as string}
           pageSubtitle={
             <Stack direction="row" alignItems="center" gap={1}>
-              <Typography sx={{ fontSize: 12, color: "var(--lens-semantic-color-type-muted)", lineHeight: "16px", letterSpacing: "0.3px" }}>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)' }}>
                 {meeting.committee}
               </Typography>
               {meeting.status === "Draft"
@@ -247,7 +247,7 @@ export default function AgendaEditorLayout({
             <Stack direction="row" spacing={1} alignItems="center">
               <Tooltip title="Download">
                 <IconButton size="medium" aria-label="Download">
-                  <DownloadIcon style={{ fontSize: 20 }} />
+                  <DownloadIcon style={{ fontSize: 'var(--lens-semantic-font-title-h3-lg-font-size)' }} />
                 </IconButton>
               </Tooltip>
               <Button variant="outlined" size="medium">
@@ -283,7 +283,7 @@ export default function AgendaEditorLayout({
                   "&:hover": { bgcolor: "action.hover" },
                 }}
               >
-                <ExpandSideNavIcon style={{ fontSize: 18 }} />
+                <ExpandSideNavIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
               </IconButton>
             </Tooltip>
           </Box>
@@ -348,12 +348,12 @@ export default function AgendaEditorLayout({
                 />
               )}
               {panelView === "search" && (
-                <Box sx={{ p: 2, textAlign: "center", color: "text.secondary", fontSize: 13 }}>
+                <Box sx={{ p: 2, textAlign: "center", color: "text.secondary", fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>
                   Search coming soon
                 </Box>
               )}
               {panelView === "notes" && (
-                <Box sx={{ p: 2, textAlign: "center", color: "text.secondary", fontSize: 13 }}>
+                <Box sx={{ p: 2, textAlign: "center", color: "text.secondary", fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>
                   Notes coming soon
                 </Box>
               )}
@@ -373,7 +373,7 @@ export default function AgendaEditorLayout({
             />
           ) : (
             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", p: 3 }}>
-              <Typography sx={{ fontSize: 14, color: "text.secondary" }}>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', color: "text.secondary" }}>
                 Select an item to view or edit
               </Typography>
             </Box>
@@ -383,11 +383,11 @@ export default function AgendaEditorLayout({
 
       {/* ── Add Item dialog ── */}
       <Dialog open={addItemOpen} onClose={() => setAddItemOpen(false)} fullWidth maxWidth="xs">
-        <DialogTitle sx={{ fontSize: 18, fontWeight: 600, pb: 1 }}>New Agenda Item</DialogTitle>
+        <DialogTitle sx={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', pb: 1 }}>New Agenda Item</DialogTitle>
         <DialogContent sx={{ pt: "8px !important" }}>
           <Stack gap={2}>
             <Stack gap={0.5}>
-              <Typography sx={{ fontSize: 12, fontWeight: 600, color: "text.secondary" }}>Subject</Typography>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: "text.secondary" }}>Subject</Typography>
               <TextField
                 autoFocus
                 value={addItemSubject}
@@ -397,19 +397,19 @@ export default function AgendaEditorLayout({
                 error={addItemSubjectError}
                 helperText={addItemSubjectError ? "Subject is required" : undefined}
                 onKeyDown={(e) => { if (e.key === "Enter") confirmAddItem(); }}
-                inputProps={{ style: { fontSize: 14 } }}
+                inputProps={{ style: { fontSize: 'var(--lens-semantic-font-text-body-font-size)' } }}
               />
             </Stack>
             <Stack gap={0.5}>
-              <Typography sx={{ fontSize: 12, fontWeight: 600, color: "text.secondary" }}>Category</Typography>
+              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: "text.secondary" }}>Category</Typography>
               <Select
                 value={addItemCategoryId}
                 onChange={(e) => setAddItemCategoryId(e.target.value)}
                 size="small"
-                sx={{ fontSize: 14 }}
+                sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}
               >
                 {categories.map((c) => (
-                  <MenuItem key={c.id} value={c.id} sx={{ fontSize: 14 }}>{c.name}</MenuItem>
+                  <MenuItem key={c.id} value={c.id} sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)' }}>{c.name}</MenuItem>
                 ))}
               </Select>
             </Stack>

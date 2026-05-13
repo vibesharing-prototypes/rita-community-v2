@@ -1,4 +1,3 @@
-import { PageHeader } from "@diligentcorp/atlas-react-bundle";
 import BookPublishIcon from "@diligentcorp/atlas-react-bundle/icons/BookPublish";
 import BookUnpublishIcon from "@diligentcorp/atlas-react-bundle/icons/BookUnpublish";
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
@@ -102,7 +101,6 @@ export default function HomePage() {
 
   return (
     <PageLayout id="page-home">
-      <PageHeader pageTitle="Home" />
       <Box
         id="home-grid"
         sx={{

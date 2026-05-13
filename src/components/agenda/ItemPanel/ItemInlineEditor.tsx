@@ -9,9 +9,10 @@ import {
   Menu, MenuItem, Stack, SvgIcon, Tab, Tabs, TextField, Tooltip, Typography, useTheme,
 } from "@mui/material";
 import { differenceInHours, differenceInMinutes, format, isSameDay } from "date-fns";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import type { AgendaAttachment, AgendaCategory, AgendaItem, AgendaItemType } from "../../../types/agenda";
-import RichTextField from "../../common/RichTextField";
+import RichTextField, { type RichTextFieldHandle } from "../../common/RichTextField";
+import UnsavedChangesDialog from "./UnsavedChangesDialog";
 
 const ALL_TYPES: AgendaItemType[] = [
   "Action", "Action (Consent)", "Minutes", "Information",
@@ -159,19 +160,29 @@ function formatEditedLabel(date: Date): string {
 
 // ── Main component ─────────────────────────────────────────────────────────
 
-export default function ItemInlineEditor({
-  item,
-  categories,
-  onSave,
-  onDelete,
-  onDuplicate,
-}: {
+export type ItemInlineEditorHandle = {
+  /**
+   * Ask the editor whether `action` can run now.
+   * - If there's no open editor or no unsaved changes, runs `action` immediately.
+   * - If there are unsaved changes, opens the dialog and runs `action` only
+   *   after Save or Discard. If the user dismisses the dialog, `action` is dropped.
+   */
+  tryProceed: (action: () => void) => void;
+};
+
+const ItemInlineEditor = forwardRef<ItemInlineEditorHandle, {
   item: AgendaItem;
   categories: AgendaCategory[];
   onSave: (updated: AgendaItem) => void;
   onDelete: (id: string) => void;
   onDuplicate: (item: AgendaItem) => void;
-}) {
+}>(function ItemInlineEditor({
+  item,
+  categories,
+  onSave,
+  onDelete,
+  onDuplicate,
+}, ref) {
   const { tokens } = useTheme();
   const borderColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
   const category = categories.find((c) => c.id === item.categoryId);
@@ -189,6 +200,40 @@ export default function ItemInlineEditor({
   const [activeTab, setActiveTab] = useState<"public" | "staff" | "executive">("public");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Rich-text editor coordination ───────────────────────────────────────────
+  // Imperative handle of whichever RichTextField is currently mounted
+  // (only the active tab's editor exists at a time).
+  const richTextRef = useRef<RichTextFieldHandle | null>(null);
+  // Held navigation request that's waiting for the user to resolve the
+  // unsaved-changes dialog. Cleared after Save / Discard / dialog close.
+  const pendingActionRef = useRef<(() => void) | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  /**
+   * Run `action` if the editor is idle / clean, otherwise stash it and ask
+   * the user. Used by tab switches and by the parent for item navigation.
+   */
+  const tryProceed = (action: () => void) => {
+    const handle = richTextRef.current;
+    if (!handle || !handle.isEditing()) { action(); return; }
+    if (!handle.isDirty()) { handle.discard(); action(); return; }
+    pendingActionRef.current = action;
+    setDialogOpen(true);
+  };
+
+  useImperativeHandle(ref, () => ({ tryProceed }));
+
+  const runPending = () => {
+    const next = pendingActionRef.current;
+    pendingActionRef.current = null;
+    setDialogOpen(false);
+    next?.();
+  };
+
+  const handleDialogSave = () => { richTextRef.current?.save(); runPending(); };
+  const handleDialogDiscard = () => { richTextRef.current?.discard(); runPending(); };
+  const handleDialogClose = () => { pendingActionRef.current = null; setDialogOpen(false); };
+
   useEffect(() => {
     setSubject(item.subject);
     setType(item.type[0] ?? "");
@@ -198,6 +243,9 @@ export default function ItemInlineEditor({
     setContentEditedAt(item.contentEditedAt ?? {});
     setMembersOnly(Boolean(item.membersOnly));
     setActiveTab("public");
+    // A fresh item means there's no in-flight edit to guard.
+    pendingActionRef.current = null;
+    setDialogOpen(false);
   }, [item.id]);
 
   /**
@@ -406,7 +454,10 @@ export default function ItemInlineEditor({
         <Box sx={{ borderBottom: `1px solid ${borderColor}` }}>
           <Tabs
             value={activeTab}
-            onChange={(_, v) => setActiveTab(v)}
+            onChange={(_, v: "public" | "staff" | "executive") => {
+              if (v === activeTab) return;
+              tryProceed(() => setActiveTab(v));
+            }}
             sx={{
               minHeight: 0,
               "& .MuiTab-root:not(.Mui-selected)::after": { display: "none" },
@@ -456,6 +507,7 @@ export default function ItemInlineEditor({
           </Typography>
           <RichTextField
             key={active.id}
+            ref={richTextRef}
             value={active.content}
             placeholder={active.placeholder}
             onSave={(v) => {
@@ -499,6 +551,15 @@ export default function ItemInlineEditor({
           </Stack>
         </Box>
       </Box>
+
+      <UnsavedChangesDialog
+        open={dialogOpen}
+        onSave={handleDialogSave}
+        onDiscard={handleDialogDiscard}
+        onClose={handleDialogClose}
+      />
     </Box>
   );
-}
+});
+
+export default ItemInlineEditor;

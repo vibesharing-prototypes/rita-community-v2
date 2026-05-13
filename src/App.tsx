@@ -19,15 +19,29 @@ function useSideNavAppLabel(label: string) {
     const apply = () => {
       const host = document.querySelector("mock-hb-global-navigator");
       if (!host) return false;
-      // Walk into any shadow roots and find the H2 in the side-nav header.
+      // Walk into any shadow roots and patch:
+      //   1. The H2 with "Boards" → the project's app label.
+      //   2. The atlas-gn-side-nav host's `border-right` color — it ships
+      //      transparent, and lives inside a shadow root so a stylesheet
+      //      selector can't reach it. We set it inline so the side nav has
+      //      the same hairline outline on its right edge that the top nav
+      //      already has at its bottom edge.
       const seen = new Set<Node>();
       const stack: Node[] = [host];
       while (stack.length) {
         const node = stack.pop()!;
         if (seen.has(node)) continue;
         seen.add(node);
-        if (node instanceof Element && node.tagName === "H2" && node.textContent !== label) {
-          node.textContent = label;
+        if (node instanceof Element) {
+          if (node.tagName === "H2" && node.textContent !== label) {
+            node.textContent = label;
+          }
+          if (node.tagName === "ATLAS-GN-SIDE-NAV") {
+            const el = node as HTMLElement;
+            if (el.style.borderRightColor !== "var(--lens-component-global-nav-list-divider-border-color)") {
+              el.style.borderRightColor = "var(--lens-component-global-nav-list-divider-border-color)";
+            }
+          }
         }
         const el = node as Element;
         if ((el as HTMLElement).shadowRoot) stack.push((el as HTMLElement).shadowRoot!);

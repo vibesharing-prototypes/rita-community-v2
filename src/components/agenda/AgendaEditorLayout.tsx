@@ -5,7 +5,7 @@ import {
 } from "@mui/material";
 import ExpandSideNavIcon from "@diligentcorp/atlas-react-bundle/icons/ExpandSideNav";
 import DownloadIcon from "@diligentcorp/atlas-react-bundle/icons/Download";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { setAgendaFor } from "../../data/runtimeAgendaStore";
 import type { AgendaCategory, AgendaItem } from "../../types/agenda";
@@ -14,7 +14,7 @@ import { isUpcoming } from "../../utils/meetings";
 import StatusChip from "../meetings/StatusChip";
 import AgendaToolbar, { type AgendaPanelView } from "./AgendaToolbar";
 import AgendaTree from "./AgendaTree/AgendaTree";
-import ItemInlineEditor from "./ItemPanel/ItemInlineEditor";
+import ItemInlineEditor, { type ItemInlineEditorHandle } from "./ItemPanel/ItemInlineEditor";
 
 function generateId() {
   return `new-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -46,6 +46,21 @@ export default function AgendaEditorLayout({
   });
   const [agendaCollapsed, setAgendaCollapsed] = useState(false);
   const [panelView, setPanelView] = useState<AgendaPanelView>("content");
+
+  // Used to guard agenda-item navigation while the rich-text editor is dirty.
+  const inlineEditorRef = useRef<ItemInlineEditorHandle | null>(null);
+
+  /**
+   * Wrapper around setSelectedItemId that first asks the item panel whether
+   * it has unsaved changes. If clean, the change happens immediately; if
+   * dirty, the panel opens its unsaved-changes dialog and only proceeds
+   * once the user resolves it.
+   */
+  const requestSelectItem = (id: string | null) => {
+    const handle = inlineEditorRef.current;
+    if (!handle) { setSelectedItemId(id); return; }
+    handle.tryProceed(() => setSelectedItemId(id));
+  };
 
   // Add item dialog
   const [addItemOpen, setAddItemOpen] = useState(false);
@@ -175,7 +190,7 @@ export default function AgendaEditorLayout({
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden" }}>
 
       {/* ── Header ── */}
-      <Box sx={{ borderBottom: `1px solid ${dividerColor}`, pt: 3, px: { xs: 2, sm: 3 }, pb: "12px", flexShrink: 0 }}>
+      <Box sx={{ borderBottom: `1px solid ${dividerColor}`, pt: 3, px: 4, pb: "12px", flexShrink: 0 }}>
         <PageHeader
           breadcrumbs={
             <OverflowBreadcrumbs
@@ -266,11 +281,14 @@ export default function AgendaEditorLayout({
       </Box>
 
       {/* ── Two-panel body ── */}
-      <Box sx={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      {/* px: 4 keeps the agenda tree / right panel flush with the 32px page
+          gutter used everywhere else (PageLayout). The tree card adds its own
+          internal padding inside this. */}
+      <Box sx={{ display: "flex", flex: 1, overflow: "hidden", px: 4 }}>
 
         {/* Collapsed-state open button (overlays when collapsed) */}
         {agendaCollapsed && (
-          <Box sx={{ p: 2, flexShrink: 0 }}>
+          <Box sx={{ py: 2, pr: 2, flexShrink: 0 }}>
             <Tooltip title="Open agenda">
               <IconButton
                 size="small"
@@ -289,13 +307,14 @@ export default function AgendaEditorLayout({
           </Box>
         )}
 
-        {/* Left: Agenda tree (card) */}
+        {/* Left: Agenda tree (card). Parent <Box> already supplies the 32px
+            outer gutter via px: 4; this column only needs the inner gap to
+            the right-side panel. */}
         <Box sx={{
           width: agendaCollapsed ? 0 : "30%",
           minWidth: agendaCollapsed ? 0 : 280,
           maxWidth: agendaCollapsed ? 0 : 380,
           pt: 2, pb: 2,
-          pl: agendaCollapsed ? 0 : 2,
           pr: agendaCollapsed ? 0 : "12px",
           display: "flex", flexDirection: "column",
           flexShrink: 0,
@@ -336,7 +355,7 @@ export default function AgendaEditorLayout({
                 <AgendaTree
                   categories={categories}
                   selectedItemId={selectedItemId}
-                  onSelectItem={setSelectedItemId}
+                  onSelectItem={requestSelectItem}
                   onReorder={handleReorder}
                   onRenameCategory={handleRenameCategory}
                   onDeleteCategory={handleDeleteCategory}
@@ -365,6 +384,7 @@ export default function AgendaEditorLayout({
         <Box sx={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
           {selectedItem ? (
             <ItemInlineEditor
+              ref={inlineEditorRef}
               item={selectedItem}
               categories={categories}
               onSave={handleSaveItem}

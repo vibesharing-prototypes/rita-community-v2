@@ -11,7 +11,7 @@ type PageLayoutProps = PropsWithChildren<{ id?: string }>;
  */
 export default function PageLayout({ children, id }: PageLayoutProps) {
   return (
-    <Box id={id} sx={{ pt: 3, pb: 2, px: { xs: 2, sm: 3 } }}>
+    <Box id={id} sx={{ pt: 4, pb: 3, px: 4 }}>
       <Stack gap={3}>{children}</Stack>
     </Box>
   );

@@ -1,8 +1,56 @@
 import { AppLayout } from "@diligentcorp/atlas-react-bundle";
+import { useEffect } from "react";
 import { Outlet, Route, Routes } from "react-router";
 import "./styles.css";
 
 import Navigation from "./Navigation.js";
+
+const SIDE_NAV_APP_LABEL = "Community v2";
+
+/**
+ * Atlas's mock global nav hardcodes the side-nav title as "Boards" inside
+ * a closed-ish shadow DOM tree we don't control. We replace the text once
+ * it mounts and re-apply if Atlas re-renders.
+ */
+function useSideNavAppLabel(label: string) {
+  useEffect(() => {
+    let stopped = false;
+
+    const apply = () => {
+      const host = document.querySelector("mock-hb-global-navigator");
+      if (!host) return false;
+      // Walk into any shadow roots and find the H2 in the side-nav header.
+      const seen = new Set<Node>();
+      const stack: Node[] = [host];
+      while (stack.length) {
+        const node = stack.pop()!;
+        if (seen.has(node)) continue;
+        seen.add(node);
+        if (node instanceof Element && node.tagName === "H2" && node.textContent !== label) {
+          node.textContent = label;
+        }
+        const el = node as Element;
+        if ((el as HTMLElement).shadowRoot) stack.push((el as HTMLElement).shadowRoot!);
+        for (const child of (node.childNodes ?? [])) stack.push(child);
+      }
+      return true;
+    };
+
+    // Try until the custom element has rendered its shadow tree.
+    const tick = () => {
+      if (stopped) return;
+      apply();
+      requestAnimationFrame(() => setTimeout(tick, 250));
+    };
+    tick();
+
+    // Also reapply on route / navigation activity in case Atlas re-renders.
+    const observer = new MutationObserver(() => apply());
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => { stopped = true; observer.disconnect(); };
+  }, [label]);
+}
 import HomePage from "./pages/HomePage.js";
 import MeetingsPage from "./pages/MeetingsPage.js";
 import MeetingDetailPage from "./pages/MeetingDetailPage.js";
@@ -20,6 +68,8 @@ import EventDetailPage from "./pages/EventDetailPage.js";
 import MembersPage from "./pages/MembersPage.js";
 
 export default function App() {
+  useSideNavAppLabel(SIDE_NAV_APP_LABEL);
+
   return (
     <Routes>
       <Route

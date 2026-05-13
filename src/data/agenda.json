@@ -137,7 +137,7 @@
               "categoryId": "m1-cat-3",
               "type": ["Action"],
               "status": "Draft",
-              "publicContent": "Approve the 2026-27 Preliminary Budget as presented by the Superintendent and Director of Finance.",
+              "publicContent": "<p>The Board is asked to approve the <strong>2026–27 Preliminary Budget</strong> as presented by the Superintendent and Director of Finance. The Preliminary Budget reflects our best current estimates of revenue and expenditures and serves as the foundation for the Adopted Budget in June.</p><p>Key highlights:</p><ul><li>Total general fund expenditures of approximately <strong>$48.6 million</strong>, a <strong>3.2% increase</strong> over the FY2026 adopted budget.</li><li>The increase is driven primarily by <strong>salary step-and-column movement</strong>, <strong>health benefits cost growth</strong>, and <strong>rising utility rates</strong>.</li><li>The <strong>reserve fund</strong> is projected to remain at <strong>11.4%</strong>, comfortably above the 10% statutory minimum.</li></ul><p>Staff recommend approval of the Preliminary Budget; <em>final adoption is scheduled for the June 24 Board meeting</em> following the second public hearing.</p>",
               "staffContent": "Budget reflects a 3.2% increase in operational expenditures driven by salary step increases and rising utilities costs. Reserve fund remains above the 10% statutory minimum.",
               "executiveContent": "Confidential: projected budget shortfall of $420K in FY27 if enrollment decline continues. Contingency plan attached.",
               "attachments": {
@@ -169,7 +169,7 @@
               "categoryId": "m1-cat-3",
               "type": ["Action"],
               "status": "Draft",
-              "publicContent": "Award contract for HVAC system replacement at Building C to the lowest responsive bidder.",
+              "publicContent": "<p>The Board is asked to <strong>award the contract</strong> for the HVAC system replacement project at <strong>Building C</strong> to the lowest responsive and responsible bidder, as determined through the formal competitive bidding process.</p><p>The project will replace the original 1998-era rooftop units and associated air-handling equipment, providing improved <strong>energy efficiency</strong>, <strong>indoor air quality</strong>, and <strong>filtration capacity</strong> for occupied classroom spaces.</p><p>Two responsive bids were received:</p><ul><li><strong>Meridian Mechanical — $387,400</strong> <em>(staff recommendation)</em></li><li>Pacific Climate Systems — $412,200</li></ul><p>Funding is available from the <strong>2024 Facilities Bond — Series B</strong>. Work is expected to begin in late June and be substantially complete before the start of the 2026–27 school year.</p>",
               "staffContent": "Bid opened April 8. Lowest responsive bid: Meridian Mechanical, $387,400. Second bid: Pacific Climate Systems, $412,200. Facilities reviewed both bids; recommends award to Meridian.",
               "executiveContent": "",
               "attachments": {
@@ -241,7 +241,7 @@
               "categoryId": "m2-cat-2",
               "type": ["Reports"],
               "status": "Draft",
-              "publicContent": "Review of third-quarter financial results compared to adopted budget. Year-to-date expenditures and revenues presented by the Director of Finance.",
+              "publicContent": "<p>The Director of Finance will present the <strong>third-quarter financial results</strong> for FY2026, compared against the adopted budget. The report covers both <strong>revenues</strong> and <strong>expenditures</strong> across the general fund and all major restricted funds.</p><p>At a high level:</p><ul><li>Year-to-date <strong>expenditures are at 74.2% of budget</strong> — slightly under the linear pace, consistent with prior years.</li><li>Year-to-date <strong>revenues are at 71.8%</strong>, modestly behind plan due to <em>delayed state apportionment</em> rather than any underlying shortfall.</li><li>There are <strong>no material variances</strong> that require action at this time.</li></ul><p>The Director will also briefly preview <strong>year-end projections</strong> and the assumptions feeding into the 2026–27 budget development cycle.</p>",
               "staffContent": "YTD expenditures at 74.2% of budget — on track. Revenue at 71.8% — slightly behind due to delayed state apportionment. No major variances to flag.",
               "executiveContent": "Board-only note: enrollment tracking 1.8% below projection; if trend continues, we may need a mid-year budget revision in Q4.",
               "attachments": {
@@ -378,7 +378,7 @@
               "categoryId": "m4-cat-2",
               "type": ["Action"],
               "status": "Draft",
-              "publicContent": "Annual review and reaffirmation of the Internal Audit Charter as required by professional standards.",
+              "publicContent": "<p>The committee will conduct its <strong>annual review and reaffirmation</strong> of the Internal Audit Charter, as required by the Institute of Internal Auditors&apos; <em>International Professional Practices Framework</em>.</p><p>The Charter establishes the <strong>purpose, authority, and responsibility</strong> of the internal audit function, including its scope of work, independence, and direct reporting line to the Audit &amp; Risk Committee. Members are asked to confirm that the document continues to reflect current practice and governance expectations.</p><p>Only minor wording refinements are proposed this year — there are <strong>no substantive changes to authority or scope</strong>.</p>",
               "staffContent": "No substantive changes proposed. Minor wording update to Section 3 (scope) to clarify technology audit coverage.",
               "executiveContent": "",
               "attachments": {
@@ -394,7 +394,7 @@
               "type": ["Reports"],
               "status": "Draft",
               "membersOnly": true,
-              "publicContent": "Status update on completion of the FY2026 internal audit plan.",
+              "publicContent": "<p>This update reports progress against the <strong>FY2026 Internal Audit Plan</strong> approved at the June 2025 committee meeting. To date, <strong>four of seven</strong> planned engagements have been completed, with two currently in fieldwork and one deferred.</p><p>Completed audits include <strong>Cash Handling</strong>, <strong>Procurement Card Controls</strong>, <strong>Student Activity Funds</strong>, and <strong>Federal Grant Compliance</strong>. The <em>Payroll</em> and <em>IT General Controls</em> audits are presently in fieldwork, and the Benefits audit has been deferred to FY2027 due to staffing capacity.</p><p>Overall the plan remains <strong>on track for substantial completion by year-end</strong>. Members are welcome to suggest emerging risk areas for consideration in the FY2027 plan.</p>",
               "staffContent": "4 of 7 planned audits complete. Payroll audit and IT General Controls audit in progress. Benefits audit deferred to FY27 due to resource constraints.",
               "executiveContent": "",
               "attachments": {
@@ -411,7 +411,7 @@
               "categoryId": "m4-cat-2",
               "type": ["Reports"],
               "status": "Draft",
-              "publicContent": "Presentation of preliminary findings from the FY2026 payroll process audit.",
+              "publicContent": "<p>The Internal Audit team will present <strong>preliminary findings</strong> from the FY2026 payroll process audit. The objective of the engagement was to evaluate the design and operating effectiveness of <strong>key controls over payroll authorization, processing, and reconciliation</strong>.</p><p>Three preliminary observations have been identified:</p><ul><li><strong>Timecard approval delays</strong> in approximately 12% of sampled records.</li><li><strong>Two instances</strong> of pay rate changes processed without documented HR sign-off.</li><li>An <strong>overtime calculation error</strong> in the legacy timesheet system, with an estimated impact of $3,200 — already corrected and reimbursed.</li></ul><p>Importantly, the preliminary findings <strong>do not indicate any systemic fraud risk</strong>. Final findings and management responses will be presented at the August meeting.</p>",
               "staffContent": "Three findings identified: (1) Time card approval delays in 12% of sampled records. (2) Two instances of pay rate changes without documented HR sign-off. (3) Overtime calculation error in legacy timesheet system — estimated $3,200 impact, now corrected.",
               "executiveContent": "Executive summary: no findings indicate systemic fraud risk. All findings have corrective actions assigned. Full report will be public at next meeting.",
               "attachments": {
@@ -465,7 +465,7 @@
               "categoryId": "m4-cat-3",
               "type": ["Reports"],
               "status": "Draft",
-              "publicContent": "Briefing on the March 2026 phishing incident: scope, containment actions, and remediation steps.",
+              "publicContent": "<p>The Chief Information Officer will brief the committee on a <strong>phishing incident</strong> that occurred in March 2026 targeting district payroll staff. The briefing will cover scope, containment, remediation, and lessons learned.</p><p><strong>Three staff accounts</strong> were temporarily compromised before <strong>multi-factor authentication</strong> blocked any unauthorized transactions. IT reset all affected credentials within <strong>four hours</strong> of detection. A forensic review confirmed that <strong>no student or financial data was accessed</strong>.</p><p>Remediation steps include <strong>mandatory phishing awareness training</strong> for all district staff by May 1, expanded email filtering rules, and a refresh of the incident response playbook. The district&apos;s cyber insurance carrier has been notified in line with policy requirements.</p>",
               "staffContent": "Phishing email targeted payroll staff. 3 accounts compromised; MFA prevented unauthorized transactions. IT reset credentials within 4 hours. No student or financial data accessed. Remediation: mandatory phishing training for all staff by May 1.",
               "executiveContent": "Full incident report and forensic summary provided to executive committee only. Insurance carrier notified per policy requirements.",
               "attachments": {
@@ -480,7 +480,7 @@
               "categoryId": "m4-cat-3",
               "type": ["Information"],
               "status": "Draft",
-              "publicContent": "Annual review of district insurance coverage: property, liability, cyber, and workers' compensation.",
+              "publicContent": "<p>The Director of Risk Management will present the <strong>annual review</strong> of the district&apos;s insurance program, covering <strong>property, general liability, cyber liability, and workers&apos; compensation</strong> lines.</p><p>The most notable change at this renewal is an increase in the <strong>cyber liability limit from $1M to $2M</strong>, reflecting industry guidance on appropriate coverage levels for public-sector entities of our size. All other lines have renewed with <em>no material coverage changes</em>.</p><p>The total premium increased by <strong>6.2% year-over-year</strong>, in line with broader market trends for K–12 risk pools.</p>",
               "staffContent": "Cyber liability limit increased from $1M to $2M at renewal. All other lines renewed with no material changes. Total premium increase: 6.2%.",
               "executiveContent": "",
               "attachments": {
@@ -510,7 +510,7 @@
               "categoryId": "m4-cat-3",
               "type": ["Action"],
               "status": "Draft",
-              "publicContent": "Authorize the Superintendent to execute the engagement letter with Eide Bailly LLP for the FY2026 external audit.",
+              "publicContent": "<p>The committee is asked to recommend that the Board <strong>authorize the Superintendent</strong> to execute the engagement letter with <strong>Eide Bailly LLP</strong> for the FY2026 external financial audit.</p><p>Eide Bailly is in the third year of a five-year master services agreement approved in 2024. The proposed engagement scope, materiality thresholds, and risk areas have been reviewed by the Director of Finance and are <em>consistent with prior years</em>.</p><p>The audit fee of <strong>$62,500 remains unchanged from FY2025</strong>. Fieldwork is scheduled to begin <strong>July 14, 2026</strong>, with preliminary results expected at the October committee meeting and the final report presented to the Board in November.</p>",
               "staffContent": "Audit fee: $62,500, unchanged from FY2025. Fieldwork begins July 14. Preliminary results to committee in October.",
               "executiveContent": "",
               "attachments": {

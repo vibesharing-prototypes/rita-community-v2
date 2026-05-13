@@ -1,0 +1,18 @@
+.rich-text-field .ck-editor__editable p {
+  margin: 0 !important;
+  line-height: 22px !important;
+}
+
+.rich-text-field .ck-editor__editable p + p,
+.rich-text-field .ck-editor__editable p + ul,
+.rich-text-field .ck-editor__editable p + ol,
+.rich-text-field .ck-editor__editable ul + p,
+.rich-text-field .ck-editor__editable ol + p {
+  margin-top: 8px !important;
+}
+
+.rich-text-field .ck-editor__editable ul,
+.rich-text-field .ck-editor__editable ol {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}

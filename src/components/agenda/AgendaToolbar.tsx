@@ -1,9 +1,10 @@
-import { Button, IconButton, ListItemText, Menu, MenuItem, Stack, SvgIcon } from "@mui/material";
+import { Button, IconButton, ListItemText, Menu, MenuItem, Stack } from "@mui/material";
 import { useState } from "react";
 import AddIcon from "@diligentcorp/atlas-react-bundle/icons/Add";
 import ListIcon from "@diligentcorp/atlas-react-bundle/icons/List";
 import SearchIcon from "@diligentcorp/atlas-react-bundle/icons/Search";
 import AnnotationsIcon from "@diligentcorp/atlas-react-bundle/icons/Annotations";
+import CollapseSideNavIcon from "@diligentcorp/atlas-react-bundle/icons/CollapseSideNav";
 
 export type AgendaPanelView = "content" | "search" | "notes";
 
@@ -37,10 +38,9 @@ export default function AgendaToolbar({
         <Button
           size="small"
           onClick={() => onChangeView("content")}
-          startIcon={<ListIcon style={{ fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)' }} />}
+          startIcon={<ListIcon style={{ fontSize: 16 }} />}
           sx={{
-            minWidth: 0, px: "10px", py: "4px",
-            fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+            minWidth: 0,
             color: isActive("content") ? ACTIVE_FG : "text.secondary",
             bgcolor: isActive("content") ? ACTIVE_BG : "transparent",
             "&:hover": {
@@ -64,7 +64,7 @@ export default function AgendaToolbar({
             },
           }}
         >
-          <SearchIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
+          <SearchIcon style={{ fontSize: 16 }} />
         </IconButton>
 
         <IconButton
@@ -79,7 +79,7 @@ export default function AgendaToolbar({
             },
           }}
         >
-          <AnnotationsIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
+          <AnnotationsIcon style={{ fontSize: 16 }} />
         </IconButton>
       </Stack>
 
@@ -90,7 +90,7 @@ export default function AgendaToolbar({
           onClick={(e) => setAnchor(e.currentTarget)}
           aria-label="Add"
         >
-          <AddIcon style={{ fontSize: 'var(--lens-semantic-font-title-h4-md-font-size)' }} />
+          <AddIcon style={{ fontSize: 16 }} />
         </IconButton>
         <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={close}>
           <MenuItem onClick={() => { close(); onAddCategory(); }}>
@@ -105,10 +105,7 @@ export default function AgendaToolbar({
         </Menu>
 
         <IconButton size="small" onClick={onCollapse} aria-label="Collapse agenda">
-          <SvgIcon sx={{ width: 18, height: 18 }} viewBox="0 0 24 24">
-            <path d="M15.6538 16.1543L10 10.5005L15.6538 4.84668L16.7077 5.90051L12.1077 10.5005L16.7077 15.1005L15.6538 16.1543Z" transform="translate(2 1)" />
-            <path d="M10.6538 16.1543L5 10.5005L10.6538 4.84668L11.7077 5.90051L7.10767 10.5005L11.7077 15.1005L10.6538 16.1543Z" transform="translate(2 1)" />
-          </SvgIcon>
+          <CollapseSideNavIcon style={{ fontSize: 20 }} />
         </IconButton>
       </Stack>
     </Stack>

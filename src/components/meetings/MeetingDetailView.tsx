@@ -40,6 +40,7 @@ import { useNavigate } from "react-router";
 import ConfirmDialog from "./ConfirmDialog";
 
 import PageLayout from "../PageLayout";
+import RichTextField from "../common/RichTextField";
 import type { Meeting, MeetingVisibility } from "../../types/meetings";
 import { isUpcoming } from "../../utils/meetings";
 import StatusChip from "./StatusChip";
@@ -63,8 +64,9 @@ const TRIGGER_SX = {
   px: "4px",
   py: "4px",
   cursor: "pointer",
-  fontSize: 'var(--lens-semantic-font-title-h5-sm-font-size)',
-  lineHeight: 'var(--lens-semantic-font-title-h3-lg-line-height)',
+  // Match the Location field (and other inline meeting fields): body text token.
+  fontSize: 'var(--lens-semantic-font-text-body-font-size)',
+  lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
   userSelect: "none" as const,
   "&:hover": { backgroundColor: "action.hover" },
 };
@@ -272,34 +274,22 @@ function EditableMultilineField({
   placeholder: string;
   onSave: (val: string) => void;
 }) {
-  const [local, setLocal] = useState(value);
-
   return (
     <Box>
-      <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: 0, "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}>
+      <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: "4px", "& svg": { width: 20, height: 20, flexShrink: 0, color: "text.secondary" } }}>
         {icon}
         <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'var(--lens-core-font-weight-semi-bold)' }}>
           {label}
         </Typography>
       </Stack>
-      <TextField
-        value={local}
-        onChange={(e) => setLocal(e.target.value)}
-        onBlur={() => { if (local !== value) onSave(local); }}
-        onKeyDown={(e) => { if (e.key === "Escape") setLocal(value); }}
-        fullWidth
-        multiline
-        variant="standard"
-        placeholder={placeholder}
-        sx={{
-          "& .MuiInput-root": {
-            borderRadius: "4px",
-            "&:not(.Mui-focused):hover": { backgroundColor: "action.hover" },
-          },
-          "& .MuiInput-input.MuiInput-input": { pl: "28px", pr: 0, pt: "4px", pb: "4px" },
-          "& .MuiInput-root::before": { borderBottom: "none !important" },
-        }}
-      />
+      {/* Indent the editor under the leading icon to match the other meeting fields */}
+      <Box sx={{ pl: "28px" }}>
+        <RichTextField
+          value={value}
+          placeholder={placeholder}
+          onSave={onSave}
+        />
+      </Box>
     </Box>
   );
 }

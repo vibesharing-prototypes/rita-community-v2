@@ -1,27 +1,17 @@
 import CopyIcon from "@diligentcorp/atlas-react-bundle/icons/Copy";
-import GroupIcon from "@diligentcorp/atlas-react-bundle/icons/Group";
-import LanguageIcon from "@diligentcorp/atlas-react-bundle/icons/Language";
-import CustomerAdminIcon from "@diligentcorp/atlas-react-bundle/icons/CustomerAdmin";
 import AttachIcon from "@diligentcorp/atlas-react-bundle/icons/Attach";
 import DocumentIcon from "@diligentcorp/atlas-react-bundle/icons/Document";
 import RemoveCircleIcon from "@diligentcorp/atlas-react-bundle/icons/RemoveCircle";
 import LockedIcon from "@diligentcorp/atlas-react-bundle/icons/Locked";
 import UnlockedIcon from "@diligentcorp/atlas-react-bundle/icons/Unlocked";
 import {
-  Box, IconButton, ListItemIcon, ListItemText,
-  Menu, MenuItem, Stack, SvgIcon, TextField, Tooltip, Typography, useTheme,
+  Box, Button, IconButton, ListItemIcon, ListItemText,
+  Menu, MenuItem, Stack, SvgIcon, Tab, Tabs, TextField, Tooltip, Typography, useTheme,
 } from "@mui/material";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import {
-  ClassicEditor, Bold, Italic, Underline, Strikethrough,
-  List, Link, Essentials, Paragraph,
-  Heading, Indent, IndentBlock, BlockQuote, Undo,
-} from "ckeditor5";
-import "ckeditor5/ckeditor5.css";
-import "./ItemInlineEditor.css";
 import { differenceInHours, differenceInMinutes, format, isSameDay } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import type { AgendaAttachment, AgendaCategory, AgendaItem, AgendaItemType } from "../../../types/agenda";
+import RichTextField from "../../common/RichTextField";
 
 const ALL_TYPES: AgendaItemType[] = [
   "Action", "Action (Consent)", "Minutes", "Information",
@@ -61,104 +51,6 @@ function InlineTitle({ value, onSave }: { value: string; onSave: (v: string) => 
         "& .MuiInput-root::after": { borderBottom: "none" },
       }}
     />
-  );
-}
-
-// ── CKEditor config ────────────────────────────────────────────────────────
-
-const ckEditorConfig = {
-  plugins: [
-    Essentials, Paragraph, Heading, Bold, Italic, Underline, Strikethrough,
-    List, Link, Indent, IndentBlock, BlockQuote, Undo,
-  ],
-  toolbar: {
-    items: ["bold", "italic", "underline", "strikethrough", "|", "bulletedList", "numberedList", "|", "outdent", "indent", "|", "link", "blockQuote", "|", "undo", "redo"],
-  },
-  licenseKey: "GPL",
-};
-
-// ── Rich text description ──────────────────────────────────────────────────
-
-function RichTextDescription({
-  value, onSave, placeholder,
-}: { value: string; onSave: (v: string) => void; placeholder: string }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<InstanceType<typeof ClassicEditor> | null>(null);
-
-  const handleSaveAndClose = () => {
-    const data = editorRef.current?.getData() ?? value;
-    if (data !== value) onSave(data);
-    setIsEditing(false);
-  };
-
-  const handleBlur = (_event: unknown, editor: InstanceType<typeof ClassicEditor>) => {
-    // Delay so toolbar balloon clicks don't prematurely close the editor
-    setTimeout(() => {
-      if (wrapperRef.current && !wrapperRef.current.contains(document.activeElement)) {
-        const data = editor.getData();
-        if (data !== value) onSave(data);
-        setIsEditing(false);
-      }
-    }, 150);
-  };
-
-  if (!isEditing) {
-    const isEmpty = !value || value === "<p></p>" || value === "<p>&nbsp;</p>" || value.trim() === "";
-    return (
-      <Box
-        onClick={() => setIsEditing(true)}
-        sx={{
-          cursor: "text",
-          minHeight: 22,
-          borderRadius: "4px",
-          py: "2px",
-          px: "4px",
-          mx: "-4px",
-          fontSize: 'var(--lens-semantic-font-text-body-font-size)',
-          lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
-          fontFamily: "inherit",
-          "&:hover": { backgroundColor: "action.hover" },
-          "& p": { margin: 0, fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', fontFamily: "inherit" },
-          "& ul, & ol": { mt: 0, mb: 0, pl: "20px", fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)' },
-          "& li": { fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)' },
-          "& a": { color: "primary.main" },
-          "& strong": { fontWeight: 'var(--lens-core-font-weight-semi-bold)' },
-          "& blockquote": { borderLeft: "3px solid", borderColor: "divider", pl: 1, ml: 0, my: "4px" },
-        }}
-      >
-        {isEmpty ? (
-          <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', color: "text.disabled", fontStyle: "italic" }}>
-            {placeholder}
-          </Typography>
-        ) : (
-          <div dangerouslySetInnerHTML={{ __html: value }} />
-        )}
-      </Box>
-    );
-  }
-
-  return (
-    <Box
-      ref={wrapperRef}
-      className="agenda-ck-editor"
-      sx={{
-        "& .ck-editor__editable": { minHeight: "80px", fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontFamily: "inherit" },
-        "& .ck.ck-editor__main>.ck-editor__editable": { borderRadius: "0 0 4px 4px" },
-        "& .ck.ck-toolbar": { borderRadius: "4px 4px 0 0" },
-      }}
-    >
-      <CKEditor
-        editor={ClassicEditor}
-        config={ckEditorConfig}
-        data={value}
-        onReady={(editor) => {
-          editorRef.current = editor as InstanceType<typeof ClassicEditor>;
-          editor.focus();
-        }}
-        onBlur={handleBlur as Parameters<typeof CKEditor>[0]["onBlur"]}
-      />
-    </Box>
   );
 }
 
@@ -253,86 +145,6 @@ function AttachmentRow({ att, onRemove, borderColor }: { att: AgendaAttachment; 
   );
 }
 
-// ── Content section ────────────────────────────────────────────────────────
-
-function ContentSection({
-  icon, label, content, attachments, onSave, onAddAttachment, onRemoveAttachment, placeholder, borderColor,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  content: string;
-  attachments: AgendaAttachment[];
-  onSave: (v: string) => void;
-  onAddAttachment: (att: AgendaAttachment) => void;
-  onRemoveAttachment: (id: string) => void;
-  placeholder: string;
-  borderColor: string;
-}) {
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? []);
-    files.forEach((file) => {
-      onAddAttachment({
-        id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-        filename: file.name,
-        tier: "public",
-      });
-    });
-    e.target.value = "";
-  };
-
-  return (
-    <Box sx={{
-      pt: "12px", pr: "12px", pl: "12px", pb: "16px",
-      border: `1px solid ${borderColor}`,
-      borderRadius: "12px",
-      bgcolor: "#fff",
-    }}>
-      <input
-        ref={fileInputRef}
-        type="file"
-        multiple
-        style={{ display: "none" }}
-        onChange={handleFileChange}
-      />
-      <Stack direction="row" alignItems="center" gap={1.5} sx={{ mb: 1 }}>
-        <Box sx={{
-          backgroundColor: "#E4F3FF",
-          borderRadius: "8px",
-          p: "4px",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          flexShrink: 0,
-          "& svg": { width: 20, height: 20, display: "block" },
-        }}>
-          {icon}
-        </Box>
-        <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-body-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', flex: 1 }}>{label}</Typography>
-        <Tooltip title="Attach file">
-          <IconButton size="small" sx={{ flexShrink: 0 }} aria-label="Attach file" onClick={() => fileInputRef.current?.click()}>
-            <AttachIcon sx={{ width: 18, height: 18 }} />
-          </IconButton>
-        </Tooltip>
-      </Stack>
-      <Box sx={{ pl: "40px" }}>
-        <RichTextDescription value={content} onSave={onSave} placeholder={placeholder} />
-        {attachments.length > 0 && (
-          <Stack gap={1} sx={{ mt: 1.5 }}>
-            <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', color: "var(--lens-semantic-color-type-default, #282e37)" }}>
-              Attachments
-            </Typography>
-            <Stack>
-              {attachments.map((att) => (
-                <AttachmentRow key={att.id} att={att} onRemove={() => onRemoveAttachment(att.id)} borderColor={borderColor} />
-              ))}
-            </Stack>
-          </Stack>
-        )}
-      </Box>
-    </Box>
-  );
-}
-
 // ── Edited label ──────────────────────────────────────────────────────────
 
 function formatEditedLabel(date: Date): string {
@@ -369,11 +181,13 @@ export default function ItemInlineEditor({
   const [publicContent, setPublicContent] = useState(item.publicContent);
   const [staffContent, setStaffContent] = useState(item.staffContent);
   const [executiveContent, setExecutiveContent] = useState(item.executiveContent);
-  const [lastModifiedAt, setLastModifiedAt] = useState<Date | null>(
-    item.lastModifiedAt ? new Date(item.lastModifiedAt) : null
+  const [contentEditedAt, setContentEditedAt] = useState<{ public?: string; staff?: string; executive?: string }>(
+    item.contentEditedAt ?? {}
   );
   const [membersOnly, setMembersOnly] = useState<boolean>(Boolean(item.membersOnly));
   const [moreAnchor, setMoreAnchor] = useState<null | HTMLElement>(null);
+  const [activeTab, setActiveTab] = useState<"public" | "staff" | "executive">("public");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSubject(item.subject);
@@ -381,13 +195,26 @@ export default function ItemInlineEditor({
     setPublicContent(item.publicContent);
     setStaffContent(item.staffContent);
     setExecutiveContent(item.executiveContent);
-    setLastModifiedAt(item.lastModifiedAt ? new Date(item.lastModifiedAt) : null);
+    setContentEditedAt(item.contentEditedAt ?? {});
     setMembersOnly(Boolean(item.membersOnly));
+    setActiveTab("public");
   }, [item.id]);
 
-  const saved = (overrides: Partial<AgendaItem> = {}) => {
+  /**
+   * Build the next item snapshot. If `editedTier` is given, also bump the
+   * per-tier edit timestamp and the overall lastModifiedAt.
+   */
+  const saved = (
+    overrides: Partial<AgendaItem> = {},
+    editedTier?: "public" | "staff" | "executive",
+  ) => {
     const now = new Date();
-    setLastModifiedAt(now);
+    const nowIso = now.toISOString();
+    let nextContentEditedAt = contentEditedAt;
+    if (editedTier) {
+      nextContentEditedAt = { ...contentEditedAt, [editedTier]: nowIso };
+      setContentEditedAt(nextContentEditedAt);
+    }
     return {
       ...item,
       subject,
@@ -396,7 +223,8 @@ export default function ItemInlineEditor({
       staffContent,
       executiveContent,
       membersOnly,
-      lastModifiedAt: now.toISOString(),
+      lastModifiedAt: nowIso,
+      contentEditedAt: nextContentEditedAt,
       ...overrides,
     };
   };
@@ -405,6 +233,71 @@ export default function ItemInlineEditor({
     const next = !membersOnly;
     setMembersOnly(next);
     onSave(saved({ membersOnly: next }));
+  };
+
+  // ── Tab data ─────────────────────────────────────────────────────────────
+  const tabs = [
+    {
+      id: "public" as const,
+      label: "Public",
+      content: publicContent,
+      placeholder: "Add public content…",
+      attachments: item.attachments.public,
+      setContent: setPublicContent,
+      contentKey: "publicContent" as const,
+      attachKey: "public" as const,
+    },
+    {
+      id: "staff" as const,
+      label: "Admin",
+      content: staffContent,
+      placeholder: "Add admin content…",
+      attachments: item.attachments.staff,
+      setContent: setStaffContent,
+      contentKey: "staffContent" as const,
+      attachKey: "staff" as const,
+    },
+    {
+      id: "executive" as const,
+      label: "Executive",
+      content: executiveContent,
+      placeholder: "Add executive content…",
+      attachments: item.attachments.executive,
+      setContent: setExecutiveContent,
+      contentKey: "executiveContent" as const,
+      attachKey: "executive" as const,
+    },
+  ];
+
+  const active = tabs.find((t) => t.id === activeTab)!;
+
+  // Per-tab edited date — falls back to overall lastModifiedAt for legacy data
+  // so existing items show a sensible label until each tab is individually edited.
+  const tabEditedAtIso = contentEditedAt[active.id] ?? item.lastModifiedAt;
+  const tabEditedAt = tabEditedAtIso ? new Date(tabEditedAtIso) : null;
+
+  const handleAddAttachment = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+    const newAtts: AgendaAttachment[] = files.map((file) => ({
+      id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      filename: file.name,
+      tier: active.attachKey,
+    }));
+    const nextAttachments = {
+      ...item.attachments,
+      [active.attachKey]: [...item.attachments[active.attachKey], ...newAtts],
+    };
+    onSave(saved({ attachments: nextAttachments }, active.id));
+    e.target.value = "";
+  };
+
+  const handleRemoveAttachment = (id: string) => {
+    const nextAttachments = {
+      ...item.attachments,
+      [active.attachKey]: item.attachments[active.attachKey].filter((a) => a.id !== id),
+    };
+    onSave(saved({ attachments: nextAttachments }, active.id));
   };
 
   return (
@@ -453,14 +346,6 @@ export default function ItemInlineEditor({
             )}
           </Stack>
 
-          {/* Edited label */}
-          {lastModifiedAt && (
-            <Tooltip title={`Edited by you on ${format(lastModifiedAt, "MMMM d")} at ${format(lastModifiedAt, "h:mm a")}`} placement="bottom-start">
-              <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', color: "var(--lens-semantic-color-type-muted)", lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-letter-spacing-sm)', cursor: "default", mt: 0.25, width: "fit-content" }}>
-                {formatEditedLabel(lastModifiedAt)}
-              </Typography>
-            </Tooltip>
-          )}
         </Box>
 
         {/* More button */}
@@ -507,60 +392,113 @@ export default function ItemInlineEditor({
         </Menu>
       </Stack>
 
-      {/* Content sections — separate cards */}
-      <Stack gap={1.5}>
-        <ContentSection
-          icon={<LanguageIcon />}
-          label="Public content"
-          content={publicContent}
-          attachments={item.attachments.public}
-          placeholder="Add public content…"
-          onSave={(v) => { setPublicContent(v); onSave(saved({ publicContent: v })); }}
-          onAddAttachment={(att) => {
-            const next = { ...item.attachments, public: [...item.attachments.public, att] };
-            onSave(saved({ attachments: next }));
-          }}
-          onRemoveAttachment={(id) => {
-            const next = { ...item.attachments, public: item.attachments.public.filter((a) => a.id !== id) };
-            onSave(saved({ attachments: next }));
-          }}
-          borderColor={borderColor}
+      {/* Content tabs */}
+      <Box>
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          style={{ display: "none" }}
+          onChange={handleAddAttachment}
         />
-        <ContentSection
-          icon={<CustomerAdminIcon />}
-          label="Admin content"
-          content={staffContent}
-          attachments={item.attachments.staff}
-          placeholder="Add admin content…"
-          onSave={(v) => { setStaffContent(v); onSave(saved({ staffContent: v })); }}
-          onAddAttachment={(att) => {
-            const next = { ...item.attachments, staff: [...item.attachments.staff, { ...att, tier: "staff" as const }] };
-            onSave(saved({ attachments: next }));
-          }}
-          onRemoveAttachment={(id) => {
-            const next = { ...item.attachments, staff: item.attachments.staff.filter((a) => a.id !== id) };
-            onSave(saved({ attachments: next }));
-          }}
-          borderColor={borderColor}
-        />
-        <ContentSection
-          icon={<GroupIcon />}
-          label="Executive content"
-          content={executiveContent}
-          attachments={item.attachments.executive}
-          placeholder="Add executive content…"
-          onSave={(v) => { setExecutiveContent(v); onSave(saved({ executiveContent: v })); }}
-          onAddAttachment={(att) => {
-            const next = { ...item.attachments, executive: [...item.attachments.executive, { ...att, tier: "executive" as const }] };
-            onSave(saved({ attachments: next }));
-          }}
-          onRemoveAttachment={(id) => {
-            const next = { ...item.attachments, executive: item.attachments.executive.filter((a) => a.id !== id) };
-            onSave(saved({ attachments: next }));
-          }}
-          borderColor={borderColor}
-        />
-      </Stack>
+
+        {/* Tab bar */}
+        <Box sx={{ borderBottom: `1px solid ${borderColor}` }}>
+          <Tabs
+            value={activeTab}
+            onChange={(_, v) => setActiveTab(v)}
+            sx={{
+              minHeight: 0,
+              "& .MuiTab-root:not(.Mui-selected)::after": { display: "none" },
+            }}
+          >
+            {tabs.map((t) => (
+              <Tab key={t.id} value={t.id} label={t.label} />
+            ))}
+          </Tabs>
+        </Box>
+
+        {/* Per-tab edited label */}
+        {tabEditedAt && (
+          <Tooltip title={`Edited by you on ${format(tabEditedAt, "MMMM d")} at ${format(tabEditedAt, "h:mm a")}`} placement="bottom-start">
+            <Typography sx={{
+              fontSize: 'var(--lens-semantic-font-text-md-font-size)',
+              color: "var(--lens-semantic-color-type-muted)",
+              lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
+              letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
+              cursor: "default",
+              mt: 1, mb: 1.5,
+              width: "fit-content",
+            }}>
+              {formatEditedLabel(tabEditedAt)}
+            </Typography>
+          </Tooltip>
+        )}
+
+        {/* Active tab panel — card wrapper */}
+        <Box sx={{
+          mt: tabEditedAt ? 0 : 2,
+          p: "16px",
+          border: `1px solid ${borderColor}`,
+          borderRadius: "12px",
+          bgcolor: "#fff",
+        }}>
+          {/* Description */}
+          <Typography sx={{
+            fontSize: 'var(--lens-semantic-font-text-md-font-size)',
+            fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+            lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
+            letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
+            color: "var(--lens-semantic-color-type-default, #282e37)",
+            mb: 0.5,
+          }}>
+            Description
+          </Typography>
+          <RichTextField
+            key={active.id}
+            value={active.content}
+            placeholder={active.placeholder}
+            onSave={(v) => {
+              active.setContent(v);
+              onSave(saved({ [active.contentKey]: v } as Partial<AgendaItem>, active.id));
+            }}
+          />
+
+          {/* Attachments */}
+          <Stack gap={1} sx={{ mt: 2 }}>
+            <Typography sx={{
+              fontSize: 'var(--lens-semantic-font-text-md-font-size)',
+              fontWeight: 'var(--lens-core-font-weight-semi-bold)',
+              lineHeight: 'var(--lens-semantic-font-text-md-line-height)',
+              letterSpacing: 'var(--lens-semantic-letter-spacing-sm)',
+              color: "var(--lens-semantic-color-type-default, #282e37)",
+            }}>
+              Attachments
+            </Typography>
+            {active.attachments.length > 0 && (
+              <Stack>
+                {active.attachments.map((att) => (
+                  <AttachmentRow
+                    key={att.id}
+                    att={att}
+                    onRemove={() => handleRemoveAttachment(att.id)}
+                    borderColor={borderColor}
+                  />
+                ))}
+              </Stack>
+            )}
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => fileInputRef.current?.click()}
+              startIcon={<AttachIcon sx={{ width: 16, height: 16 }} />}
+              sx={{ alignSelf: "flex-start" }}
+            >
+              Add attachment
+            </Button>
+          </Stack>
+        </Box>
+      </Box>
     </Box>
   );
 }

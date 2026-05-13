@@ -102,7 +102,7 @@ export default function ItemRow({
       </Box>
 
       {/* Letter index */}
-      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', color: isSelected ? "#0040D5" : "text.secondary", flexShrink: 0, mr: "2px" }}>
+      <Typography sx={{ fontSize: 'var(--lens-semantic-font-text-md-font-size)', fontWeight: 'var(--lens-core-font-weight-semi-bold)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-font-text-md-letter-spacing)', color: isSelected ? "#0040D5" : "text.secondary", flexShrink: 0, mr: "2px" }}>
         {LETTER[index] ?? index + 1}.
       </Typography>
 
@@ -118,13 +118,13 @@ export default function ItemRow({
           onClick={(e) => e.stopPropagation()}
           sx={{
             flex: 1, border: "1px solid", borderColor: "primary.main", borderRadius: "4px",
-            px: 1, py: "2px", fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)',
+            px: 1, py: "2px", fontSize: 'var(--lens-semantic-font-text-md-font-size)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-font-text-md-letter-spacing)',
             outline: "none", bgcolor: "white", fontFamily: "inherit",
           }}
         />
       ) : (
         <Typography sx={{
-          fontSize: 'var(--lens-semantic-font-text-body-font-size)', lineHeight: 'var(--lens-semantic-font-text-body-line-height)', flex: 1, minWidth: 0,
+          fontSize: 'var(--lens-semantic-font-text-md-font-size)', lineHeight: 'var(--lens-semantic-font-text-md-line-height)', letterSpacing: 'var(--lens-semantic-font-text-md-letter-spacing)', flex: 1, minWidth: 0,
           display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
           overflow: "hidden", wordBreak: "break-word",
         }}>

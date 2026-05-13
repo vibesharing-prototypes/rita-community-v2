@@ -33,6 +33,12 @@ export type AgendaItem = {
   };
   lastModifiedBy?: string;
   lastModifiedAt?: string;
+  /** Per-tier edit timestamps. Falls back to lastModifiedAt for display. */
+  contentEditedAt?: {
+    public?: string;
+    staff?: string;
+    executive?: string;
+  };
   membersOnly?: boolean;
 };
 

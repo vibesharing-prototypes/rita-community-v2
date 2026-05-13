@@ -1,6 +1,31 @@
 @import "@diligentcorp/atlas-react-bundle/styles";
 @import "@diligentcorp/atlas-react-bundle/global-nav.css";
 
+/*
+ * Font fallback chain.
+ * Atlas sets `font-family: "Inter Variable"` on <body> with NO fallback.
+ * Inter Variable ships with only a `normal`-style face — no italic face is registered —
+ * so when italic text is requested and font-synthesis can't fill in (or the font fails
+ * to load), the browser falls back to the user-agent default (Times / serif).
+ * We re-declare body's font-family WITH a sans-serif fallback chain so that any
+ * descendant inheriting `font-family` gets a graceful sans-serif fallback instead of Times.
+ */
+body.lens-theme,
+body.lens-theme.atlas-light-tokens {
+  font-family:
+    "Inter Variable",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol";
+}
+
 main[data-atlas-gn-app] {
   border-left: 1px solid var(--lens-component-global-nav-list-divider-border-color);
   min-height: 100dvh;

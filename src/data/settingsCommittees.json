@@ -1,0 +1,227 @@
+{
+  "items": [
+    {
+      "id": "c1",
+      "name": "Regular board",
+      "memberCount": 9,
+      "meetingReleaseDays": 4,
+      "allowAdminViewDraftItems": true,
+      "allowExecViewDraft": true,
+      "allowAdminSubmitItems": true,
+      "groupType": "committee",
+      "visibility": "public",
+      "userAccess": {
+        "superPublisher": ["u1"],
+        "publisher": ["u2"],
+        "executive": ["u3", "u4"],
+        "votingBoard": ["u3"],
+        "administratorsExecutive": ["u5"],
+        "administrator": [],
+        "moderator": ["u2"]
+      },
+      "emailNotifications": {
+        "meetingPublished": true,
+        "agendaPublished": true,
+        "agendaItemUpdated": true,
+        "minutesPublished": true,
+        "workflowReminder": false
+      },
+      "agenda": {
+        "defaultMeetingSecurity": "public",
+        "agendaStyle": "detailed",
+        "defaultNumbering": "decimalPadded",
+        "agendaItemTypes": [
+          "action",
+          "actionConsent",
+          "discussion",
+          "information",
+          "minutes",
+          "procedural"
+        ],
+        "showMotionToPublicBeforeAction": true,
+        "goalTrackingEnabled": true,
+        "administrativeContentEnabled": true,
+        "executiveContentEnabled": true,
+        "showConsentParagraph": true,
+        "consentParagraphText": "Test Consent",
+        "publicTemplate": ""
+      },
+      "workflow": {
+        "requireApproval": "forAllItems",
+        "allowAdminViewDraftItems": true,
+        "allowAdminSubmitItems": true,
+        "allowExecutiveViewDraftItems": true,
+        "defaultAgendaItemAccess": "public",
+        "allowSubmitterSetPublic": true,
+        "historyShowToPublic": false,
+        "historyShowToAdmin": true,
+        "historyShowToExecutive": true
+      },
+      "meetingControl": {
+        "votingMode": "manual",
+        "voteLabels": {
+          "yea": "Yea",
+          "nay": "Nay",
+          "abstain": "Abstain",
+          "notPresentAtVote": "Not Present at Vote"
+        },
+        "actionLabels": {
+          "unanimous": "Unanimous",
+          "motionCarries": "Motion Carries",
+          "motionFails": "Motion Fails"
+        },
+        "includeOriginalResolutionForConsent": true,
+        "timerPresets": [
+          { "minutes": 5, "seconds": 0 },
+          { "minutes": 10, "seconds": 0 },
+          { "minutes": 15, "seconds": 0 }
+        ]
+      },
+      "lastModifiedDate": "2026-04-10"
+    },
+    {
+      "id": "c2",
+      "name": "Finance committee",
+      "memberCount": 5,
+      "meetingReleaseDays": 7,
+      "allowAdminViewDraftItems": true,
+      "allowExecViewDraft": false,
+      "allowAdminSubmitItems": true,
+      "groupType": "committee",
+      "visibility": "private",
+      "userAccess": {
+        "superPublisher": ["u1"],
+        "publisher": ["u2", "u5"],
+        "executive": ["u4"],
+        "votingBoard": [],
+        "administratorsExecutive": ["u5"],
+        "administrator": ["u5"],
+        "moderator": []
+      },
+      "emailNotifications": {
+        "meetingPublished": true,
+        "agendaPublished": true,
+        "agendaItemUpdated": false,
+        "minutesPublished": true,
+        "workflowReminder": true
+      },
+      "agenda": {
+        "defaultMeetingSecurity": "private",
+        "agendaStyle": "detailed",
+        "defaultNumbering": "decimalPadded",
+        "agendaItemTypes": ["action", "discussion", "information"],
+        "showMotionToPublicBeforeAction": false,
+        "goalTrackingEnabled": true,
+        "administrativeContentEnabled": true,
+        "executiveContentEnabled": false,
+        "showConsentParagraph": true,
+        "consentParagraphText": "",
+        "publicTemplate": ""
+      },
+      "workflow": {
+        "requireApproval": "forAllItems",
+        "allowAdminViewDraftItems": true,
+        "allowAdminSubmitItems": true,
+        "allowExecutiveViewDraftItems": false,
+        "defaultAgendaItemAccess": "private",
+        "allowSubmitterSetPublic": false,
+        "historyShowToPublic": false,
+        "historyShowToAdmin": true,
+        "historyShowToExecutive": false
+      },
+      "meetingControl": {
+        "votingMode": "electronic",
+        "voteLabels": {
+          "yea": "Yea",
+          "nay": "Nay",
+          "abstain": "Abstain",
+          "notPresentAtVote": "Not Present at Vote"
+        },
+        "actionLabels": {
+          "unanimous": "Unanimous",
+          "motionCarries": "Motion Carries",
+          "motionFails": "Motion Fails"
+        },
+        "includeOriginalResolutionForConsent": false,
+        "timerPresets": [
+          { "minutes": 3, "seconds": 0 },
+          { "minutes": 5, "seconds": 30 },
+          { "minutes": 10, "seconds": 0 }
+        ]
+      },
+      "lastModifiedDate": "2026-04-08"
+    },
+    {
+      "id": "c3",
+      "name": "Audit committee",
+      "memberCount": 4,
+      "meetingReleaseDays": -1,
+      "allowAdminViewDraftItems": false,
+      "allowExecViewDraft": true,
+      "allowAdminSubmitItems": false,
+      "groupType": "advisoryGroup",
+      "visibility": "private",
+      "userAccess": {
+        "superPublisher": ["u1"],
+        "publisher": [],
+        "executive": ["u4"],
+        "votingBoard": ["u4"],
+        "administratorsExecutive": ["u6"],
+        "administrator": ["u6"],
+        "moderator": []
+      },
+      "emailNotifications": {
+        "meetingPublished": false,
+        "agendaPublished": true,
+        "agendaItemUpdated": false,
+        "minutesPublished": false,
+        "workflowReminder": false
+      },
+      "agenda": {
+        "defaultMeetingSecurity": "private",
+        "agendaStyle": "summary",
+        "defaultNumbering": "decimal",
+        "agendaItemTypes": ["action", "information", "minutes"],
+        "showMotionToPublicBeforeAction": true,
+        "goalTrackingEnabled": false,
+        "administrativeContentEnabled": false,
+        "executiveContentEnabled": true,
+        "showConsentParagraph": false,
+        "consentParagraphText": "",
+        "publicTemplate": ""
+      },
+      "workflow": {
+        "requireApproval": "none",
+        "allowAdminViewDraftItems": false,
+        "allowAdminSubmitItems": false,
+        "allowExecutiveViewDraftItems": true,
+        "defaultAgendaItemAccess": "private",
+        "allowSubmitterSetPublic": true,
+        "historyShowToPublic": true,
+        "historyShowToAdmin": false,
+        "historyShowToExecutive": true
+      },
+      "meetingControl": {
+        "votingMode": "manual",
+        "voteLabels": {
+          "yea": "Aye",
+          "nay": "No",
+          "abstain": "Abstain",
+          "notPresentAtVote": "Absent"
+        },
+        "actionLabels": {
+          "unanimous": "Unanimous consent",
+          "motionCarries": "Approved",
+          "motionFails": "Not approved"
+        },
+        "includeOriginalResolutionForConsent": true,
+        "timerPresets": [
+          { "minutes": 0, "seconds": 0 },
+          { "minutes": 0, "seconds": 0 },
+          { "minutes": 0, "seconds": 0 }
+        ]
+      },
+      "lastModifiedDate": "2026-04-02"
+    }
+  ]
+}

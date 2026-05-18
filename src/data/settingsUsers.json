@@ -1,0 +1,108 @@
+{
+  "items": [
+    {
+      "id": "u1",
+      "firstName": "Diana",
+      "middleInitial": "",
+      "lastName": "Roadcap",
+      "username": "droadcap",
+      "name": "Diana Roadcap",
+      "email": "diana.roadcap@ecsd.edu",
+      "appRole": "systemAdministrator",
+      "committees": ["All committees"],
+      "status": "Active",
+      "lastModifiedDate": "2026-04-12"
+    },
+    {
+      "id": "u2",
+      "firstName": "Marcus",
+      "middleInitial": "A",
+      "lastName": "Williams",
+      "username": "mwilliams",
+      "name": "Marcus A Williams",
+      "email": "marcus.williams@ecsd.edu",
+      "appRole": "boardAdmin",
+      "committees": ["Regular board", "Finance committee"],
+      "status": "Active",
+      "lastModifiedDate": "2026-04-11"
+    },
+    {
+      "id": "u3",
+      "firstName": "Sarah",
+      "middleInitial": "",
+      "lastName": "Johnson",
+      "username": "sjohnson",
+      "name": "Sarah Johnson",
+      "email": "sarah.johnson@ecsd.edu",
+      "appRole": "boardMember",
+      "committees": ["Regular board"],
+      "status": "Active",
+      "lastModifiedDate": "2026-04-09"
+    },
+    {
+      "id": "u4",
+      "firstName": "Robert",
+      "middleInitial": "",
+      "lastName": "Okafor",
+      "username": "rokafor",
+      "name": "Robert Okafor",
+      "email": "robert.okafor@ecsd.edu",
+      "appRole": "boardMember",
+      "committees": ["Regular board", "Audit committee"],
+      "status": "Active",
+      "lastModifiedDate": "2026-04-08"
+    },
+    {
+      "id": "u5",
+      "firstName": "Emily",
+      "middleInitial": "",
+      "lastName": "Nakamura",
+      "username": "enakamura",
+      "name": "Emily Nakamura",
+      "email": "emily.nakamura@ecsd.edu",
+      "appRole": "boardStaff",
+      "committees": ["Finance committee"],
+      "status": "Active",
+      "lastModifiedDate": "2026-04-07"
+    },
+    {
+      "id": "u6",
+      "firstName": "James",
+      "middleInitial": "",
+      "lastName": "Huang",
+      "username": "jhuang",
+      "name": "James Huang",
+      "email": "james.huang@ecsd.edu",
+      "appRole": "boardStaff",
+      "committees": ["Audit committee"],
+      "status": "Inactive",
+      "lastModifiedDate": "2026-03-28"
+    },
+    {
+      "id": "u7",
+      "firstName": "Linda",
+      "middleInitial": "",
+      "lastName": "Torres",
+      "username": "ltorres",
+      "name": "Linda Torres",
+      "email": "linda.torres@ecsd.edu",
+      "appRole": "policyAdmin",
+      "committees": [],
+      "status": "Active",
+      "lastModifiedDate": "2026-04-05"
+    },
+    {
+      "id": "u8",
+      "firstName": "Patricia",
+      "middleInitial": "",
+      "lastName": "Chen",
+      "username": "pchen",
+      "name": "Patricia Chen",
+      "email": "patricia.chen@ecsd.edu",
+      "appRole": "libraryAdmin",
+      "committees": [],
+      "status": "Active",
+      "lastModifiedDate": "2026-04-03"
+    }
+  ]
+}

@@ -69,6 +69,11 @@ import EventsPage from "./pages/EventsPage.js";
 import GoalDetailPage from "./pages/GoalDetailPage.js";
 import EventDetailPage from "./pages/EventDetailPage.js";
 import MembersPage from "./pages/MembersPage.js";
+import SettingsPage from "./pages/SettingsPage.js";
+import SettingsLayout from "./pages/settings/SettingsLayout.js";
+import SettingsUsersPage from "./pages/settings/SettingsUsersPage.js";
+import SettingsCommitteesPage from "./pages/settings/SettingsCommitteesPage.js";
+import SettingsCommitteeDetailPage from "./pages/settings/SettingsCommitteeDetailPage.js";
 
 export default function App() {
   useSideNavAppLabel(SIDE_NAV_APP_LABEL);
@@ -99,7 +104,12 @@ export default function App() {
         <Route path="library/events" element={<EventsPage />} />
         <Route path="library/events/:eventId" element={<EventDetailPage />} />
         <Route path="library/members" element={<MembersPage />} />
-        <Route path="settings" element={<PlaceholderPage title="Settings" />} />
+        <Route path="settings" element={<SettingsLayout />}>
+          <Route index element={<SettingsPage />} />
+          <Route path="users" element={<SettingsUsersPage />} />
+          <Route path="committees" element={<SettingsCommitteesPage />} />
+          <Route path="committees/:committeeId" element={<SettingsCommitteeDetailPage />} />
+        </Route>
       </Route>
     </Routes>
   );

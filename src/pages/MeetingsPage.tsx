@@ -940,7 +940,7 @@ export default function MeetingsPage() {
         meeting={duplicateSource}
         committees={committees}
         onClose={() => { setDuplicateDialogOpen(false); setDuplicateSource(null); }}
-        onDuplicate={(meeting) => setMeetings((prev) => [meeting, ...prev])}
+        onDuplicate={(meeting) => { setMeetings((prev) => [meeting, ...prev]); navigate(`/meetings/${meeting.id}`, { state: { meeting } }); }}
       />
       <ConfirmDialog
         open={Boolean(pendingAction)}

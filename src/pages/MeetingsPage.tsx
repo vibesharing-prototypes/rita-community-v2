@@ -66,21 +66,24 @@ import type {
   MeetingVisibility,
 } from "../types/meetings";
 import { formatDateLong, getDayOfMonth, getMonthAbbrev, getYear, isUpcoming } from "../utils/meetings";
-import meetingsData from "../data/meetings.json";
 import { cloneAgendaFromTemplate } from "../data/runtimeAgendaStore";
+import {
+  committees,
+  setMeetings as storeSetMeetings,
+  setTemplates as storeSetTemplates,
+  useMeetings,
+  useTemplates,
+} from "../state/meetingsStore";
 
 export default function MeetingsPage() {
   const { presets, tokens } = useTheme();
   const dividerColor = tokens?.component?.divider?.colors?.default?.borderColor?.value ?? "#E0E0E0";
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { meetings: seedMeetings, templates: seedTemplates, committees } = meetingsData as {
-    meetings: Meeting[];
-    templates: MeetingTemplate[];
-    committees: string[];
-  };
-  const [meetings, setMeetings] = useState<Meeting[]>(seedMeetings);
-  const [templates, setTemplates] = useState<MeetingTemplate[]>(seedTemplates);
+  const meetings = useMeetings();
+  const templates = useTemplates();
+  const setMeetings = storeSetMeetings;
+  const setTemplates = storeSetTemplates;
   const activeTab: MeetingTab = (searchParams.get("tab") as MeetingTab | null) ?? "upcoming";
   const [search, setSearch] = useState("");
   const [upcomingSortBy, setUpcomingSortBy] = useState("date-asc");
